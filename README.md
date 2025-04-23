@@ -1,1 +1,2 @@
-# gxl-docs
+# Galaxy-Flow & Gxl
+
