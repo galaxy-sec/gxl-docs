@@ -1,0 +1,6 @@
+[book]
+authors = ["wukong"]
+language = "zh"
+multilingual = true
+src = "./"
+title = "gxl"

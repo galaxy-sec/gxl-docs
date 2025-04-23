@@ -3,7 +3,7 @@
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
-        <title>README - gxl</title>
+        <title>BUILDIN - gxl</title>
 
 
         <!-- Custom HTML head -->
@@ -155,14 +155,108 @@
 
                 <div id="content" class="content">
                     <main>
-                        <h1 id="galaxy-flow--gxl"><a class="header" href="#galaxy-flow--gxl">Galaxy-Flow &amp; Gxl</a></h1>
+                        <h2 id="gxassert"><a class="header" href="#gxassert">gx.assert</a></h2>
+<pre><code class="language-bash">gx.assert { value = "hello" ; expect = "hello" ; } 
+</code></pre>
+<h3 id="属性参数"><a class="header" href="#属性参数">属性参数</a></h3>
+<p>value    :  需要验证的变量
+expect  :  期待的结果
+result  :  "[true|false]" 默认值为 "true"
+err     :  验证失败后的错误信息。</p>
+<h3 id="示例"><a class="header" href="#示例">示例:</a></h3>
+<pre><code>gx.assert { value = "hello" ; expect = "hello" ; result = "false" , err="test assert";} 
+</code></pre>
+<h2 id="gxcmd"><a class="header" href="#gxcmd">gx.cmd</a></h2>
+<pre><code class="language-bash">gx.cmd {  
+	cmd = "${PRJ_ROOT}/do.sh"; 
+ } 
+</code></pre>
+<h3 id="属性参数-1"><a class="header" href="#属性参数-1">属性参数</a></h3>
+<ul>
+<li>cmd       执行脚本</li>
+<li>log       日志输出级别</li>
+<li>out       输出执行结果</li>
+<li>expect    期待的结果</li>
+</ul>
+<h3 id="示例-1"><a class="header" href="#示例-1">示例:</a></h3>
+<pre><code class="language-bash">gx.cmd {  
+	cmd = "${PRJ_ROOT}/do.sh"; 
+    log     = "1" ;
+    out     = "true" ;
+    expect  = "[0,1,255]" ;
+ } 
+</code></pre>
+<h2 id="gxecho"><a class="header" href="#gxecho">gx.echo</a></h2>
+<pre><code class="language-bash"> gx.echo { value = "${PRJ_ROOT}/test/main.py" ; }
+</code></pre>
+<h3 id="属性参数-2"><a class="header" href="#属性参数-2">属性参数</a></h3>
+<ul>
+<li>value : 需显示的变量</li>
+</ul>
+<h2 id="gxread"><a class="header" href="#gxread">gx.read</a></h2>
+<p>读取信息到环境变量。</p>
+<h3 id="读取cmd运行结果到-name"><a class="header" href="#读取cmd运行结果到-name">读取CMD运行结果到 name</a></h3>
+<pre><code class="language-bash">env dev {
+    gx.read { name = "gx" ; cmd = "echo rigger-1.0"; }
+}
+</code></pre>
+<h3 id="从ini文件中读取"><a class="header" href="#从ini文件中读取">从INI文件中读取;</a></h3>
+<pre><code class="language-bash">env dev {
+    gx.read { ini = "${ENV_ROOT}/test.ini"; }
+}
+</code></pre>
+<h3 id="从标准输入读取"><a class="header" href="#从标准输入读取">从标准输入读取;</a></h3>
+<pre><code class="language-bash">env dev {
+    gx.read { stdin = "please input you name"; name = "NAME" ; }
+    gx.echo { value = "${NAME}"; }
+}
+</code></pre>
+<h2 id="gxtpl"><a class="header" href="#gxtpl">gx.tpl</a></h2>
+<p>通过模板生成文件,使用 handlebars 引擎。</p>
+<pre><code class="language-bash">gx.tpl {  
+   tpl = "${PRJ_ROOT}/conf_tpl.toml" ;
+   dst = "${PRJ_ROOT}/conf.toml" ;
+}
+</code></pre>
+<h3 id="属性参数-3"><a class="header" href="#属性参数-3">属性参数</a></h3>
+<ul>
+<li>tpl  :  模板文件</li>
+<li>dst ： 生成目标文件</li>
+</ul>
+<pre><code class="language-bash">gx.tpl {  
+   tpl = "${PRJ_ROOT}/conf_tpl.toml" ;
+   dst = "${PRJ_ROOT}/conf.toml" ;
+   data = ^" { "name" : "xiaoming", "age" : 3 } "^;
+}
+</code></pre>
+<ul>
+<li>data : 符合Json格式的模板数据</li>
+</ul>
+<h2 id="gxvars"><a class="header" href="#gxvars">gx.vars</a></h2>
+<pre><code class="language-bash">gx.vars {  
+   x = "${PRJ_ROOT}/test/main.py" ;
+   y = "${PRJ_ROOT}/test/main.py" ; 
+}
+</code></pre>
+<p>x,y 自定义的变量，可以在gxL 和扩展脚本使用</p>
+<h2 id="gxver"><a class="header" href="#gxver">gx.ver</a></h2>
+<pre><code class="language-yml">gx.ver { file = "./version.txt" ;  inc = "bugfix" ; } 
+</code></pre>
+<h3 id="属性参数-4"><a class="header" href="#属性参数-4">属性参数</a></h3>
+<ul>
+<li>file :  version.txt 文件</li>
+<li>inc： 增长单位。   有 null,build,bugfix,feature,main 六个选项</li>
+</ul>
 
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="gxl.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
 
-                            <a rel="next prefetch" href="gxl.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                            <a rel="next prefetch" href="CHANGELOG.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                                 <i class="fa fa-angle-right"></i>
                             </a>
 
@@ -172,8 +266,11 @@
             </div>
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="gxl.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
 
-                    <a rel="next prefetch" href="gxl.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                    <a rel="next prefetch" href="CHANGELOG.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                         <i class="fa fa-angle-right"></i>
                     </a>
             </nav>
