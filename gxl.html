@@ -41,6 +41,17 @@
         <script src="toc.js"></script>
     </head>
     <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
     <div id="body-container">
         <!-- Work around some values being stored in localStorage wrapped in quotes -->
         <script>
@@ -118,7 +129,7 @@
                             <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
                             <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
                         </ul>
-                        <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S" aria-controls="searchbar">
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
                             <i class="fa fa-search"></i>
                         </button>
                     </div>
@@ -180,7 +191,7 @@ mod main {
 <pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span>flow test {
-  gx.echo { value = "hello world"; }
+  gx.echo ( value : "hello world" );
 }
 <span class="boring">}</span></code></pre></pre>
 <h4 id="增加描述"><a class="header" href="#增加描述">增加描述</a></h4>
@@ -188,7 +199,7 @@ mod main {
 </span><span class="boring">fn main() {
 </span>#[usage(desp="test flow")]
 flow test() {
-  gx.echo { value = "hello world"; }
+  gx.echo ( value : "hello world" );
 }
 <span class="boring">}</span></code></pre></pre>
 <h4 id="前序后序-flow"><a class="header" href="#前序后序-flow">前序、后序 flow</a></h4>
@@ -236,11 +247,11 @@ flow test_1 {
 mod main {
 
   flow start {
-    gx.echo { value = "hello" ;}
+    gx.echo ( value : "hello" );
   }
   #[auto_load(entry)]
   flow conf {
-    gx.echo { value = "hello" ;}
+    gx.echo ( value : "hello" );
   }
 }
 <span class="boring">}</span></code></pre></pre>
@@ -251,10 +262,10 @@ mod main {
   api = "1.0"
   flow conf {
     if  ${API} == "1.0" {
-        gx.echo { value = "this is if true cond " ;}
+        gx.echo ( value : "this is if true cond " );
     }
     else {
-        gx.echo { value = "this is if false cond" ;}
+        gx.echo ( value : "this is if false cond" );
     }
   }
 }
@@ -276,11 +287,13 @@ env dev {
 }
 <span class="boring">}</span></code></pre></pre>
 <h4 id="mix-env"><a class="header" href="#mix-env">mix env</a></h4>
-<pre><code class="language-bash">env base {}
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>env base {}
 env dev  : base {
     root = "./" ;
 }
-</code></pre>
+<span class="boring">}</span></code></pre></pre>
 <ul>
 <li>默认env: default  , 可以省去 gx -e 参数 ;</li>
 </ul>
@@ -309,8 +322,10 @@ mod main {
 }
 <span class="boring">}</span></code></pre></pre>
 <p>执行</p>
-<pre><code class="language-bash">gx -e dev test 
-</code></pre>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>gx -e dev test 
+<span class="boring">}</span></code></pre></pre>
 <h3 id="mod-注解"><a class="header" href="#mod-注解">mod 注解</a></h3>
 <h3 id="mod继承"><a class="header" href="#mod继承">mod继承</a></h3>
 <h3 id="示例-2"><a class="header" href="#示例-2">示例</a></h3>
