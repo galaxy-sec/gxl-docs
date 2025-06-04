@@ -26,7 +26,7 @@ mod main {
 
 ```rust
 flow test {
-  gx.echo { value = "hello world"; }
+  gx.echo ( value : "hello world" );
 }
 ```
 
@@ -35,7 +35,7 @@ flow test {
 ```rust
 #[usage(desp="test flow")]
 flow test() {
-  gx.echo { value = "hello world"; }
+  gx.echo ( value : "hello world" );
 }
 ```
 
@@ -87,11 +87,11 @@ flow test_1 {
 mod main {
 
   flow start {
-    gx.echo { value = "hello" ;}
+    gx.echo ( value : "hello" );
   }
   #[auto_load(entry)]
   flow conf {
-    gx.echo { value = "hello" ;}
+    gx.echo ( value : "hello" );
   }
 }
 ```
@@ -103,10 +103,10 @@ mod main {
   api = "1.0"
   flow conf {
     if  ${API} == "1.0" {
-        gx.echo { value = "this is if true cond " ;}
+        gx.echo ( value : "this is if true cond " );
     }
     else {
-        gx.echo { value = "this is if false cond" ;}
+        gx.echo ( value : "this is if false cond" );
     }
   }
 }
@@ -134,7 +134,7 @@ env dev {
 
 ####   mix env
 
-```bash
+```rust
 env base {}
 env dev  : base {
     root = "./" ;
@@ -172,7 +172,7 @@ mod main {
 
 执行
 
-```bash
+```rust
 gx -e dev test 
 ```
 
