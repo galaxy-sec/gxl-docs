@@ -187,10 +187,12 @@
 <pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span>gx.cmd (  cmd : "${PRJ_ROOT}/do.sh" ); 
+// 可省略 cmd 参数名
+gx.cmd (  "${PRJ_ROOT}/do.sh" ); 
 <span class="boring">}</span></code></pre></pre>
 <h3 id="属性参数"><a class="header" href="#属性参数">属性参数</a></h3>
 <ul>
-<li>cmd       [必须] 执行脚本</li>
+<li>cmd       [必须][] 执行脚本</li>
 <li>log       日志输出级别</li>
 <li>out       输出执行结果</li>
 <li>expect    期待的结果</li>
@@ -231,6 +233,8 @@
 <pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span> gx.echo ( value : "${PRJ_ROOT}/test/main.py"  );
+// 可省略 value 参数名
+ gx.echo ( "${PRJ_ROOT}/test/main.py"  );
 <span class="boring">}</span></code></pre></pre>
 <h3 id="属性参数-2"><a class="header" href="#属性参数-2">属性参数</a></h3>
 <ul>
@@ -248,16 +252,15 @@
 <h3 id="从ini文件中读取"><a class="header" href="#从ini文件中读取">从INI文件中读取;</a></h3>
 <pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
-</span>env dev {
-    gx.read_file ( file : "${ENV_ROOT}/test.ini" );
-}
+</span>    gx.read_file ( file : "${ENV_ROOT}/test.ini" );
+    gx.read_file ( "${ENV_ROOT}/test.ini" );
 <span class="boring">}</span></code></pre></pre>
 <h3 id="从标准输入读取"><a class="header" href="#从标准输入读取">从标准输入读取;</a></h3>
 <pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span>env dev {
-    gx.read_stdin ( stdin : "please input you name", name : "NAME"  );
-    gx.echo ( value : "${NAME}" );
+    gx.read_stdin ( prompt : "please input you name", name : "NAME"  );
+    gx.echo (  "${NAME}" );
 }
 <span class="boring">}</span></code></pre></pre>
 <h2 id="gxtpl"><a class="header" href="#gxtpl">gx.tpl</a></h2>
