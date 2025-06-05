@@ -23,11 +23,13 @@ gx.assert ( value = "hello" , expect : "hello" , result : "false" , err:"test as
 
 ```rust
 gx.cmd (  cmd : "${PRJ_ROOT}/do.sh" ); 
+// 可省略 cmd 参数名
+gx.cmd (  "${PRJ_ROOT}/do.sh" ); 
 ```
 
 ### 属性参数
 
-* cmd       [必须] 执行脚本
+* cmd       [必须][] 执行脚本
 * log       日志输出级别
 * out       输出执行结果
 * expect    期待的结果
@@ -71,6 +73,8 @@ gx.cmd (
 
 ```rust
  gx.echo ( value : "${PRJ_ROOT}/test/main.py"  );
+// 可省略 value 参数名
+ gx.echo ( "${PRJ_ROOT}/test/main.py"  );
 ```
 
 
@@ -93,17 +97,16 @@ env dev {
 ###  从INI文件中读取;
 
 ```rust
-env dev {
     gx.read_file ( file : "${ENV_ROOT}/test.ini" );
-}
+    gx.read_file ( "${ENV_ROOT}/test.ini" );
 ```
 
 ### 从标准输入读取;
 
 ```rust
 env dev {
-    gx.read_stdin ( stdin : "please input you name", name : "NAME"  );
-    gx.echo ( value : "${NAME}" );
+    gx.read_stdin ( prompt : "please input you name", name : "NAME"  );
+    gx.echo (  "${NAME}" );
 }
 ```
 
