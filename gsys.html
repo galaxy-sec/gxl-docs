@@ -177,6 +177,28 @@ help      Print this message or the help of the given subcommand(s)</p>
 <p>Options:
 -h, --help     Print help
 -V, --version  Print version</p>
+<h2 id="mod-list"><a class="header" href="#mod-list">mod-list</a></h2>
+<pre><code class="language-yaml">mods:
+- name: example_mod1
+  addr:
+    path: ./example/modules/example_mod1
+  node: arm-mac14-host
+  effective: false
+- name: postgresql
+  addr:
+    path: ./example/modules/postgresql
+  node: arm-mac14-host
+  depends:
+  - addr:
+      path: ./example/knowlege/mysql
+    local: depends
+  effective: null
+</code></pre>
+<h3 id="depends"><a class="header" href="#depends">depends</a></h3>
+<ul>
+<li>addr : 依赖的模块地址</li>
+<li>local : 依赖的模块本地地址</li>
+</ul>
 
                     </main>
 
