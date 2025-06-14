@@ -166,7 +166,14 @@
 
                 <div id="content" class="content">
                     <main>
-                        <h2 id="gxassert"><a class="header" href="#gxassert">gx.assert</a></h2>
+                        <h2 id="内置变量"><a class="header" href="#内置变量">内置变量</a></h2>
+<ul>
+<li>GXL_PRJ_ROOT:   最近定义了 _gal/project.toml 的目录</li>
+<li>GXL_START_ROOT:  GXL 启动处理的目录</li>
+<li>GXL_CUR_DIR:  GXL 当前所在目录，在调用gx.run时，与GXL_START_ROOT可能不同</li>
+<li>GXL_CMD_ARG:  gflow -- &lt;cmd_arg&gt;</li>
+</ul>
+<h2 id="gxassert"><a class="header" href="#gxassert">gx.assert</a></h2>
 <pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span>gx.assert ( value = "hello" , expect = "hello"  ); 
