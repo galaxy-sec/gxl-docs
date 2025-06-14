@@ -4,6 +4,6 @@
 * [GXL](gxl.md)
 * [gflow](gflow.md)
     * [BUILDIN](buildin.md)
-* [gmod](gmod.md)
-* [gsys](gsys.md)
+* [ds-mod](ds-mod.md)
+* [ds-sys](ds-sys.md)
 * [Changelog](CHANGELOG.md)
