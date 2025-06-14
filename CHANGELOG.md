@@ -9,6 +9,7 @@
  ```
  extern mod head { path = "${GXL_START_ROOT}/_gal/"; }
  ```
+[0.5.3 下载](https://github.com/galaxy-sec/galaxy-flow/releases/tag/v0.5.3)
 
 ## 0.5.2
 ### 内置环境变量
