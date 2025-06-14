@@ -3,7 +3,7 @@
 ## 0.5.3
 
 ### 内置环境变量
-- GXL_PRJ_ROOT:   最近定义了 _gal/project.toml 的目录
+- GXL_PRJ_ROOT:    最近定义的 _gal/project.toml 的目录
 
 ###  extern mod 支持变量
  ```
