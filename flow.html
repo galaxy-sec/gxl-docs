@@ -3,7 +3,7 @@
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
-        <title>Changelog - gxl</title>
+        <title>flow - gxl</title>
 
 
         <!-- Custom HTML head -->
@@ -166,42 +166,30 @@
 
                 <div id="content" class="content">
                     <main>
-                        <h1 id="changelog"><a class="header" href="#changelog">Changelog</a></h1>
-<h2 id="060"><a class="header" href="#060">0.6.0</a></h2>
-<h3 id="新增"><a class="header" href="#新增">新增</a></h3>
-<ul>
-<li>生成任务报告</li>
-<li>支持 flow上的 Task注解</li>
-</ul>
-<h3 id="改进"><a class="header" href="#改进">改进</a></h3>
-<ul>
-<li>改进 flow 编排语法，由: 变为 |  符号</li>
-</ul>
-<h2 id="gflow-053"><a class="header" href="#gflow-053">gflow-0.5.3</a></h2>
-<h3 id="内置环境变量"><a class="header" href="#内置环境变量">内置环境变量</a></h3>
-<ul>
-<li>GXL_PRJ_ROOT:    最近定义的 _gal/project.toml 的目录</li>
-</ul>
-<h3 id="extern-mod-支持变量"><a class="header" href="#extern-mod-支持变量">extern mod 支持变量</a></h3>
-<pre><code>extern mod head { path = "${GXL_START_ROOT}/_gal/"; }
-</code></pre>
-<p><a href="https://github.com/galaxy-sec/galaxy-flow/releases/tag/v0.5.3">0.5.3 下载</a></p>
-<h2 id="052"><a class="header" href="#052">0.5.2</a></h2>
-<h3 id="内置环境变量-1"><a class="header" href="#内置环境变量-1">内置环境变量</a></h3>
-<ul>
-<li>GXL_START_ROOT:  GXL 启动处理的目录</li>
-<li>GXL_CUR_DIR:  GXL 当前所在目录，在调用gx.run时，与GXL_START_ROOT可能不同</li>
-</ul>
-<h2 id="051"><a class="header" href="#051">0.5.1</a></h2>
+                        <h1 id="flow"><a class="header" href="#flow">flow</a></h1>
+<h2 id="注解"><a class="header" href="#注解">注解</a></h2>
+<h3 id="task---v060"><a class="header" href="#task---v060">task   (v0.6.0)</a></h3>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>#[task(name="setup")]
+flow setup{
+    ...
+}
+<span class="boring">}</span></code></pre></pre>
+<h3 id="transcation--v070"><a class="header" href="#transcation--v070">transcation  (v0.7.0)</a></h3>
+<h3 id="undo"><a class="header" href="#undo">undo</a></h3>
 
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
-                            <a rel="prev" href="buildin.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                            <a rel="prev" href="env.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                                 <i class="fa fa-angle-left"></i>
                             </a>
 
+                            <a rel="next prefetch" href="gflow.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
 
                         <div style="clear: both"></div>
                     </nav>
@@ -209,10 +197,13 @@
             </div>
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
-                    <a rel="prev" href="buildin.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                    <a rel="prev" href="env.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                         <i class="fa fa-angle-left"></i>
                     </a>
 
+                    <a rel="next prefetch" href="gflow.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
             </nav>
 
         </div>

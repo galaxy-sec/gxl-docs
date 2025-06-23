@@ -372,6 +372,18 @@ mod main {
      executer = "copy_act.sh" ;
 }
 <span class="boring">}</span></code></pre></pre>
+<div style="break-before: page; page-break-before: always;"></div><div style="break-before: page; page-break-before: always;"></div><h1 id="flow-1"><a class="header" href="#flow-1">flow</a></h1>
+<h2 id="注解-1"><a class="header" href="#注解-1">注解</a></h2>
+<h3 id="task---v060"><a class="header" href="#task---v060">task   (v0.6.0)</a></h3>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>#[task(name="setup")]
+flow setup{
+    ...
+}
+<span class="boring">}</span></code></pre></pre>
+<h3 id="transcation--v070"><a class="header" href="#transcation--v070">transcation  (v0.7.0)</a></h3>
+<h3 id="undo"><a class="header" href="#undo">undo</a></h3>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="gflow"><a class="header" href="#gflow">gflow</a></h1>
 <pre><code class="language-bash">Usage: gflow [OPTIONS] [FLOW]...
 
@@ -554,6 +566,7 @@ gx.cmd (  "${PRJ_ROOT}/do.sh" );
 <h3 id="新增"><a class="header" href="#新增">新增</a></h3>
 <ul>
 <li>生成任务报告</li>
+<li>支持 flow上的 Task注解</li>
 </ul>
 <h3 id="改进"><a class="header" href="#改进">改进</a></h3>
 <ul>
