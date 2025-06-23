@@ -1,5 +1,5 @@
 
-# Gxl 
+# GXL   语法
 
 ##  结构 
 
@@ -14,8 +14,8 @@ mod main {
     }
 }
 ```
-* mod 模块
-* env  环境
+* mod   模块
+* env   环境
 * flow  处理流
 
 ## flow  
@@ -26,7 +26,7 @@ mod main {
 
 ```rust
 flow test {
-  gx.echo ( value : "hello world" );
+  gx.echo (  "hello world" );
 }
 ```
 
@@ -35,30 +35,41 @@ flow test {
 ```rust
 #[usage(desp="test flow")]
 flow test() {
-  gx.echo ( value : "hello world" );
+  gx.echo (  "hello world" );
 }
 ```
 
-#### 前序、后序 flow
+#### 编排
 
 ```rust
-flow head {}
-flow tail {}
-flow test : head : tail {
-  gx.echo { value = "hello world"; }
+flow head {
+  gx.echo ( "head"; )
+}
+flow tail {
+  gx.echo ( "tail"; )
+}
+
+// 执行过程为: test -> head -> tail
+flow  @test | head | tail  { }
+flow  test | head | tail  { }
+
+
+// 执行过程为: head -> tail -> test
+flow  | head | tail  |@test { }
+
+//执行过程为: head -> test -> tail
+flow  head | @test | tail {
+  gx.echo ( "test"; )
 }
 ```
- 执行过程为: head -> test -> tail
+
 
 ### 定义
 
 ```rust 
-  flow <forword_name> [: <before-flows> [: <after-flows>]] {
+  flow [ <flows>|]  @<flow_name>  [|<flows>] {
   }
 ```
-
-* before-flows    : 前向流 如: flow1,flow2
-* after-flows     : 后向流 如: flow1,flow2
 
 ### 注解
 
@@ -111,6 +122,20 @@ mod main {
   }
 }
 ```
+####  通配比较
+```rust
+mod main {
+  api = "1.0"
+  flow conf {
+    if  ${API} =* "1*" {
+        gx.echo ( value : "this is if true cond " );
+    }
+    else {
+        gx.echo ( value : "this is if false cond" );
+    }
+  }
+}
+```
 
 ## env
 
@@ -141,7 +166,7 @@ env dev  : base {
 }
 ```
 
-* 默认env: default  , 可以省去 gx -e 参数 ;
+* 默认env: default  , 可以省去 gflow -e 参数 ;
 
 ### 定义
 
@@ -173,7 +198,7 @@ mod main {
 执行
 
 ```rust
-gx -e dev test 
+gflow -e dev test 
 ```
 
 ### mod 注解
