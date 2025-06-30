@@ -38,7 +38,7 @@ gx.cmd (  "${PRJ_ROOT}/do.sh" );
 
 * cmd       [必须][] 执行脚本
 * log       日志输出级别
-* out       输出执行结果
+* quiet     静默，不输出出指令和结果
 * expect    期待的结果
 
 ### 示例:
@@ -47,7 +47,7 @@ gx.cmd (  "${PRJ_ROOT}/do.sh" );
 gx.cmd (  
 	cmd     : "${PRJ_ROOT}/do.sh", 
     log     : "1" ,
-    out     : "true" ,
+    quiet   : "true" ,
     expect  : "[0,1,255]" 
  ) 
 ```
