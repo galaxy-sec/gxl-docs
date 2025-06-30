@@ -434,7 +434,7 @@ gx.cmd (  "${PRJ_ROOT}/do.sh" );
 <ul>
 <li>cmd       [必须][] 执行脚本</li>
 <li>log       日志输出级别</li>
-<li>out       输出执行结果</li>
+<li>quiet     静默，不输出出指令和结果</li>
 <li>expect    期待的结果</li>
 </ul>
 <h3 id="示例-4"><a class="header" href="#示例-4">示例:</a></h3>
@@ -443,7 +443,7 @@ gx.cmd (  "${PRJ_ROOT}/do.sh" );
 </span>gx.cmd (  
 	cmd     : "${PRJ_ROOT}/do.sh", 
     log     : "1" ,
-    out     : "true" ,
+    quiet   : "true" ,
     expect  : "[0,1,255]" 
  ) 
 <span class="boring">}</span></code></pre></pre>
