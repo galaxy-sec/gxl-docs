@@ -233,39 +233,6 @@ flow  head | @test | tail {
 </span>  flow [ &lt;flows&gt;|]  @&lt;flow_name&gt;  [|&lt;flows&gt;] {
   }
 <span class="boring">}</span></code></pre></pre>
-<h3 id="注解"><a class="header" href="#注解">注解</a></h3>
-<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
-</span><span class="boring">fn main() {
-</span>#[usage(desp="test")]
-flow test_1 {
-
-}
-<span class="boring">}</span></code></pre></pre>
-<h4 id="usage"><a class="header" href="#usage">usage</a></h4>
-<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
-</span><span class="boring">fn main() {
-</span>#[usage(desp ="")]
-<span class="boring">}</span></code></pre></pre>
-<h4 id="auto_load"><a class="header" href="#auto_load">auto_load</a></h4>
-<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
-</span><span class="boring">fn main() {
-</span>#[auto_load(entry,exit)] 
-
-//entry: 进入flow 
-//exit : 退出flow
-示例:
-
-mod main {
-
-  flow start {
-    gx.echo ( value : "hello" );
-  }
-  #[auto_load(entry)]
-  flow conf {
-    gx.echo ( value : "hello" );
-  }
-}
-<span class="boring">}</span></code></pre></pre>
 <h3 id="分支"><a class="header" href="#分支">分支</a></h3>
 <pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
@@ -373,7 +340,7 @@ mod main {
 }
 <span class="boring">}</span></code></pre></pre>
 <div style="break-before: page; page-break-before: always;"></div><div style="break-before: page; page-break-before: always;"></div><h1 id="flow-1"><a class="header" href="#flow-1">flow</a></h1>
-<h2 id="注解-1"><a class="header" href="#注解-1">注解</a></h2>
+<h2 id="注解"><a class="header" href="#注解">注解</a></h2>
 <h3 id="task---v060"><a class="header" href="#task---v060">task   (v0.6.0)</a></h3>
 <pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
@@ -382,8 +349,69 @@ flow setup{
     ...
 }
 <span class="boring">}</span></code></pre></pre>
-<h3 id="transcation--v070"><a class="header" href="#transcation--v070">transcation  (v0.7.0)</a></h3>
-<h3 id="undo"><a class="header" href="#undo">undo</a></h3>
+<h3 id="dryrun--v070"><a class="header" href="#dryrun--v070">dryrun  (v0.7.0)</a></h3>
+<pre><code>#[dryrun(_pub_dryrun)]
+flow _pub_dysec {
+    ...
+}
+flow _pub_dryrun {
+    ...
+}
+</code></pre>
+<h3 id="transcation-undo-v070"><a class="header" href="#transcation-undo-v070">transcation undo (v0.7.0)</a></h3>
+<pre><code>flow trans1 | step1 | step2 | step3 ;
+  #[transaction,undo(_undo_step1)]
+  flow step1 {
+    gx.echo (" step1 ");
+  }
+  #[undo(_undo_step2)]
+  flow step2 {
+    gx.echo (" step2 ");
+  }
+  #[undo(_undo_step3)]
+  flow step3 {
+    gx.echo (" step3 ");
+    gx.assert ( value : "true" , expect : "false" );
+  }
+
+  flow _undo_step1 {
+    gx.echo (" undo step1 ");
+  }
+  flow _undo_step2 {
+    gx.echo (" undo step2 ");
+  }
+  flow _undo_step3 {
+    gx.echo (" undo step3 ");
+  }
+</code></pre>
+<h3 id="usage"><a class="header" href="#usage">usage</a></h3>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>#[usage(desp="test")]
+flow test_1 {
+
+}
+<span class="boring">}</span></code></pre></pre>
+<h3 id="auto_load"><a class="header" href="#auto_load">auto_load</a></h3>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>#[auto_load(entry,exit)] 
+
+//entry: 进入flow 
+//exit : 退出flow
+示例:
+
+mod main {
+
+  flow start {
+    gx.echo ( value : "hello" );
+  }
+  #[auto_load(entry)]
+  flow conf {
+    gx.echo ( value : "hello" );
+  }
+}
+<span class="boring">}</span></code></pre></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="gflow"><a class="header" href="#gflow">gflow</a></h1>
 <pre><code class="language-bash">Usage: gflow [OPTIONS] [FLOW]...
 
@@ -562,11 +590,27 @@ gx.cmd (  "${PRJ_ROOT}/do.sh" );
 <li>password :   密码</li>
 </ul>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="changelog"><a class="header" href="#changelog">Changelog</a></h1>
-<h2 id="060"><a class="header" href="#060">0.6.0</a></h2>
+<h2 id="070"><a class="header" href="#070">0.7.0</a></h2>
 <h3 id="新增"><a class="header" href="#新增">新增</a></h3>
 <ul>
-<li>生成任务报告</li>
-<li>支持 flow上的 Task注解</li>
+<li>支持事务机制</li>
+<li>支持dryrun机制 - 允许预览操作结果而不实际执行</li>
+</ul>
+<h3 id="064"><a class="header" href="#064">0.6.4</a></h3>
+<h3 id="新增-1"><a class="header" href="#新增-1">新增</a></h3>
+<ul>
+<li>支持 gx.cmd  quiet (静默） - 自定义控制cmd的日志输出与否</li>
+</ul>
+<h3 id="062"><a class="header" href="#062">0.6.2</a></h3>
+<h3 id="新增-2"><a class="header" href="#新增-2">新增</a></h3>
+<ul>
+<li>优化日志输出，增加日志的重定向，支持捕获控制台标准日志输出</li>
+</ul>
+<h2 id="060"><a class="header" href="#060">0.6.0</a></h2>
+<h3 id="新增-3"><a class="header" href="#新增-3">新增</a></h3>
+<ul>
+<li>生成任务报告 - 提供执行过程和结果的详细信息</li>
+<li>支持flow上的Task注解 - 增强流程定义的灵活性</li>
 </ul>
 <h3 id="改进"><a class="header" href="#改进">改进</a></h3>
 <ul>
