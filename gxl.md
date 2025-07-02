@@ -70,42 +70,6 @@ flow  head | @test | tail {
   }
 ```
 
-### 注解
-
-```rust
-#[usage(desp="test")]
-flow test_1 {
-
-}
-```
-
-#### usage 
-
-```rust
-#[usage(desp ="")]
-```
-
-#### auto_load
-
-```rust
-#[auto_load(entry,exit)] 
-
-//entry: 进入flow 
-//exit : 退出flow
-示例:
-
-mod main {
-
-  flow start {
-    gx.echo ( value : "hello" );
-  }
-  #[auto_load(entry)]
-  flow conf {
-    gx.echo ( value : "hello" );
-  }
-}
-```
-
 ### 分支
 
 ```rust
