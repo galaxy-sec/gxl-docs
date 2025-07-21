@@ -51,7 +51,7 @@ gx.cmd (
     expect  : "[0,1,255]" 
  ) 
 ```
-## gx.sheel 
+## gx.shell
 
 ```rust
 gx.sheel (  arg_file : "./arg.json ", shell: "${PRJ_ROOT}/do.sh" , out_var : "DO_OUT" ); 
