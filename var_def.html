@@ -3,7 +3,7 @@
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
-        <title>gflow - gxl</title>
+        <title>var_def - gxl</title>
 
 
         <!-- Custom HTML head -->
@@ -175,31 +175,54 @@
 
                 <div id="content" class="content">
                     <main>
-                        <h1 id="gflow"><a class="header" href="#gflow">gflow</a></h1>
-<pre><code class="language-bash">Usage: gflow [OPTIONS] [FLOW]...
+                        <h1 id="变量定义"><a class="header" href="#变量定义">变量定义</a></h1>
+<h2 id="示例"><a class="header" href="#示例">示例</a></h2>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>    one= "one";
+    sys_a = { mod1 : "A", mod2 : "B" , mod3: 1 , mod4 : 2};
+    sys_b =  [ "C", "D" ];
+    sys_c = ${SYS_B[1]} ;
+    sys_d = ${SYS_A.MOD1} ;
+<span class="boring">}</span></code></pre></pre>
+<h2 id="规测"><a class="header" href="#规测">规测</a></h2>
+<p>在GXL内 变量名不区分大小写</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>mod envs {
+    env default   {
+      data_list =  [ "JAVA", "RUST", "PYTHON"] ;
+      data_obj =  { 
+        JAVA : { NAME: "JAVA", SCORE: 80 }, 
+        RUST : { NAME: "RUST", SCORE: 100 }, 
+        PYTHON : { NAME: "PYTHON", SCORE: 200} 
+        } ;
+    }
+}
+mod main   {
+  flow array_do{
+    for ${CUR} in ${ENV_DATA_LIST} {
+      gx.echo( "CUR:${CUR}" );
+    }
+  }
+  flow obj_do{
+    for ${CUR} in ${ENV_DATA_OBJ} {
+      gx.echo( "CUR:${CUR.NAME} : ${CUR.SCORE}" );
+    }
+  }
 
-Arguments:
-  [FLOW]...  flow name ; eg: conf,test,package
-
-Options:
-  -e, --env &lt;ENV&gt;      env name ; eg: -e dev [default: default]
-  -d, --debug &lt;DEBUG&gt;  debug level ; eg: -d 1 [default: 0]
-  -f, --conf &lt;CONF&gt;    conf file ;  default is  work(./_rg/work.gxl) adm (./_rg/adm.gxl)
-      --log &lt;LOG&gt;      config log ; eg: --log  cmd=debug,parse=info
-  -q, --quiet          
-  -h, --help           Print help
-  -V, --version        Print version
-</code></pre>
+}
+<span class="boring">}</span></code></pre></pre>
 
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
-                            <a rel="prev" href="fun.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                            <a rel="prev" href="gxl.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                                 <i class="fa fa-angle-left"></i>
                             </a>
 
-                            <a rel="next prefetch" href="buildin.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                            <a rel="next prefetch" href="env.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                                 <i class="fa fa-angle-right"></i>
                             </a>
 
@@ -209,11 +232,11 @@ Options:
             </div>
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
-                    <a rel="prev" href="fun.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                    <a rel="prev" href="gxl.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                         <i class="fa fa-angle-left"></i>
                     </a>
 
-                    <a rel="next prefetch" href="buildin.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                    <a rel="next prefetch" href="env.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                         <i class="fa fa-angle-right"></i>
                     </a>
             </nav>

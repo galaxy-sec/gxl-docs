@@ -36,6 +36,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "searchindex.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc.js"></script>
@@ -92,10 +93,13 @@
                 sidebar = sidebar || 'visible';
             } else {
                 sidebar = 'hidden';
+                sidebar_toggle.checked = false;
             }
-            sidebar_toggle.checked = sidebar === 'visible';
-            html.classList.remove('sidebar-visible');
-            html.classList.add("sidebar-" + sidebar);
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
         </script>
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
@@ -146,7 +150,12 @@
 
                 <div id="search-wrapper" class="hidden">
                     <form id="searchbar-outer" class="searchbar-outer">
-                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
                     </form>
                     <div id="searchresults-outer" class="searchresults-outer hidden">
                         <div id="searchresults-header" class="searchresults-header"></div>
@@ -167,29 +176,43 @@
                 <div id="content" class="content">
                     <main>
                         <h1 id="changelog"><a class="header" href="#changelog">Changelog</a></h1>
-<h2 id="070"><a class="header" href="#070">0.7.0</a></h2>
+<h2 id="080"><a class="header" href="#080">0.8.0</a></h2>
 <h3 id="新增"><a class="header" href="#新增">新增</a></h3>
+<ul>
+<li>GXL 支持 数字、BOOL、数组、对象 数据类型</li>
+<li>提供 defined 函数 - 检查变量是否已定义</li>
+<li>提供 gx.shell 方便 shell 调用</li>
+</ul>
+<h3 id="改进"><a class="header" href="#改进">改进</a></h3>
+<ul>
+<li>gx.read_file 读取内容到对象，便于后续处理</li>
+<li>winnow 升级 0.7</li>
+<li>对于远程Mod的获取，去掉外部Git 依赖</li>
+<li>修改外部依赖</li>
+</ul>
+<h2 id="070"><a class="header" href="#070">0.7.0</a></h2>
+<h3 id="新增-1"><a class="header" href="#新增-1">新增</a></h3>
 <ul>
 <li>支持事务机制</li>
 <li>支持dryrun机制 - 允许预览操作结果而不实际执行</li>
 </ul>
 <h3 id="064"><a class="header" href="#064">0.6.4</a></h3>
-<h3 id="新增-1"><a class="header" href="#新增-1">新增</a></h3>
+<h3 id="新增-2"><a class="header" href="#新增-2">新增</a></h3>
 <ul>
 <li>支持 gx.cmd  quiet (静默） - 自定义控制cmd的日志输出与否</li>
 </ul>
 <h3 id="062"><a class="header" href="#062">0.6.2</a></h3>
-<h3 id="新增-2"><a class="header" href="#新增-2">新增</a></h3>
+<h3 id="新增-3"><a class="header" href="#新增-3">新增</a></h3>
 <ul>
 <li>优化日志输出，增加日志的重定向，支持捕获控制台标准日志输出</li>
 </ul>
 <h2 id="060"><a class="header" href="#060">0.6.0</a></h2>
-<h3 id="新增-3"><a class="header" href="#新增-3">新增</a></h3>
+<h3 id="新增-4"><a class="header" href="#新增-4">新增</a></h3>
 <ul>
 <li>生成任务报告 - 提供执行过程和结果的详细信息</li>
 <li>支持flow上的Task注解 - 增强流程定义的灵活性</li>
 </ul>
-<h3 id="改进"><a class="header" href="#改进">改进</a></h3>
+<h3 id="改进-1"><a class="header" href="#改进-1">改进</a></h3>
 <ul>
 <li>改进 flow 编排语法，由: 变为 |  符号</li>
 </ul>
@@ -250,6 +273,7 @@
         <script src="book.js"></script>
 
         <!-- Custom JS scripts -->
+
 
 
     </div>

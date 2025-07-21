@@ -3,7 +3,7 @@
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
-        <title>gflow - gxl</title>
+        <title>fun - gxl</title>
 
 
         <!-- Custom HTML head -->
@@ -175,31 +175,26 @@
 
                 <div id="content" class="content">
                     <main>
-                        <h1 id="gflow"><a class="header" href="#gflow">gflow</a></h1>
-<pre><code class="language-bash">Usage: gflow [OPTIONS] [FLOW]...
-
-Arguments:
-  [FLOW]...  flow name ; eg: conf,test,package
-
-Options:
-  -e, --env &lt;ENV&gt;      env name ; eg: -e dev [default: default]
-  -d, --debug &lt;DEBUG&gt;  debug level ; eg: -d 1 [default: 0]
-  -f, --conf &lt;CONF&gt;    conf file ;  default is  work(./_rg/work.gxl) adm (./_rg/adm.gxl)
-      --log &lt;LOG&gt;      config log ; eg: --log  cmd=debug,parse=info
-  -q, --quiet          
-  -h, --help           Print help
-  -V, --version        Print version
-</code></pre>
+                        <h2 id="defined"><a class="header" href="#defined">defined</a></h2>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>    if defined(${PRJ_ROOT}) {
+        gx.echo (  "${PRJ_ROOT}/test/main.py"  );
+        }
+        else {
+        gx.echo (  "${PRJ_ROOT}/test/main.py"  );
+    }
+<span class="boring">}</span></code></pre></pre>
 
                     </main>
 
                     <nav class="nav-wrapper" aria-label="Page navigation">
                         <!-- Mobile navigation buttons -->
-                            <a rel="prev" href="fun.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                            <a rel="prev" href="flow.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                                 <i class="fa fa-angle-left"></i>
                             </a>
 
-                            <a rel="next prefetch" href="buildin.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                            <a rel="next prefetch" href="gflow.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                                 <i class="fa fa-angle-right"></i>
                             </a>
 
@@ -209,11 +204,11 @@ Options:
             </div>
 
             <nav class="nav-wide-wrapper" aria-label="Page navigation">
-                    <a rel="prev" href="fun.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                    <a rel="prev" href="flow.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                         <i class="fa fa-angle-left"></i>
                     </a>
 
-                    <a rel="next prefetch" href="buildin.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                    <a rel="next prefetch" href="gflow.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                         <i class="fa fa-angle-right"></i>
                     </a>
             </nav>

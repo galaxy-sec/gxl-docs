@@ -37,6 +37,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "searchindex.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc.js"></script>
@@ -93,10 +94,13 @@
                 sidebar = sidebar || 'visible';
             } else {
                 sidebar = 'hidden';
+                sidebar_toggle.checked = false;
             }
-            sidebar_toggle.checked = sidebar === 'visible';
-            html.classList.remove('sidebar-visible');
-            html.classList.add("sidebar-" + sidebar);
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
         </script>
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
@@ -147,7 +151,12 @@
 
                 <div id="search-wrapper" class="hidden">
                     <form id="searchbar-outer" class="searchbar-outer">
-                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
                     </form>
                     <div id="searchresults-outer" class="searchresults-outer hidden">
                         <div id="searchresults-header" class="searchresults-header"></div>
@@ -339,6 +348,44 @@ mod main {
      executer = "copy_act.sh" ;
 }
 <span class="boring">}</span></code></pre></pre>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="变量定义"><a class="header" href="#变量定义">变量定义</a></h1>
+<h2 id="示例-3"><a class="header" href="#示例-3">示例</a></h2>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>    one= "one";
+    sys_a = { mod1 : "A", mod2 : "B" , mod3: 1 , mod4 : 2};
+    sys_b =  [ "C", "D" ];
+    sys_c = ${SYS_B[1]} ;
+    sys_d = ${SYS_A.MOD1} ;
+<span class="boring">}</span></code></pre></pre>
+<h2 id="规测"><a class="header" href="#规测">规测</a></h2>
+<p>在GXL内 变量名不区分大小写</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>mod envs {
+    env default   {
+      data_list =  [ "JAVA", "RUST", "PYTHON"] ;
+      data_obj =  { 
+        JAVA : { NAME: "JAVA", SCORE: 80 }, 
+        RUST : { NAME: "RUST", SCORE: 100 }, 
+        PYTHON : { NAME: "PYTHON", SCORE: 200} 
+        } ;
+    }
+}
+mod main   {
+  flow array_do{
+    for ${CUR} in ${ENV_DATA_LIST} {
+      gx.echo( "CUR:${CUR}" );
+    }
+  }
+  flow obj_do{
+    for ${CUR} in ${ENV_DATA_OBJ} {
+      gx.echo( "CUR:${CUR.NAME} : ${CUR.SCORE}" );
+    }
+  }
+
+}
+<span class="boring">}</span></code></pre></pre>
 <div style="break-before: page; page-break-before: always;"></div><div style="break-before: page; page-break-before: always;"></div><h1 id="flow-1"><a class="header" href="#flow-1">flow</a></h1>
 <h2 id="注解"><a class="header" href="#注解">注解</a></h2>
 <h3 id="task---v060"><a class="header" href="#task---v060">task   (v0.6.0)</a></h3>
@@ -412,6 +459,16 @@ mod main {
   }
 }
 <span class="boring">}</span></code></pre></pre>
+<div style="break-before: page; page-break-before: always;"></div><h2 id="defined"><a class="header" href="#defined">defined</a></h2>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>    if defined(${PRJ_ROOT}) {
+        gx.echo (  "${PRJ_ROOT}/test/main.py"  );
+        }
+        else {
+        gx.echo (  "${PRJ_ROOT}/test/main.py"  );
+    }
+<span class="boring">}</span></code></pre></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="gflow"><a class="header" href="#gflow">gflow</a></h1>
 <pre><code class="language-bash">Usage: gflow [OPTIONS] [FLOW]...
 
@@ -446,7 +503,7 @@ Options:
 <li>result  :  "[true|false]" 默认值为 "true"</li>
 <li>err     :  验证失败后的错误信息。</li>
 </ul>
-<h3 id="示例-3"><a class="header" href="#示例-3">示例:</a></h3>
+<h3 id="示例-4"><a class="header" href="#示例-4">示例:</a></h3>
 <pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span>gx.assert ( value = "hello" , expect : "hello" , result : "false" , err:"test assert"); 
@@ -454,18 +511,18 @@ Options:
 <h2 id="gxcmd"><a class="header" href="#gxcmd">gx.cmd</a></h2>
 <pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
-</span>gx.cmd (  cmd : "${PRJ_ROOT}/do.sh" ); 
+</span>gx.cmd (  cmd : "cat ./test.txt" ); 
 // 可省略 cmd 参数名
-gx.cmd (  "${PRJ_ROOT}/do.sh" ); 
+gx.cmd (  "cat ./test.txt" ); 
 <span class="boring">}</span></code></pre></pre>
 <h3 id="属性参数"><a class="header" href="#属性参数">属性参数</a></h3>
 <ul>
-<li>cmd       [必须][] 执行脚本</li>
+<li>cmd       [必须][] 执行命令</li>
 <li>log       日志输出级别</li>
 <li>quiet     静默，不输出出指令和结果</li>
 <li>expect    期待的结果</li>
 </ul>
-<h3 id="示例-4"><a class="header" href="#示例-4">示例:</a></h3>
+<h3 id="示例-5"><a class="header" href="#示例-5">示例:</a></h3>
 <pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span>gx.cmd (  
@@ -475,19 +532,30 @@ gx.cmd (  "${PRJ_ROOT}/do.sh" );
     expect  : "[0,1,255]" 
  ) 
 <span class="boring">}</span></code></pre></pre>
+<h2 id="gxsheel"><a class="header" href="#gxsheel">gx.sheel</a></h2>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>gx.sheel (  arg_file : "./arg.json ", shell: "${PRJ_ROOT}/do.sh" , out_var : "DO_OUT" ); 
+<span class="boring">}</span></code></pre></pre>
+<h3 id="属性参数-1"><a class="header" href="#属性参数-1">属性参数</a></h3>
+<ul>
+<li>shell       [必须] 执行脚本</li>
+<li>arg_file    脚本参数文件</li>
+<li>out_var     输出变量名</li>
+</ul>
 <h2 id="gxrun"><a class="header" href="#gxrun">gx.run</a></h2>
 <pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span>gx.run (  local: "${PRJ_ROOT}/mod/" ,env : "dev", flow : "conf,test" ); 
 <span class="boring">}</span></code></pre></pre>
-<h3 id="属性参数-1"><a class="header" href="#属性参数-1">属性参数</a></h3>
+<h3 id="属性参数-2"><a class="header" href="#属性参数-2">属性参数</a></h3>
 <ul>
 <li>local   [必须] 运行所在目录</li>
 <li>env     [必须] 运行环境</li>
 <li>flow    [必须]运行的flow</li>
 <li>conf    运行的配置文件</li>
 </ul>
-<h3 id="示例-5"><a class="header" href="#示例-5">示例:</a></h3>
+<h3 id="示例-6"><a class="header" href="#示例-6">示例:</a></h3>
 <pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span>gx.cmd (  
@@ -504,7 +572,7 @@ gx.cmd (  "${PRJ_ROOT}/do.sh" );
 // 可省略 value 参数名
  gx.echo ( "${PRJ_ROOT}/test/main.py"  );
 <span class="boring">}</span></code></pre></pre>
-<h3 id="属性参数-2"><a class="header" href="#属性参数-2">属性参数</a></h3>
+<h3 id="属性参数-3"><a class="header" href="#属性参数-3">属性参数</a></h3>
 <ul>
 <li>value : [必须]需显示的变量</li>
 </ul>
@@ -540,7 +608,7 @@ gx.cmd (  "${PRJ_ROOT}/do.sh" );
    dst : "${PRJ_ROOT}/conf.toml" ,
 );
 <span class="boring">}</span></code></pre></pre>
-<h3 id="属性参数-3"><a class="header" href="#属性参数-3">属性参数</a></h3>
+<h3 id="属性参数-4"><a class="header" href="#属性参数-4">属性参数</a></h3>
 <ul>
 <li>tpl : [必须]模板文件</li>
 <li>dst : [必须]生成目标文件</li>
@@ -570,7 +638,7 @@ gx.cmd (  "${PRJ_ROOT}/do.sh" );
 </span><span class="boring">fn main() {
 </span>gx.ver ( file : "./version.txt" ,  inc : "bugfix"  ); 
 <span class="boring">}</span></code></pre></pre>
-<h3 id="属性参数-4"><a class="header" href="#属性参数-4">属性参数</a></h3>
+<h3 id="属性参数-5"><a class="header" href="#属性参数-5">属性参数</a></h3>
 <ul>
 <li>file :  version.txt 文件</li>
 <li>inc： 增长单位。   有 null,build,bugfix,feature,main 六个选项</li>
@@ -590,29 +658,43 @@ gx.cmd (  "${PRJ_ROOT}/do.sh" );
 <li>password :   密码</li>
 </ul>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="changelog"><a class="header" href="#changelog">Changelog</a></h1>
-<h2 id="070"><a class="header" href="#070">0.7.0</a></h2>
+<h2 id="080"><a class="header" href="#080">0.8.0</a></h2>
 <h3 id="新增"><a class="header" href="#新增">新增</a></h3>
+<ul>
+<li>GXL 支持 数字、BOOL、数组、对象 数据类型</li>
+<li>提供 defined 函数 - 检查变量是否已定义</li>
+<li>提供 gx.shell 方便 shell 调用</li>
+</ul>
+<h3 id="改进"><a class="header" href="#改进">改进</a></h3>
+<ul>
+<li>gx.read_file 读取内容到对象，便于后续处理</li>
+<li>winnow 升级 0.7</li>
+<li>对于远程Mod的获取，去掉外部Git 依赖</li>
+<li>修改外部依赖</li>
+</ul>
+<h2 id="070"><a class="header" href="#070">0.7.0</a></h2>
+<h3 id="新增-1"><a class="header" href="#新增-1">新增</a></h3>
 <ul>
 <li>支持事务机制</li>
 <li>支持dryrun机制 - 允许预览操作结果而不实际执行</li>
 </ul>
 <h3 id="064"><a class="header" href="#064">0.6.4</a></h3>
-<h3 id="新增-1"><a class="header" href="#新增-1">新增</a></h3>
+<h3 id="新增-2"><a class="header" href="#新增-2">新增</a></h3>
 <ul>
 <li>支持 gx.cmd  quiet (静默） - 自定义控制cmd的日志输出与否</li>
 </ul>
 <h3 id="062"><a class="header" href="#062">0.6.2</a></h3>
-<h3 id="新增-2"><a class="header" href="#新增-2">新增</a></h3>
+<h3 id="新增-3"><a class="header" href="#新增-3">新增</a></h3>
 <ul>
 <li>优化日志输出，增加日志的重定向，支持捕获控制台标准日志输出</li>
 </ul>
 <h2 id="060"><a class="header" href="#060">0.6.0</a></h2>
-<h3 id="新增-3"><a class="header" href="#新增-3">新增</a></h3>
+<h3 id="新增-4"><a class="header" href="#新增-4">新增</a></h3>
 <ul>
 <li>生成任务报告 - 提供执行过程和结果的详细信息</li>
 <li>支持flow上的Task注解 - 增强流程定义的灵活性</li>
 </ul>
-<h3 id="改进"><a class="header" href="#改进">改进</a></h3>
+<h3 id="改进-1"><a class="header" href="#改进-1">改进</a></h3>
 <ul>
 <li>改进 flow 编排语法，由: 变为 |  符号</li>
 </ul>
@@ -673,6 +755,7 @@ gx.cmd (  "${PRJ_ROOT}/do.sh" );
             window.setTimeout(window.print, 100);
         });
         </script>
+
 
     </div>
     </body>

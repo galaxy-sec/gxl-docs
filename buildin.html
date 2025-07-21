@@ -36,6 +36,7 @@
             const path_to_root = "";
             const default_light_theme = "light";
             const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "searchindex.js";
         </script>
         <!-- Start loading toc.js asap -->
         <script src="toc.js"></script>
@@ -92,10 +93,13 @@
                 sidebar = sidebar || 'visible';
             } else {
                 sidebar = 'hidden';
+                sidebar_toggle.checked = false;
             }
-            sidebar_toggle.checked = sidebar === 'visible';
-            html.classList.remove('sidebar-visible');
-            html.classList.add("sidebar-" + sidebar);
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
         </script>
 
         <nav id="sidebar" class="sidebar" aria-label="Table of contents">
@@ -146,7 +150,12 @@
 
                 <div id="search-wrapper" class="hidden">
                     <form id="searchbar-outer" class="searchbar-outer">
-                        <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
                     </form>
                     <div id="searchresults-outer" class="searchresults-outer hidden">
                         <div id="searchresults-header" class="searchresults-header"></div>
@@ -193,13 +202,13 @@
 <h2 id="gxcmd"><a class="header" href="#gxcmd">gx.cmd</a></h2>
 <pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
-</span>gx.cmd (  cmd : "${PRJ_ROOT}/do.sh" ); 
+</span>gx.cmd (  cmd : "cat ./test.txt" ); 
 // 可省略 cmd 参数名
-gx.cmd (  "${PRJ_ROOT}/do.sh" ); 
+gx.cmd (  "cat ./test.txt" ); 
 <span class="boring">}</span></code></pre></pre>
 <h3 id="属性参数"><a class="header" href="#属性参数">属性参数</a></h3>
 <ul>
-<li>cmd       [必须][] 执行脚本</li>
+<li>cmd       [必须][] 执行命令</li>
 <li>log       日志输出级别</li>
 <li>quiet     静默，不输出出指令和结果</li>
 <li>expect    期待的结果</li>
@@ -214,12 +223,23 @@ gx.cmd (  "${PRJ_ROOT}/do.sh" );
     expect  : "[0,1,255]" 
  ) 
 <span class="boring">}</span></code></pre></pre>
+<h2 id="gxsheel"><a class="header" href="#gxsheel">gx.sheel</a></h2>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>gx.sheel (  arg_file : "./arg.json ", shell: "${PRJ_ROOT}/do.sh" , out_var : "DO_OUT" ); 
+<span class="boring">}</span></code></pre></pre>
+<h3 id="属性参数-1"><a class="header" href="#属性参数-1">属性参数</a></h3>
+<ul>
+<li>shell       [必须] 执行脚本</li>
+<li>arg_file    脚本参数文件</li>
+<li>out_var     输出变量名</li>
+</ul>
 <h2 id="gxrun"><a class="header" href="#gxrun">gx.run</a></h2>
 <pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span>gx.run (  local: "${PRJ_ROOT}/mod/" ,env : "dev", flow : "conf,test" ); 
 <span class="boring">}</span></code></pre></pre>
-<h3 id="属性参数-1"><a class="header" href="#属性参数-1">属性参数</a></h3>
+<h3 id="属性参数-2"><a class="header" href="#属性参数-2">属性参数</a></h3>
 <ul>
 <li>local   [必须] 运行所在目录</li>
 <li>env     [必须] 运行环境</li>
@@ -243,7 +263,7 @@ gx.cmd (  "${PRJ_ROOT}/do.sh" );
 // 可省略 value 参数名
  gx.echo ( "${PRJ_ROOT}/test/main.py"  );
 <span class="boring">}</span></code></pre></pre>
-<h3 id="属性参数-2"><a class="header" href="#属性参数-2">属性参数</a></h3>
+<h3 id="属性参数-3"><a class="header" href="#属性参数-3">属性参数</a></h3>
 <ul>
 <li>value : [必须]需显示的变量</li>
 </ul>
@@ -279,7 +299,7 @@ gx.cmd (  "${PRJ_ROOT}/do.sh" );
    dst : "${PRJ_ROOT}/conf.toml" ,
 );
 <span class="boring">}</span></code></pre></pre>
-<h3 id="属性参数-3"><a class="header" href="#属性参数-3">属性参数</a></h3>
+<h3 id="属性参数-4"><a class="header" href="#属性参数-4">属性参数</a></h3>
 <ul>
 <li>tpl : [必须]模板文件</li>
 <li>dst : [必须]生成目标文件</li>
@@ -309,7 +329,7 @@ gx.cmd (  "${PRJ_ROOT}/do.sh" );
 </span><span class="boring">fn main() {
 </span>gx.ver ( file : "./version.txt" ,  inc : "bugfix"  ); 
 <span class="boring">}</span></code></pre></pre>
-<h3 id="属性参数-4"><a class="header" href="#属性参数-4">属性参数</a></h3>
+<h3 id="属性参数-5"><a class="header" href="#属性参数-5">属性参数</a></h3>
 <ul>
 <li>file :  version.txt 文件</li>
 <li>inc： 增长单位。   有 null,build,bugfix,feature,main 六个选项</li>
@@ -375,6 +395,7 @@ gx.cmd (  "${PRJ_ROOT}/do.sh" );
         <script src="book.js"></script>
 
         <!-- Custom JS scripts -->
+
 
 
     </div>
