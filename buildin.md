@@ -54,7 +54,7 @@ gx.cmd (
 ## gx.shell
 
 ```rust
-gx.sheel (  arg_file : "./arg.json ", shell: "${PRJ_ROOT}/do.sh" , out_var : "DO_OUT" ); 
+gx.shell (  arg_file : "./arg.json ", shell: "${PRJ_ROOT}/do.sh" , out_var : "DO_OUT" ); 
 ```
 ### 属性参数
 
