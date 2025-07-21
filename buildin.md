@@ -29,14 +29,14 @@ gx.assert ( value = "hello" , expect : "hello" , result : "false" , err:"test as
 ## gx.cmd
 
 ```rust
-gx.cmd (  cmd : "${PRJ_ROOT}/do.sh" ); 
+gx.cmd (  cmd : "cat ./test.txt" ); 
 // 可省略 cmd 参数名
-gx.cmd (  "${PRJ_ROOT}/do.sh" ); 
+gx.cmd (  "cat ./test.txt" ); 
 ```
 
 ### 属性参数
 
-* cmd       [必须][] 执行脚本
+* cmd       [必须][] 执行命令
 * log       日志输出级别
 * quiet     静默，不输出出指令和结果
 * expect    期待的结果
@@ -51,6 +51,16 @@ gx.cmd (
     expect  : "[0,1,255]" 
  ) 
 ```
+## gx.sheel 
+
+```rust
+gx.sheel (  arg_file : "./arg.json ", shell: "${PRJ_ROOT}/do.sh" , out_var : "DO_OUT" ); 
+```
+### 属性参数
+
+* shell       [必须] 执行脚本
+* arg_file    脚本参数文件
+* out_var     输出变量名
 
 ## gx.run
 
