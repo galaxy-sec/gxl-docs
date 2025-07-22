@@ -1,11 +1,12 @@
 # Changelog
 
-## 0.8.0 
+## 0.8.3 
 ### 新增
 * GXL 支持 数字、BOOL、数组、对象 数据类型 
 * 提供 defined 函数 - 检查变量是否已定义
 * 提供 gx.shell 方便 shell 调用
 * 支持 ${VAR:default} 变量定义默认值
+* gprj update mod 支持更新项目依赖的Mod
 ### 改进
 * gx.read_file 读取内容到对象，便于后续处理
 * winnow 升级 0.7
