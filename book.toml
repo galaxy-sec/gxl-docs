@@ -10,5 +10,5 @@ command = "mdbook-mermaid"
 
 
 [output.html]
-additional-css = ["mermaid.css"]
-additional-js = ["mermaid.min.js"]
+additional-css = ["./mermaid.css"]
+additional-js = ["./mermaid.min.js"]
