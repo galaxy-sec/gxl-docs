@@ -658,6 +658,1346 @@ gx.cmd (  "cat ./test.txt" );
 <li>username :   用户名</li>
 <li>password :   密码</li>
 </ul>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="gxl-文件语法"><a class="header" href="#gxl-文件语法">GXL 文件语法</a></h1>
+<h2 id="gxl-语法定义"><a class="header" href="#gxl-语法定义">GXL 语法定义</a></h2>
+<p>GXL（Galaxy Flow Language）是一种为 DevSecOps 自动化工作流设计的领域特定语言。根据代码库中的信息，GXL 的语法定义主要在 galaxy-sec/galaxy-flow 仓库的解析器模块中实现。</p>
+<h3 id="gxl-语法结构"><a class="header" href="#gxl-语法结构">GXL 语法结构</a></h3>
+<p>GXL 语言遵循模块化、层次化的结构，主要由以下核心组件组成：</p>
+<ul>
+<li>模块（Modules）：使用 mod 关键字定义，是 GXL 的顶层组织单元</li>
+<li>环境（Environments）：使用 env 关键字定义，用于配置不同的执行上下文</li>
+<li>流程（Flows）：使用 flow 关键字定义，表示工作流程序</li>
+<li>活动（Activities）：可重用的操作单元，在流程中调用</li>
+</ul>
+<h2 id="ebnf-语法"><a class="header" href="#ebnf-语法">EBNF 语法</a></h2>
+<pre><code class="language-EBNF">
+; GXL 文件由一系列模块定义组成
+GXL-File = *Module
+
+
+(* GXL 文件由一系列模块定义组成 *)
+GXL-File = {Module};
+
+(* 模块定义 *)
+Module = "mod", whitespace, ModuleName, whitespace, "{", whitespace, ModuleContent, whitespace, "}", whitespace, ";";
+ModuleName = Identifier;
+ModuleContent = {Property | Environment | Flow};
+
+(* 属性定义 (键值对) *)
+Property = PropertyName, whitespace, "=", whitespace, PropertyValue, whitespace, ";";
+PropertyName = Identifier;
+PropertyValue = String;
+
+(* 环境定义 *)
+Environment = "env", whitespace, EnvName, [whitespace, ":", whitespace, EnvRefList], whitespace, "{", whitespace, EnvContent, whitespace, "}";
+EnvName = Identifier;
+EnvContent = {Property};
+EnvRefList = EnvRef, {",", whitespace, EnvRef};
+EnvRef = Identifier;
+
+(* 流程定义 - 两种形式：直接定义或引用其他流程 *)
+Flow = DirectFlow | ReferenceFlow;
+
+(* 直接定义流程 *)
+DirectFlow = "flow", whitespace, FlowName, [whitespace, ":", whitespace, FlowRefList [ whitespace , ":" whitespace, FlowRefList ] ], whitespace, "{", whitespace, FlowContent, whitespace, "}", whitespace, ";";
+FlowName = Identifier;
+FlowContent = {Command};
+
+(* 引用其他流程 *)
+ReferenceFlow = "flow", whitespace, FlowName, whitespace, ":", whitespace, FlowRefList, whitespace, ";";
+FlowRefList = FlowRef, {",", whitespace, FlowRef};
+FlowRef = Identifier;
+
+
+(* 命令定义 *)
+Command = (BuiltinCommand | ActivityCall), whitespace, ";";
+
+(* 内置命令 *)
+BuiltinCommand = "gx.", CommandName, whitespace, "{", whitespace, CommandProps, whitespace, "}";
+CommandName = "echo" | "vars" | "cmd" | "read" | "tpl" | "assert" | "ver";
+CommandProps = {PropertyAssignment};
+PropertyAssignment = PropertyName, whitespace, "=", whitespace, PropertyValue, whitespace,  ",";
+
+(* 活动调用 *)
+ActivityCall = ActivityName, whitespace, "{", whitespace, CommandProps, whitespace, "}";
+ActivityName = Identifier, {".", Identifier};
+
+(* 标识符 *)
+Identifier = Alpha, {Alpha | Digit | "_"};
+Alpha = "A" | "B" | ... | "Z" | "a" | "b" | ... | "z";
+Digit = "0" | "1" | ... | "9";
+
+(* 字符串 *)
+String = '"', {StringChar}, '"';
+StringChar = UnescapedChar | EscapedChar;
+UnescapedChar = ? 除了 " 和 \ 的任何字符 ?;
+EscapedChar = "\", ("\" | '"');
+
+(* 变量引用 *)
+VariableRef = "${", VariableName, "}";
+VariableName = Identifier;
+
+(* 空白字符 *)
+whitespace = {" " | "\t" | "\r" | "\n"};
+
+(* 外部模块引用 *)
+ExternModule = "extern", whitespace, "mod", whitespace, ModuleNameList, whitespace, "{", whitespace, ModuleSource, whitespace, "}", whitespace, ";";
+ModuleNameList = ModuleName, {",", whitespace, ModuleName};
+ModuleSource = PathSource | GitSource;
+PathSource = "path", whitespace, "=", whitespace, String;
+GitSource = "git", whitespace, "=", whitespace, String, whitespace, ",", whitespace, "channel", whitespace, "=", whitespace, String;
+
+
+(* 注解 *)
+Annotation = "#[", AnnotationName, ("(", AnnotationParams, ")")?, "]";
+AnnotationName = Identifier;
+AnnotationParams = AnnotationParam, {",", whitespace, AnnotationParam};
+AnnotationParam = Identifier, whitespace, "=", whitespace, String;
+</code></pre>
+<h2 id="示例-7"><a class="header" href="#示例-7">示例</a></h2>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>env dev {
+	root = "${HOME}/my_project";
+	gx.read_cmd {
+		name = "MY_PATH" ;
+		cmd  = "pwd" ;
+	};
+}
+<span class="boring">}</span></code></pre></pre>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>mod my_module {
+    -- 模块属性
+    author = "John Doe";
+    version = "1.0";
+
+    -- 环境定义
+    env test {
+        root = "${HOME}/test_project";
+        gx.read_cmd {
+            name = "TEST_PATH";
+            cmd = "ls";
+        };
+    }
+
+    -- 流程定义
+    flow my_flow {
+        step1 = "execute_task";
+        task1.run {
+            param1 = "value1";
+            param2 = "value2";
+        };
+    }
+}
+<span class="boring">}</span></code></pre></pre>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="示例-8"><a class="header" href="#示例-8">示例</a></h1>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="assert-示例"><a class="header" href="#assert-示例">Assert 示例</a></h1>
+<h2 id="示例代码"><a class="header" href="#示例代码">示例代码</a></h2>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>extern mod os { path= "../../_gal/mods"; }
+mod base_env {
+    env _common {
+      gx.vars {
+        DOMAIN    = "domain" ;
+      }
+    }
+    env cli : _common {
+      ROOT   = "./";
+
+    }
+    env unit_test : _common {
+      ROOT   = "./example";
+    }
+}
+mod envs : base_env {
+    #[usage(desp="default")]
+    env default : cli ;
+    env empty {}
+    env ut : unit_test  ;
+}
+mod base{
+  mod_val = "1";
+  flow define {
+    base = "BASE";
+  }
+  #[auto_load(entry)]
+  flow base_into  {
+    base_begin = "BASE_INTO";
+  }
+  #[auto_load(exit)]
+  flow base_exit {
+    base_end = "BASE_EXIT";
+  }
+}
+mod other {
+  flow def1 {
+    other_val = "OTHER_DEF";
+  }
+  flow def2{
+    other_val = "OTHER_DEF2";
+  }
+}
+mod main   {
+  conf = "${ENV_ROOT}/conf" ;
+
+  #[auto_load(entry)]
+  flow __into  | other.def1  {
+    other_val = "OTHER_DE1";
+  }
+  #[auto_load(exit)]
+  flow __exit | other.def2 ;
+  #[usage(desp="main")]
+  flow assert_main {
+    one= "one";
+    sys_a = { mod1 : "A", mod2 : "B" };
+    sys_b =  [ "C", "D" ];
+    sys_c = ${SYS_B[1]} ;
+    sys_d = ${SYS_A.MOD1} ;
+    gx.assert ( value : "${MAIN_CONF}" , expect : "${ENV_ROOT}/conf" );
+    gx.assert ( value : "${OTHER_VAL}" , expect : "OTHER_DEF" );
+    gx.assert ( value : "${SYS_A.MOD1}" , expect : "A" );
+    gx.assert ( value : "${sys_a.mod1}" , expect : "A" );
+    gx.assert ( value : "${sys_b[0]}" , expect : "C" );
+    gx.assert ( value : "${sys_d}" , expect : "A" );
+  }
+
+  flow base.define | @assert_parent   {
+    gx.assert ( value : "${MAIN_CONF}" , expect : "${ENV_ROOT}/conf" );
+    gx.assert ( value : "${BASE_MOD_VAL}" , expect : "1" );
+    gx.assert ( value : "${OTHER_VAL}" , expect : "OTHER_DEF" );
+    gx.assert ( value : "${BASE}" , expect : "BASE" );
+    gx.assert ( value : "${BASE_BEGIN}" , expect : "BASE_INTO" );
+  }
+
+}
+<span class="boring">}</span></code></pre></pre>
+<h2 id="说明"><a class="header" href="#说明">说明</a></h2>
+<p>这个示例展示了如何使用 <code>gx.assert</code> 命令进行断言检查。在 <code>assert_main</code> 流程中，多个 <code>gx.assert</code> 命令用于验证变量的值是否符合预期。在 <code>base.define</code> 流程中，也使用了 <code>gx.assert</code> 来验证环境变量和模块变量的值。</p>
+<pre><code class="language-mermaid">graph TD
+    A[Start] --&gt; B[Load base_env]
+    B --&gt; C[Load envs]
+    C --&gt; D[Load base module]
+    D --&gt; E[Load other module]
+    E --&gt; F[Load main module]
+    F --&gt; G[Execute __into flow]
+    G --&gt; H[Execute assert_main flow]
+    H --&gt; I[Execute gx.assert commands]
+    I --&gt; J[Execute base.define flow]
+    J --&gt; K[Execute more gx.assert commands]
+    K --&gt; L[Execute __exit flow]
+    L --&gt; M[End]
+</code></pre>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="dryrun-example"><a class="header" href="#dryrun-example">Dryrun Example</a></h1>
+<p>This example demonstrates the dryrun functionality in GXL.</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>mod main {
+
+env default {}
+
+flow _step1 {
+    gx.echo ("step1");
+}
+
+#[dryrun(_step3)]
+flow _step2 {
+    gx.echo ("step2");
+    gx.assert ( value : "true" , expect : "false" );
+}
+
+flow _step3 {
+    gx.echo ("dryrun setp2");
+}
+
+flow start | _step1 | _step2 ;
+
+}
+<span class="boring">}</span></code></pre></pre>
+<pre><code class="language-mermaid">graph TD
+    A[Start] --&gt; B[Load main module]
+    B --&gt; C[Execute start flow]
+    C --&gt; D[Execute _step1 flow]
+    D --&gt; E[Execute _step2 flow]
+    E --&gt; F{Assertion fails?}
+    F --&gt;|Yes| G[Execute _step3 flow]
+    F --&gt;|No| H[End]
+    G --&gt; I[End]
+</code></pre>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="fun-example"><a class="header" href="#fun-example">Fun Example</a></h1>
+<p>This example demonstrates how to define and use functions in GXL.</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>extern mod os { path = "../../_gal/mods"; }
+
+mod sys {
+    fun echo(name) {
+        gx.echo("echo:${name}");
+    }
+    fun echo_obj(obj) {
+        gx.echo("echo_obj:${obj}");
+    }
+    fun echo_list(list) {
+        gx.echo("echo_list:${list}");
+    }
+}
+
+mod envs {
+    env default {
+        DATA = [
+            "JAVA",
+            "RUST",
+            "PYTHON",
+        ];
+        OBJ = {
+            name: "test",
+            value: "value",
+        };
+    }
+}
+
+mod main {
+    flow conf {
+        sys.echo("test");
+        sys.echo_obj("${OBJ}");
+        sys.echo_list("${DATA}");
+    }
+}
+<span class="boring">}</span></code></pre></pre>
+<pre><code class="language-mermaid">graph TD
+    A[Start] --&gt; B[Load sys module]
+    B --&gt; C[Define echo functions]
+    C --&gt; D[Load envs module]
+    D --&gt; E[Load main module]
+    E --&gt; F[Execute conf flow]
+    F --&gt; G[Call sys.echo function]
+    G --&gt; H[Call sys.echo_obj function]
+    H --&gt; I[Call sys.echo_list function]
+    I --&gt; J[End]
+</code></pre>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="read-示例"><a class="header" href="#read-示例">Read 示例</a></h1>
+<h2 id="示例代码-1"><a class="header" href="#示例代码-1">示例代码</a></h2>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>extern mod os { path= "../../_gal/mods"; }
+mod envs {
+    env _dev_local {
+        gx.read_file ( file : "./var.ini" );
+    }
+    env default : _dev_local ;
+}
+mod main   {
+  flow conf  {
+    gx.echo (  "${RUST}" );
+    gx.echo (  "${JAVA}" );
+    gx.assert ( value : "${JAVA}" , expect : "90"  );
+
+    gx.read_cmd (
+        //fail!
+        //cmd  : r#"git branch --show-current |  sed -E "s/(feature|develop|ver-dev|release|master|issue)(\/\.*)?/_branch_\1/g" "# ,
+        //suc!
+        cmd  : "git branch --show-current | sed -E 's/release/rls/g'" ,
+        name : "GIT_BRANCH" );
+
+    gx.echo ( "what:${GIT_BRANCH}" );
+
+    gx.read_file ( file : "./var2.ini" , name : "DATA");
+
+    for ${CUR} in ${DATA} {
+        gx.echo ( value : "${CUR}" );
+    }
+  }
+
+
+
+}
+<span class="boring">}</span></code></pre></pre>
+<pre><code class="language-mermaid">graph TD
+    A[Start] --&gt; B[Load envs module]
+    B --&gt; C[Execute _dev_local env]
+    C --&gt; D[Execute gx.read_file command]
+    D --&gt; E[Load main module]
+    E --&gt; F[Execute conf flow]
+    F --&gt; G[Execute gx.echo commands]
+    G --&gt; H[Execute gx.read_cmd command]
+    H --&gt; I[Execute gx.echo command]
+    I --&gt; J[Execute gx.read_file command]
+    J --&gt; K[Loop through DATA]
+    K --&gt; L[Execute gx.echo command for each item]
+    L --&gt; M[End]
+</code></pre>
+<h2 id="说明-1"><a class="header" href="#说明-1">说明</a></h2>
+<p>这个示例展示了如何使用 <code>gx.read</code> 命令从不同来源读取数据。在 <code>_dev_local</code> 环境中，使用 <code>gx.read_file</code> 从 <code>var.ini</code> 文件读取数据。在 <code>conf</code> 流程中，使用 <code>gx.read_cmd</code> 执行 Git 命令并捕获输出，以及使用 <code>gx.read_file</code> 从 <code>var2.ini</code> 文件读取数据。还展示了如何遍历读取的数据。</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="shell-example"><a class="header" href="#shell-example">Shell Example</a></h1>
+<p>This example demonstrates how to execute shell commands in GXL.</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>extern mod os { path = "../../_gal/mods"; }
+
+mod envs {
+    env _dev_local {}
+    env default : _dev_local;
+}
+
+mod main {
+    flow conf {
+        gx.read_file(file: "./var.yml", name: "VAR");
+        gx.echo("what:${VAR.MEMBER.JAVA}");
+
+        gx.shell(
+            arg_file: "./var.json",
+            shell: "./demo.sh",
+            out_var: "SYS_OUT");
+
+        gx.echo("what:${SYS_OUT}");
+
+        gx.read_file(file: "./var_list.yml", name: "DATA");
+        for ${CUR} in ${DATA.DEV_LANG} {
+            gx.shell(
+                shell: "./demo_ex.sh ${CUR}",
+                out_var: "SYS_OUT");
+            gx.echo("what:${SYS_OUT}");
+        }
+
+        gx.read_file(file: "./var_obj.yml", name: "DATA");
+        for ${CUR} in ${DATA} {
+            gx.shell(
+                shell: "./demo_ex.sh ${CUR.SYS.NAME}",
+                out_var: "SYS_OUT");
+            gx.echo("what:${SYS_OUT}");
+        }
+    }
+    flow do_obj {
+        gx.read_file(file: "./var_obj.yml", name: "DATA");
+        for ${CUR} in ${DATA} {
+            //gx.echo( "CUR:${CUR.SYS.NAME}" );
+            gx.shell(
+                shell: "./demo_ex.sh ${CUR.SYS.NAME}",
+                out_var: "SYS_OUT");
+            gx.echo("what:${SYS_OUT}");
+        }
+    }
+}
+<span class="boring">}</span></code></pre></pre>
+<h2 id="说明-2"><a class="header" href="#说明-2">说明</a></h2>
+<p>这个示例展示了如何使用 <code>gx.shell</code> 命令执行 shell 脚本。在 <code>conf</code> 流程中，首先从 <code>var.yml</code> 文件读取数据，然后使用 <code>gx.shell</code> 执行 <code>demo.sh</code> 脚本，并通过 <code>arg_file</code> 参数传递 <code>var.json</code> 文件。还展示了如何在循环中执行 shell 脚本，并处理列表和对象数据。</p>
+<pre><code class="language-mermaid">graph TD
+    A[Start] --&gt; B[Load envs module]
+    B --&gt; C[Load main module]
+    C --&gt; D[Execute conf flow]
+    D --&gt; E[Execute gx.read_file command]
+    E --&gt; F[Execute gx.echo command]
+    F --&gt; G[Execute gx.shell command]
+    G --&gt; H[Execute gx.echo command]
+    H --&gt; I[Execute gx.read_file command]
+    I --&gt; J[Loop through DATA.DEV_LANG]
+    J --&gt; K[Execute gx.shell command for each item]
+    K --&gt; L[Execute gx.echo command]
+    L --&gt; M[Execute gx.read_file command]
+    M --&gt; N[Loop through DATA]
+    N --&gt; O[Execute gx.shell command for each item]
+    O --&gt; P[Execute gx.echo command]
+    P --&gt; Q[End]
+</code></pre>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="template-example"><a class="header" href="#template-example">Template Example</a></h1>
+<p>This example demonstrates how to use templates in GXL.</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>extern mod os { path = "../../_gal/mods"; }
+
+mod base_env {
+    env _common {
+        gx.vars {
+            DOMAIN = "domain";
+            SOCK_FILE = "socket";
+            GXL_PRJ_ROOT = "./";
+        }
+    }
+    env cli : _common {
+        ROOT = "./";
+    }
+    env unit_test : _common {
+        ROOT = "./example";
+    }
+}
+
+mod envs : base_env {
+    #[usage(desp = "default")]
+    env default : cli;
+    env empty {}
+    env ut : unit_test;
+}
+
+mod main {
+    conf = "${ENV_ROOT}/conf";
+    flow conf {
+        os.path(dst: "${MAIN_CONF}/used", keep: "true");
+        gx.tpl(
+            tpl: "${MAIN_CONF}/tpls/",
+            dst: "${MAIN_CONF}/used/",
+            file: "${MAIN_CONF}/value.json");
+
+        ```cmd
+        echo "hello";
+        cp ./conf/value.json ./conf/used/back.json;
+        ```
+    }
+}
+<span class="boring">}</span></code></pre></pre>
+<h2 id="description"><a class="header" href="#description">Description</a></h2>
+<p>This example shows how to use the <code>gx.tpl</code> command to process template files. In the <code>conf</code> flow, the <code>os.path</code> command is first used to create the target directory, then the <code>gx.tpl</code> command renders template files from the <code>tpls</code> directory based on values in the <code>value.json</code> file and outputs them to the <code>used</code> directory. Finally, an inline shell command block is shown to copy a file.</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="transaction-example"><a class="header" href="#transaction-example">Transaction Example</a></h1>
+<p>This example demonstrates how to use transactions in GXL.</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>extern mod base { path = "./_gal/"; }
+
+mod envs {
+    env default {};
+}
+
+mod main {
+    flow trans1 | step1 | step2 | base.base_step1 | step3;
+    flow trans2 | step1 | step3 | step2;
+
+    #[transaction, undo(_undo_step1)]
+    flow step1 {
+        gx.echo(" step1 ");
+    }
+    #[undo(_undo_step2)]
+    flow step2 {
+        gx.echo(" step2 ");
+    }
+    #[undo(_undo_step3)]
+    flow step3 {
+        gx.echo(" step3 ");
+        gx.assert(value: "true", expect: "false");
+    }
+
+    flow _undo_step1 {
+        gx.echo(" undo step1 ");
+    }
+    flow _undo_step2 {
+        gx.echo(" undo step2 ");
+    }
+    flow _undo_step3 {
+        gx.echo(" undo step3 ");
+    }
+}
+<span class="boring">}</span></code></pre></pre>
+<pre><code class="language-mermaid">graph TD
+    A[Start] --&gt; B[Load base module]
+    B --&gt; C[Load envs module]
+    C --&gt; D[Load main module]
+    D --&gt; E[Define flows]
+    E --&gt; F[Execute trans1 flow]
+    F --&gt; G[Execute step1 flow]
+    G --&gt; H[Execute step2 flow]
+    H --&gt; I[Execute base.base_step1 flow]
+    I --&gt; J[Execute step3 flow]
+    J --&gt; K[Execute trans2 flow]
+    K --&gt; L[Execute step1 flow]
+    L --&gt; M[Execute step3 flow]
+    M --&gt; N[Execute step2 flow]
+    N --&gt; O[End]
+</code></pre>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="vars-example"><a class="header" href="#vars-example">Vars Example</a></h1>
+<p>This example demonstrates how to define and use variables in GXL.</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>mod envs {
+    env default {
+        data_list = [
+            "JAVA",
+            "RUST",
+            "PYTHON",
+        ];
+        data_obj = {
+            JAVA: { NAME: "JAVA", SCORE: 80 },
+            RUST: { NAME: "RUST", SCORE: 100 },
+            PYTHON: { NAME: "PYTHON", SCORE: 200 },
+        };
+    }
+}
+
+mod main {
+    flow array_do {
+        for ${CUR} in ${ENV.DATA_LIST} {
+            gx.echo("CUR:${CUR}");
+        }
+    }
+    flow obj_do {
+        for ${CUR} in ${ENV.DATA_OBJ} {
+            gx.echo("CUR:${CUR.NAME} : ${CUR.SCORE}");
+        }
+    }
+}
+<span class="boring">}</span></code></pre></pre>
+<h2 id="description-1"><a class="header" href="#description-1">Description</a></h2>
+<p>This example shows how to define variables in an environment and how to use these variables in flows. In the <code>default</code> environment, a list <code>data_list</code> and an object <code>data_obj</code> are defined. In the <code>array_do</code> flow, the <code>data_list</code> list is iterated over and each element is output. In the <code>obj_do</code> flow, the <code>data_obj</code> object is iterated over and the properties of each object are output.</p>
+<pre><code class="language-mermaid">graph TD
+    A[Start] --&gt; B[Load envs module]
+    B --&gt; C[Define data_list and data_obj variables]
+    C --&gt; D[Load main module]
+    D --&gt; E[Execute array_do flow]
+    E --&gt; F[Loop through ENV.DATA_LIST]
+    F --&gt; G[Execute gx.echo command for each item]
+    G --&gt; H[Execute obj_do flow]
+    H --&gt; I[Loop through ENV.DATA_OBJ]
+    I --&gt; J[Execute gx.echo command for each item]
+    J --&gt; K[End]
+</code></pre>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="galaxy-flow-内置能力文档"><a class="header" href="#galaxy-flow-内置能力文档">Galaxy Flow 内置能力文档</a></h1>
+<p>本文档详细描述了Galaxy Flow中所有内置能力的语法定义和使用示例。</p>
+<h2 id="gxassert-1"><a class="header" href="#gxassert-1">gx.assert</a></h2>
+<h3 id="功能描述"><a class="header" href="#功能描述">功能描述</a></h3>
+<p>执行断言检查，验证表达式的值是否符合预期。</p>
+<h3 id="语法定义"><a class="header" href="#语法定义">语法定义</a></h3>
+<pre><code class="language-gxl">gx.assert {
+  value: &lt;表达式&gt;,      // 要检查的值
+  expect: &lt;期望值&gt;,     // 期望的值
+  err: &lt;错误信息&gt;,      // 断言失败时的错误信息（可选）
+  result: &lt;变量名&gt;      // 存储断言结果的变量名（可选）
+}
+</code></pre>
+<h3 id="示例代码-2"><a class="header" href="#示例代码-2">示例代码</a></h3>
+<pre><code class="language-gxl">// 检查变量值是否等于期望值
+gx.assert {
+  value: ${MY_VAR},
+  expect: "expected_value",
+  err: "MY_VAR值不正确"
+}
+
+// 检查表达式结果并存储结果
+gx.assert {
+  value: ${CALC_RESULT},
+  expect: 42,
+  result: "assert_result"
+}
+</code></pre>
+<h2 id="gxcmd-1"><a class="header" href="#gxcmd-1">gx.cmd</a></h2>
+<h3 id="功能描述-1"><a class="header" href="#功能描述-1">功能描述</a></h3>
+<p>执行系统命令或脚本。</p>
+<h3 id="语法定义-1"><a class="header" href="#语法定义-1">语法定义</a></h3>
+<pre><code class="language-gxl">gx.cmd {
+  cmd: &lt;命令字符串&gt;,     // 要执行的命令
+  shell: &lt;Shell类型&gt;,    // 指定使用的Shell（可选）
+  out: &lt;输出变量名&gt;,     // 捕获命令标准输出的变量名（可选）
+  err: &lt;错误变量名&gt;,     // 捕获命令错误输出的变量名（可选）
+  suc: &lt;成功标识&gt;,       // 命令执行成功的标识（可选）
+  sudo: &lt;布尔值&gt;,        // 是否使用sudo权限执行（可选）
+  log: &lt;日志级别&gt;,       // 日志记录级别（可选）
+  silence: &lt;布尔值&gt;      // 是否静默执行（可选）
+}
+</code></pre>
+<h3 id="示例代码-3"><a class="header" href="#示例代码-3">示例代码</a></h3>
+<pre><code class="language-gxl">// 执行简单命令
+gx.cmd {
+  cmd: "ls -la"
+}
+
+// 执行命令并捕获输出
+gx.cmd {
+  cmd: "date",
+  out: "current_date"
+}
+
+// 使用sudo权限执行命令
+gx.cmd {
+  cmd: "systemctl restart nginx",
+  sudo: true
+}
+</code></pre>
+<h2 id="gxecho-1"><a class="header" href="#gxecho-1">gx.echo</a></h2>
+<h3 id="功能描述-2"><a class="header" href="#功能描述-2">功能描述</a></h3>
+<p>输出文本信息到控制台。</p>
+<h3 id="语法定义-2"><a class="header" href="#语法定义-2">语法定义</a></h3>
+<pre><code class="language-gxl">gx.echo {
+  value: &lt;文本内容&gt;,     // 要输出的文本内容
+  file: &lt;文件路径&gt;,      // 输出到文件的路径（可选）
+  export: &lt;变量名&gt;,      // 导出为环境变量的名称（可选）
+  inc: &lt;布尔值&gt;          // 是否追加到文件末尾（可选）
+}
+</code></pre>
+<h3 id="示例代码-4"><a class="header" href="#示例代码-4">示例代码</a></h3>
+<pre><code class="language-gxl">// 输出简单文本
+gx.echo {
+  value: "Hello, Galaxy Flow!"
+}
+
+// 输出到文件
+gx.echo {
+  value: "This is a log entry",
+  file: "app.log"
+}
+
+// 追加到文件
+gx.echo {
+  value: "Additional information",
+  file: "app.log",
+  inc: true
+}
+
+// 导出为环境变量
+gx.echo {
+  value: "production",
+  export: "ENV_TYPE"
+}
+</code></pre>
+<h2 id="gxread-1"><a class="header" href="#gxread-1">gx.read</a></h2>
+<h3 id="功能描述-3"><a class="header" href="#功能描述-3">功能描述</a></h3>
+<p>从不同来源读取数据并存储到变量中。</p>
+<h3 id="语法定义-3"><a class="header" href="#语法定义-3">语法定义</a></h3>
+<pre><code class="language-gxl">// 从文件读取
+gx.read_file {
+  file: &lt;文件路径&gt;,      // 要读取的文件路径
+  name: &lt;变量名&gt;         // 存储文件内容的变量名
+}
+
+// 从标准输入读取
+gx.read_stdin {
+  name: &lt;变量名&gt;,        // 存储输入内容的变量名
+  prompt: &lt;提示文本&gt;     // 输入提示文本（可选）
+}
+
+// 从命令输出读取
+gx.read_cmd {
+  cmd: &lt;命令字符串&gt;,     // 要执行的命令
+  name: &lt;变量名&gt;,        // 存储命令输出的变量名
+  shell: &lt;Shell类型&gt;     // 指定使用的Shell（可选）
+}
+</code></pre>
+<h3 id="示例代码-5"><a class="header" href="#示例代码-5">示例代码</a></h3>
+<pre><code class="language-gxl">// 从文件读取内容
+gx.read_file {
+  file: "config.json",
+  name: "config_data"
+}
+
+// 从标准输入读取
+gx.read_stdin {
+  name: "user_input",
+  prompt: "请输入您的姓名: "
+}
+
+// 从命令输出读取
+gx.read_cmd {
+  cmd: "git rev-parse HEAD",
+  name: "commit_hash"
+}
+</code></pre>
+<h2 id="gxvars-1"><a class="header" href="#gxvars-1">gx.vars</a></h2>
+<h3 id="功能描述-4"><a class="header" href="#功能描述-4">功能描述</a></h3>
+<p>定义和设置多个变量。</p>
+<h3 id="语法定义-4"><a class="header" href="#语法定义-4">语法定义</a></h3>
+<pre><code class="language-gxl">gx.vars {
+  &lt;变量名1&gt;: &lt;值1&gt;,      // 变量名和对应的值
+  &lt;变量名2&gt;: &lt;值2&gt;,      // 可以定义多个变量
+  // ...
+}
+</code></pre>
+<h3 id="示例代码-6"><a class="header" href="#示例代码-6">示例代码</a></h3>
+<pre><code class="language-gxl">// 定义多个变量
+gx.vars {
+  app_name: "MyApp",
+  version: "1.0.0",
+  debug: true
+}
+
+// 使用变量引用
+gx.vars {
+  project_root: "${HOME}/projects",
+  config_file: "${project_root}/config.yaml"
+}
+</code></pre>
+<h2 id="gxtpl-1"><a class="header" href="#gxtpl-1">gx.tpl</a></h2>
+<h3 id="功能描述-5"><a class="header" href="#功能描述-5">功能描述</a></h3>
+<p>使用模板引擎处理文件模板。</p>
+<h3 id="语法定义-5"><a class="header" href="#语法定义-5">语法定义</a></h3>
+<pre><code class="language-gxl">gx.tpl {
+  tpl: &lt;模板内容&gt;,       // 模板内容
+  dst: &lt;目标文件路径&gt;,   // 生成文件的路径
+  data: &lt;数据变量名&gt;,    // 模板数据变量名（可选）
+  engine: &lt;引擎类型&gt;,    // 模板引擎类型（可选）
+  file: &lt;模板文件路径&gt;   // 模板文件路径（可选，与tpl互斥）
+}
+</code></pre>
+<h3 id="示例代码-7"><a class="header" href="#示例代码-7">示例代码</a></h3>
+<pre><code class="language-gxl">// 使用内联模板
+gx.tpl {
+  tpl: "Hello, {{name}}! Welcome to {{app_name}}.",
+  dst: "output.txt",
+  data: "user_data"
+}
+
+// 使用模板文件
+gx.tpl {
+  file: "template.txt",
+  dst: "output.txt",
+  data: "template_data"
+}
+</code></pre>
+<h2 id="gxver-1"><a class="header" href="#gxver-1">gx.ver</a></h2>
+<h3 id="功能描述-6"><a class="header" href="#功能描述-6">功能描述</a></h3>
+<p>管理和操作版本信息。</p>
+<h3 id="语法定义-6"><a class="header" href="#语法定义-6">语法定义</a></h3>
+<pre><code class="language-gxl">gx.ver {
+  value: &lt;版本值&gt;,       // 版本值
+  default: &lt;默认值&gt;,     // 默认版本值（可选）
+  file: &lt;文件路径&gt;,      // 版本文件路径（可选）
+  export: &lt;变量名&gt;,      // 导出版本信息的变量名（可选）
+  inc: &lt;递增类型&gt;        // 版本递增类型（可选，可选值：build/bugfix/feature/main）
+}
+</code></pre>
+<h3 id="示例代码-8"><a class="header" href="#示例代码-8">示例代码</a></h3>
+<pre><code class="language-gxl">// 设置版本值
+gx.ver {
+  value: "1.2.3"
+}
+
+// 从文件读取版本并递增
+gx.ver {
+  file: "VERSION",
+  inc: "feature"
+}
+
+// 导出版本信息
+gx.ver {
+  value: "2.0.0",
+  export: "APP_VERSION"
+}
+</code></pre>
+<h2 id="gxshell-1"><a class="header" href="#gxshell-1">gx.shell</a></h2>
+<h3 id="功能描述-7"><a class="header" href="#功能描述-7">功能描述</a></h3>
+<p>执行Shell脚本文件。</p>
+<h3 id="语法定义-7"><a class="header" href="#语法定义-7">语法定义</a></h3>
+<pre><code class="language-gxl">gx.shell {
+  shell: &lt;脚本文件路径&gt;,  // 要执行的Shell脚本文件路径
+  arg_file: &lt;参数文件&gt;,   // 参数文件路径（可选）
+  out_var: &lt;输出变量名&gt;,  // 捕获脚本输出的变量名（可选）
+  default: &lt;默认脚本&gt;     // 默认脚本文件路径（可选，与shell互斥）
+}
+</code></pre>
+<h3 id="示例代码-9"><a class="header" href="#示例代码-9">示例代码</a></h3>
+<pre><code class="language-gxl">// 执行Shell脚本
+gx.shell {
+  shell: "deploy.sh"
+}
+
+// 执行脚本并捕获输出
+gx.shell {
+  shell: "build.sh",
+  out_var: "build_output"
+}
+
+// 使用参数文件
+gx.shell {
+  shell: "install.sh",
+  arg_file: "install.args"
+}
+</code></pre>
+<h2 id="gxdownload-和-gxupload"><a class="header" href="#gxdownload-和-gxupload">gx.download 和 gx.upload</a></h2>
+<h3 id="功能描述-8"><a class="header" href="#功能描述-8">功能描述</a></h3>
+<p>下载和上传文件。</p>
+<h3 id="语法定义-8"><a class="header" href="#语法定义-8">语法定义</a></h3>
+<pre><code class="language-gxl">// 下载文件
+gx.download {
+  url: &lt;下载URL&gt;,        // 文件下载URL
+  local_file: &lt;本地路径&gt;, // 保存到本地的文件路径
+  username: &lt;用户名&gt;,     // 认证用户名（可选）
+  password: &lt;密码&gt;        // 认证密码（可选）
+}
+
+// 上传文件
+gx.upload {
+  url: &lt;上传URL&gt;,        // 文件上传URL
+  local_file: &lt;本地路径&gt;, // 要上传的本地文件路径
+  method: &lt;HTTP方法&gt;,     // HTTP方法（如POST、PUT等，默认POST）
+  username: &lt;用户名&gt;,     // 认证用户名（可选）
+  password: &lt;密码&gt;        // 认证密码（可选）
+}
+</code></pre>
+<h3 id="示例代码-10"><a class="header" href="#示例代码-10">示例代码</a></h3>
+<pre><code class="language-gxl">// 下载文件
+gx.download {
+  url: "https://example.com/file.zip",
+  local_file: "downloaded_file.zip"
+}
+
+// 上传文件
+gx.upload {
+  url: "https://example.com/upload",
+  local_file: "local_file.txt",
+  method: "POST"
+}
+</code></pre>
+<h2 id="gxtar-和-gxuntar"><a class="header" href="#gxtar-和-gxuntar">gx.tar 和 gx.untar</a></h2>
+<h3 id="功能描述-9"><a class="header" href="#功能描述-9">功能描述</a></h3>
+<p>创建和解压tar归档文件。</p>
+<h3 id="语法定义-9"><a class="header" href="#语法定义-9">语法定义</a></h3>
+<pre><code class="language-gxl">// 创建tar归档
+gx.tar {
+  src: &lt;源文件/目录&gt;,     // 要归档的源文件或目录
+  file: &lt;归档文件名&gt;      // 生成的归档文件名
+}
+
+// 解压tar归档
+gx.untar {
+  file: &lt;归档文件名&gt;,     // 要解压的归档文件
+  dst: &lt;目标目录&gt;         // 解压到的目标目录
+}
+</code></pre>
+<h3 id="示例代码-11"><a class="header" href="#示例代码-11">示例代码</a></h3>
+<pre><code class="language-gxl">// 创建tar归档
+gx.tar {
+  src: "src/",
+  file: "source.tar"
+}
+
+// 解压tar归档
+gx.untar {
+  file: "source.tar",
+  dst: "extracted/"
+}
+</code></pre>
+<h2 id="gxartifact"><a class="header" href="#gxartifact">gx.artifact</a></h2>
+<h3 id="功能描述-10"><a class="header" href="#功能描述-10">功能描述</a></h3>
+<p>处理构建产物文件。</p>
+<h3 id="语法定义-10"><a class="header" href="#语法定义-10">语法定义</a></h3>
+<pre><code class="language-gxl">gx.artifact {
+  file: &lt;文件路径&gt;,       // 构建产物文件路径
+  dst_path: &lt;目标路径&gt;    // 目标存储路径
+}
+</code></pre>
+<h3 id="示例代码-12"><a class="header" href="#示例代码-12">示例代码</a></h3>
+<pre><code class="language-gxl">// 处理构建产物
+gx.artifact {
+  file: "target/release/myapp",
+  dst_path: "artifacts/v1.0.0/"
+}
+</code></pre>
+<h2 id="gxrun-1"><a class="header" href="#gxrun-1">gx.run</a></h2>
+<h3 id="功能描述-11"><a class="header" href="#功能描述-11">功能描述</a></h3>
+<p>运行其他GXL工作流文件。</p>
+<h3 id="语法定义-11"><a class="header" href="#语法定义-11">语法定义</a></h3>
+<pre><code class="language-gxl">gx.run {
+  local: &lt;工作流路径&gt;,    // 要运行的工作流文件路径
+  env: &lt;环境配置&gt;,        // 环境配置（可选）
+  flow: &lt;流程列表&gt;,       // 要执行的流程列表（可选）
+  conf: &lt;配置文件&gt;,       // 配置文件路径（可选）
+  isolate: &lt;布尔值&gt;       // 是否隔离环境（可选）
+}
+</code></pre>
+<h3 id="示例代码-13"><a class="header" href="#示例代码-13">示例代码</a></h3>
+<pre><code class="language-gxl">// 运行其他工作流
+gx.run {
+  local: "./subflow.gxl"
+}
+
+// 在特定环境中运行工作流
+gx.run {
+  local: "./deploy.gxl",
+  env: "production",
+  flow: "build,deploy"
+}
+
+// 隔离环境运行
+gx.run {
+  local: "./test.gxl",
+  isolate: true
+}
+</code></pre>
+<h2 id="gxdefined"><a class="header" href="#gxdefined">gx.defined</a></h2>
+<h3 id="功能描述-12"><a class="header" href="#功能描述-12">功能描述</a></h3>
+<p>检查变量是否已定义。</p>
+<h3 id="语法定义-12"><a class="header" href="#语法定义-12">语法定义</a></h3>
+<pre><code class="language-gxl">gx.defined(${变量名})
+</code></pre>
+<h3 id="示例代码-14"><a class="header" href="#示例代码-14">示例代码</a></h3>
+<pre><code class="language-gxl">// 检查变量是否已定义
+if (gx.defined(${MY_VAR})) {
+  gx.echo { value: "MY_VAR已定义，值为: ${MY_VAR}" }
+} else {
+  gx.echo { value: "MY_VAR未定义" }
+}
+</code></pre>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="gxartifact-1"><a class="header" href="#gxartifact-1">gx.artifact</a></h1>
+<h2 id="功能描述-13"><a class="header" href="#功能描述-13">功能描述</a></h2>
+<p>处理构建产物文件。</p>
+<h2 id="语法定义-13"><a class="header" href="#语法定义-13">语法定义</a></h2>
+<pre><code class="language-gxl">gx.artifact {
+  file: &lt;文件路径&gt;,       // 构建产物文件路径
+  dst_path: &lt;目标路径&gt;    // 目标存储路径
+}
+</code></pre>
+<h2 id="示例代码-15"><a class="header" href="#示例代码-15">示例代码</a></h2>
+<pre><code class="language-gxl">// 处理构建产物
+gx.artifact {
+  file: "target/release/myapp",
+  dst_path: "artifacts/v1.0.0/"
+}
+</code></pre>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="gxassert-2"><a class="header" href="#gxassert-2">gx.assert</a></h1>
+<h2 id="功能描述-14"><a class="header" href="#功能描述-14">功能描述</a></h2>
+<p>执行断言检查，验证表达式的值是否符合预期。</p>
+<h2 id="语法定义-14"><a class="header" href="#语法定义-14">语法定义</a></h2>
+<pre><code class="language-gxl">gx.assert {
+  value: &lt;表达式&gt;,      // 要检查的值
+  expect: &lt;期望值&gt;,     // 期望的值
+  err: &lt;错误信息&gt;,      // 断言失败时的错误信息（可选）
+  result: &lt;变量名&gt;      // 存储断言结果的变量名（可选）
+}
+</code></pre>
+<h2 id="示例代码-16"><a class="header" href="#示例代码-16">示例代码</a></h2>
+<pre><code class="language-gxl">// 检查变量值是否等于期望值
+gx.assert {
+  value: ${MY_VAR},
+  expect: "expected_value",
+  err: "MY_VAR值不正确"
+}
+
+// 检查表达式结果并存储结果
+gx.assert {
+  value: ${CALC_RESULT},
+  expect: 42,
+  result: "assert_result"
+}
+</code></pre>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="gxcmd-2"><a class="header" href="#gxcmd-2">gx.cmd</a></h1>
+<h2 id="功能描述-15"><a class="header" href="#功能描述-15">功能描述</a></h2>
+<p>执行系统命令或脚本。</p>
+<h2 id="语法定义-15"><a class="header" href="#语法定义-15">语法定义</a></h2>
+<pre><code class="language-gxl">gx.cmd {
+  cmd: &lt;命令字符串&gt;,     // 要执行的命令
+  shell: &lt;Shell类型&gt;,    // 指定使用的Shell（可选）
+  out: &lt;输出变量名&gt;,     // 捕获命令标准输出的变量名（可选）
+  err: &lt;错误变量名&gt;,     // 捕获命令错误输出的变量名（可选）
+  suc: &lt;成功标识&gt;,       // 命令执行成功的标识（可选）
+  sudo: &lt;布尔值&gt;,        // 是否使用sudo权限执行（可选）
+  log: &lt;日志级别&gt;,       // 日志记录级别（可选）
+  silence: &lt;布尔值&gt;      // 是否静默执行（可选）
+}
+</code></pre>
+<h2 id="示例代码-17"><a class="header" href="#示例代码-17">示例代码</a></h2>
+<pre><code class="language-gxl">// 执行简单命令
+gx.cmd {
+  cmd: "ls -la"
+}
+
+// 执行命令并捕获输出
+gx.cmd {
+  cmd: "date",
+  out: "current_date"
+}
+
+// 使用sudo权限执行命令
+gx.cmd {
+  cmd: "systemctl restart nginx",
+  sudo: true
+}
+</code></pre>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="gxdefined-1"><a class="header" href="#gxdefined-1">gx.defined</a></h1>
+<h2 id="功能描述-16"><a class="header" href="#功能描述-16">功能描述</a></h2>
+<p>检查变量是否已定义。</p>
+<h2 id="语法定义-16"><a class="header" href="#语法定义-16">语法定义</a></h2>
+<pre><code class="language-gxl">gx.defined(${变量名})
+</code></pre>
+<h2 id="示例代码-18"><a class="header" href="#示例代码-18">示例代码</a></h2>
+<pre><code class="language-gxl">// 检查变量是否已定义
+if (gx.defined(${MY_VAR})) {
+  gx.echo { value: "MY_VAR已定义，值为: ${MY_VAR}" }
+} else {
+  gx.echo { value: "MY_VAR未定义" }
+}
+</code></pre>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="gxdownload-和-gxupload-1"><a class="header" href="#gxdownload-和-gxupload-1">gx.download 和 gx.upload</a></h1>
+<h2 id="功能描述-17"><a class="header" href="#功能描述-17">功能描述</a></h2>
+<p>下载和上传文件。</p>
+<h2 id="语法定义-17"><a class="header" href="#语法定义-17">语法定义</a></h2>
+<pre><code class="language-gxl">// 下载文件
+gx.download {
+  url: &lt;下载URL&gt;,        // 文件下载URL
+  local_file: &lt;本地路径&gt;, // 保存到本地的文件路径
+  username: &lt;用户名&gt;,     // 认证用户名（可选）
+  password: &lt;密码&gt;        // 认证密码（可选）
+}
+
+// 上传文件
+gx.upload {
+  url: &lt;上传URL&gt;,        // 文件上传URL
+  local_file: &lt;本地路径&gt;, // 要上传的本地文件路径
+  method: &lt;HTTP方法&gt;,     // HTTP方法（如POST、PUT等，默认POST）
+  username: &lt;用户名&gt;,     // 认证用户名（可选）
+  password: &lt;密码&gt;        // 认证密码（可选）
+}
+</code></pre>
+<h2 id="示例代码-19"><a class="header" href="#示例代码-19">示例代码</a></h2>
+<pre><code class="language-gxl">// 下载文件
+gx.download {
+  url: "https://example.com/file.zip",
+  local_file: "downloaded_file.zip"
+}
+
+// 上传文件
+gx.upload {
+  url: "https://example.com/upload",
+  local_file: "local_file.txt",
+  method: "POST"
+}
+</code></pre>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="gxecho-2"><a class="header" href="#gxecho-2">gx.echo</a></h1>
+<h2 id="功能描述-18"><a class="header" href="#功能描述-18">功能描述</a></h2>
+<p>输出文本信息到控制台。</p>
+<h2 id="语法定义-18"><a class="header" href="#语法定义-18">语法定义</a></h2>
+<pre><code class="language-gxl">gx.echo {
+  value: &lt;文本内容&gt;,     // 要输出的文本内容
+  file: &lt;文件路径&gt;,      // 输出到文件的路径（可选）
+  export: &lt;变量名&gt;,      // 导出为环境变量的名称（可选）
+  inc: &lt;布尔值&gt;          // 是否追加到文件末尾（可选）
+}
+</code></pre>
+<h2 id="示例代码-20"><a class="header" href="#示例代码-20">示例代码</a></h2>
+<pre><code class="language-gxl">// 输出简单文本
+gx.echo {
+  value: "Hello, Galaxy Flow!"
+}
+
+// 输出到文件
+gx.echo {
+  value: "This is a log entry",
+  file: "app.log"
+}
+
+// 追加到文件
+gx.echo {
+  value: "Additional information",
+  file: "app.log",
+  inc: true
+}
+
+// 导出为环境变量
+gx.echo {
+  value: "production",
+  export: "ENV_TYPE"
+}
+</code></pre>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="gxread-2"><a class="header" href="#gxread-2">gx.read</a></h1>
+<h2 id="功能描述-19"><a class="header" href="#功能描述-19">功能描述</a></h2>
+<p>从不同来源读取数据并存储到变量中。</p>
+<h2 id="语法定义-19"><a class="header" href="#语法定义-19">语法定义</a></h2>
+<pre><code class="language-gxl">// 从文件读取
+gx.read_file {
+  file: &lt;文件路径&gt;,      // 要读取的文件路径
+  name: &lt;变量名&gt;         // 存储文件内容的变量名
+}
+
+// 从标准输入读取
+gx.read_stdin {
+  name: &lt;变量名&gt;,        // 存储输入内容的变量名
+  prompt: &lt;提示文本&gt;     // 输入提示文本（可选）
+}
+
+// 从命令输出读取
+gx.read_cmd {
+  cmd: &lt;命令字符串&gt;,     // 要执行的命令
+  name: &lt;变量名&gt;,        // 存储命令输出的变量名
+  shell: &lt;Shell类型&gt;     // 指定使用的Shell（可选）
+}
+</code></pre>
+<h2 id="示例代码-21"><a class="header" href="#示例代码-21">示例代码</a></h2>
+<pre><code class="language-gxl">// 从文件读取内容
+gx.read_file {
+  file: "config.json",
+  name: "config_data"
+}
+
+// 从标准输入读取
+gx.read_stdin {
+  name: "user_input",
+  prompt: "请输入您的姓名: "
+}
+
+// 从命令输出读取
+gx.read_cmd {
+  cmd: "git rev-parse HEAD",
+  name: "commit_hash"
+}
+</code></pre>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="gxrun-2"><a class="header" href="#gxrun-2">gx.run</a></h1>
+<h2 id="功能描述-20"><a class="header" href="#功能描述-20">功能描述</a></h2>
+<p>运行其他GXL工作流文件。</p>
+<h2 id="语法定义-20"><a class="header" href="#语法定义-20">语法定义</a></h2>
+<pre><code class="language-gxl">gx.run {
+  local: &lt;工作流路径&gt;,    // 要运行的工作流文件路径
+  env: &lt;环境配置&gt;,        // 环境配置（可选）
+  flow: &lt;流程列表&gt;,       // 要执行的流程列表（可选）
+  conf: &lt;配置文件&gt;,       // 配置文件路径（可选）
+  isolate: &lt;布尔值&gt;       // 是否隔离环境（可选）
+}
+</code></pre>
+<h2 id="示例代码-22"><a class="header" href="#示例代码-22">示例代码</a></h2>
+<pre><code class="language-gxl">// 运行其他工作流
+gx.run {
+  local: "./subflow.gxl"
+}
+
+// 在特定环境中运行工作流
+gx.run {
+  local: "./deploy.gxl",
+  env: "production",
+  flow: "build,deploy"
+}
+
+// 隔离环境运行
+gx.run {
+  local: "./test.gxl",
+  isolate: true
+}
+</code></pre>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="gxshell-2"><a class="header" href="#gxshell-2">gx.shell</a></h1>
+<h2 id="功能描述-21"><a class="header" href="#功能描述-21">功能描述</a></h2>
+<p>执行Shell脚本文件。</p>
+<h2 id="语法定义-21"><a class="header" href="#语法定义-21">语法定义</a></h2>
+<pre><code class="language-gxl">gx.shell {
+  shell: &lt;脚本文件路径&gt;,  // 要执行的Shell脚本文件路径
+  arg_file: &lt;参数文件&gt;,   // 参数文件路径（可选）
+  out_var: &lt;输出变量名&gt;,  // 捕获脚本输出的变量名（可选）
+  default: &lt;默认脚本&gt;     // 默认脚本文件路径（可选，与shell互斥）
+}
+</code></pre>
+<h2 id="示例代码-23"><a class="header" href="#示例代码-23">示例代码</a></h2>
+<pre><code class="language-gxl">// 执行Shell脚本
+gx.shell {
+  shell: "deploy.sh"
+}
+
+// 执行脚本并捕获输出
+gx.shell {
+  shell: "build.sh",
+  out_var: "build_output"
+}
+
+// 使用参数文件
+gx.shell {
+  shell: "install.sh",
+  arg_file: "install.args"
+}
+</code></pre>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="gxtar-和-gxuntar-1"><a class="header" href="#gxtar-和-gxuntar-1">gx.tar 和 gx.untar</a></h1>
+<h2 id="功能描述-22"><a class="header" href="#功能描述-22">功能描述</a></h2>
+<p>创建和解压tar归档文件。</p>
+<h2 id="语法定义-22"><a class="header" href="#语法定义-22">语法定义</a></h2>
+<pre><code class="language-gxl">// 创建tar归档
+gx.tar {
+  src: &lt;源文件/目录&gt;,     // 要归档的源文件或目录
+  file: &lt;归档文件名&gt;      // 生成的归档文件名
+}
+
+// 解压tar归档
+gx.untar {
+  file: &lt;归档文件名&gt;,     // 要解压的归档文件
+  dst: &lt;目标目录&gt;         // 解压到的目标目录
+}
+</code></pre>
+<h2 id="示例代码-24"><a class="header" href="#示例代码-24">示例代码</a></h2>
+<pre><code class="language-gxl">// 创建tar归档
+gx.tar {
+  src: "src/",
+  file: "source.tar"
+}
+
+// 解压tar归档
+gx.untar {
+  file: "source.tar",
+  dst: "extracted/"
+}
+</code></pre>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="gxtpl-2"><a class="header" href="#gxtpl-2">gx.tpl</a></h1>
+<h2 id="功能描述-23"><a class="header" href="#功能描述-23">功能描述</a></h2>
+<p>使用模板引擎处理文件模板。</p>
+<h2 id="语法定义-23"><a class="header" href="#语法定义-23">语法定义</a></h2>
+<pre><code class="language-gxl">gx.tpl {
+  tpl: &lt;模板内容&gt;,       // 模板内容
+  dst: &lt;目标文件路径&gt;,   // 生成文件的路径
+  data: &lt;数据变量名&gt;,    // 模板数据变量名（可选）
+  engine: &lt;引擎类型&gt;,    // 模板引擎类型（可选）
+  file: &lt;模板文件路径&gt;   // 模板文件路径（可选，与tpl互斥）
+}
+</code></pre>
+<h2 id="示例代码-25"><a class="header" href="#示例代码-25">示例代码</a></h2>
+<pre><code class="language-gxl">// 使用内联模板
+gx.tpl {
+  tpl: "Hello, {{name}}! Welcome to {{app_name}}.",
+  dst: "output.txt",
+  data: "user_data"
+}
+
+// 使用模板文件
+gx.tpl {
+  file: "template.txt",
+  dst: "output.txt",
+  data: "template_data"
+}
+</code></pre>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="gxvars-2"><a class="header" href="#gxvars-2">gx.vars</a></h1>
+<h2 id="功能描述-24"><a class="header" href="#功能描述-24">功能描述</a></h2>
+<p>定义和设置多个变量。</p>
+<h2 id="语法定义-24"><a class="header" href="#语法定义-24">语法定义</a></h2>
+<pre><code class="language-gxl">gx.vars {
+  &lt;变量名1&gt;: &lt;值1&gt;,      // 变量名和对应的值
+  &lt;变量名2&gt;: &lt;值2&gt;,      // 可以定义多个变量
+  // ...
+}
+</code></pre>
+<h2 id="示例代码-26"><a class="header" href="#示例代码-26">示例代码</a></h2>
+<pre><code class="language-gxl">// 定义多个变量
+gx.vars {
+  app_name: "MyApp",
+  version: "1.0.0",
+  debug: true
+}
+
+// 使用变量引用
+gx.vars {
+  project_root: "${HOME}/projects",
+  config_file: "${project_root}/config.yaml"
+}
+</code></pre>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="gxver-2"><a class="header" href="#gxver-2">gx.ver</a></h1>
+<h2 id="功能描述-25"><a class="header" href="#功能描述-25">功能描述</a></h2>
+<p>管理和操作版本信息。</p>
+<h2 id="语法定义-25"><a class="header" href="#语法定义-25">语法定义</a></h2>
+<pre><code class="language-gxl">gx.ver {
+  value: &lt;版本值&gt;,       // 版本值
+  default: &lt;默认值&gt;,     // 默认版本值（可选）
+  file: &lt;文件路径&gt;,      // 版本文件路径（可选）
+  export: &lt;变量名&gt;,      // 导出版本信息的变量名（可选）
+  inc: &lt;递增类型&gt;        // 版本递增类型（可选，可选值：build/bugfix/feature/main）
+}
+</code></pre>
+<h2 id="示例代码-27"><a class="header" href="#示例代码-27">示例代码</a></h2>
+<pre><code class="language-gxl">// 设置版本值
+gx.ver {
+  value: "1.2.3"
+}
+
+// 从文件读取版本并递增
+gx.ver {
+  file: "VERSION",
+  inc: "feature"
+}
+
+// 导出版本信息
+gx.ver {
+  value: "2.0.0",
+  export: "APP_VERSION"
+}
+</code></pre>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="工程说明"><a class="header" href="#工程说明">工程说明</a></h1>
+<p>这一个 mdbook 的文档工程，用于 Galaxy-Flow 的文档组织</p>
+<h1 id="工作任务"><a class="header" href="#工作任务">工作任务</a></h1>
+<p>[ ] 文件要在 summary 一一对应</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="changelog"><a class="header" href="#changelog">Changelog</a></h1>
 <h1 id="galaxy-flow-v083--v086-发布说明"><a class="header" href="#galaxy-flow-v083--v086-发布说明">Galaxy Flow v0.8.3 → v0.8.6 发布说明</a></h1>
 <h2 id="-版本信息"><a class="header" href="#-版本信息">🚀 版本信息</a></h2>
