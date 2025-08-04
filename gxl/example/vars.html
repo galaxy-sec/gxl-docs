@@ -29,7 +29,7 @@
         <link rel="stylesheet" id="ayu-highlight-css" href="../../ayu-highlight.css">
 
         <!-- Custom theme stylesheets -->
-        <link rel="stylesheet" href="../../mermaid.css">
+        <link rel="stylesheet" href="../.././mermaid.css">
 
 
         <!-- Provide site root and default themes to javascript -->
@@ -210,7 +210,7 @@ mod main {
 <span class="boring">}</span></code></pre></pre>
 <h2 id="description"><a class="header" href="#description">Description</a></h2>
 <p>This example shows how to define variables in an environment and how to use these variables in flows. In the <code>default</code> environment, a list <code>data_list</code> and an object <code>data_obj</code> are defined. In the <code>array_do</code> flow, the <code>data_list</code> list is iterated over and each element is output. In the <code>obj_do</code> flow, the <code>data_obj</code> object is iterated over and the properties of each object are output.</p>
-<pre><code class="language-mermaid">graph TD
+<pre class="mermaid">graph TD
     A[Start] --&gt; B[Load envs module]
     B --&gt; C[Define data_list and data_obj variables]
     C --&gt; D[Load main module]
@@ -221,7 +221,7 @@ mod main {
     H --&gt; I[Loop through ENV.DATA_OBJ]
     I --&gt; J[Execute gx.echo command for each item]
     J --&gt; K[End]
-</code></pre>
+</pre>
 
                     </main>
 
@@ -269,7 +269,7 @@ mod main {
         <script src="../../book.js"></script>
 
         <!-- Custom JS scripts -->
-        <script src="../../mermaid.min.js"></script>
+        <script src="../.././mermaid.min.js"></script>
 
 
 

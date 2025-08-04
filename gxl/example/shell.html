@@ -29,7 +29,7 @@
         <link rel="stylesheet" id="ayu-highlight-css" href="../../ayu-highlight.css">
 
         <!-- Custom theme stylesheets -->
-        <link rel="stylesheet" href="../../mermaid.css">
+        <link rel="stylesheet" href="../.././mermaid.css">
 
 
         <!-- Provide site root and default themes to javascript -->
@@ -229,7 +229,7 @@ mod main {
 <span class="boring">}</span></code></pre></pre>
 <h2 id="说明"><a class="header" href="#说明">说明</a></h2>
 <p>这个示例展示了如何使用 <code>gx.shell</code> 命令执行 shell 脚本。在 <code>conf</code> 流程中，首先从 <code>var.yml</code> 文件读取数据，然后使用 <code>gx.shell</code> 执行 <code>demo.sh</code> 脚本，并通过 <code>arg_file</code> 参数传递 <code>var.json</code> 文件。还展示了如何在循环中执行 shell 脚本，并处理列表和对象数据。</p>
-<pre><code class="language-mermaid">graph TD
+<pre class="mermaid">graph TD
     A[Start] --&gt; B[Load envs module]
     B --&gt; C[Load main module]
     C --&gt; D[Execute conf flow]
@@ -246,7 +246,7 @@ mod main {
     N --&gt; O[Execute gx.shell command for each item]
     O --&gt; P[Execute gx.echo command]
     P --&gt; Q[End]
-</code></pre>
+</pre>
 
                     </main>
 
@@ -294,7 +294,7 @@ mod main {
         <script src="../../book.js"></script>
 
         <!-- Custom JS scripts -->
-        <script src="../../mermaid.min.js"></script>
+        <script src="../.././mermaid.min.js"></script>
 
 
 
