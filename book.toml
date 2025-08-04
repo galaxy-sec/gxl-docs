@@ -4,3 +4,10 @@ language = "zh"
 multilingual = true
 src = "./"
 title = "gxl"
+
+[preprocessor.mermaid]
+command = "mdbook-mermaid"
+
+[output.html]
+additional-js = ["mermaid.min.js"]
+additional-css = ["mermaid.css"]
