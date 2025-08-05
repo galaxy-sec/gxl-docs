@@ -177,7 +177,397 @@
 
                 <div id="content" class="content">
                     <main>
-                        <h1 id="galaxy-flow--ops"><a class="header" href="#galaxy-flow--ops">Galaxy Flow &amp; Ops</a></h1>
+                        <h1 id="galaxy--operator--ecosystem"><a class="header" href="#galaxy--operator--ecosystem">Galaxy  Operator  Ecosystem</a></h1>
+<h2 id="包括"><a class="header" href="#包括">包括：</a></h2>
+<ul>
+<li>DSL语言: Gxl</li>
+<li>维护器</li>
+<li>命令工具
+<ul>
+<li>gflow :Gxl的执行器</li>
+<li>gops : 维护工程</li>
+<li>gsys ：系统维护器</li>
+<li>gmod ：模块维护器</li>
+</ul>
+</li>
+</ul>
+<h2 id="核心流程"><a class="header" href="#核心流程">核心流程</a></h2>
+<ul>
+<li>1、gmod 创建模块维护器，用gxl 编写维护器的workflow</li>
+<li>2、gsys 创建系统维护器，并组合多个模块维护器,用gxl 编写维护器的workflow</li>
+<li>3、系统维护器 保存到配置管理库中，待发布到客户环境。</li>
+<li>4、在客户环境中，使用gops 创建维护工程， 并加载系统维护器。</li>
+<li>5、在客户环境中，使用gflow 执行维护器的workflow。</li>
+<li>6、保存维护工程到配置管理库中。</li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="changelog"><a class="header" href="#changelog">Changelog</a></h1>
+<h1 id="galaxy-flow-v083--v086-发布说明"><a class="header" href="#galaxy-flow-v083--v086-发布说明">Galaxy Flow v0.8.3 → v0.8.6 发布说明</a></h1>
+<h2 id="-版本信息"><a class="header" href="#-版本信息">🚀 版本信息</a></h2>
+<ul>
+<li>起始版本 : v0.8.3</li>
+<li>目标版本 : v0.8.6</li>
+<li>当前版本 : 0.8.6</li>
+</ul>
+<h2 id="-主要新功能"><a class="header" href="#-主要新功能">✨ 主要新功能</a></h2>
+<h3 id="1-日志重定向系统重构"><a class="header" href="#1-日志重定向系统重构">1. 日志重定向系统重构</a></h3>
+<ul>
+<li>新增 : 使用管道(pip)进行日志重定向的全新实现</li>
+<li>优化 : 改进了日志处理机制，提高了性能和稳定性</li>
+<li>提交 : a5bf576 , deea236 , 2e1ce2c , be686b1 , 4e3f1a7</li>
+</ul>
+<h3 id="2-逻辑表达式支持"><a class="header" href="#2-逻辑表达式支持">2. 逻辑表达式支持</a></h3>
+<ul>
+<li>新增 : 逻辑表达式( logic_exp )功能实现</li>
+<li>实现 : 完整的逻辑表达式解析和执行能力</li>
+<li>提交 : d646fd4 , fc7c975</li>
+</ul>
+<h3 id="3-归档功能增强"><a class="header" href="#3-归档功能增强">3. 归档功能增强</a></h3>
+<ul>
+<li>新增 : gx.tar 和 gx.untar 命令支持</li>
+<li>用途 : 提供原生的压缩和解压缩能力</li>
+<li>提交 : 1755d4d</li>
+</ul>
+<h2 id="-改进与优化"><a class="header" href="#-改进与优化">🔧 改进与优化</a></h2>
+<h3 id="代码质量"><a class="header" href="#代码质量">代码质量</a></h3>
+<ul>
+<li>重构 : 成功状态处理逻辑重构 ( 6dce866 )</li>
+<li>优化 : 表达式逻辑更新 ( 73dcb46 )</li>
+<li>清理 : 取消taskvalue中的日志信息 ( 523f85b )</li>
+</ul>
+<h3 id="依赖更新"><a class="header" href="#依赖更新">依赖更新</a></h3>
+<ul>
+<li>更新 : clap依赖升级到最新版本 ( 9246378 )</li>
+<li>更新 : 多个crate依赖项更新 ( 1051001 , 352e19a )</li>
+<li>维护 : 代码格式化和clippy修复 ( 08b51f2 , c57879b , b049906 )</li>
+</ul>
+<h2 id="-问题修复"><a class="header" href="#-问题修复">🐛 问题修复</a></h2>
+<h3 id="关键修复"><a class="header" href="#关键修复">关键修复</a></h3>
+<ul>
+<li>修复 : 模块路径错误问题 (#61) - d099a55</li>
+<li>修复 : 多个相关问题 (#62, #61) - 4419cad</li>
+<li>修复 : 模块名称列表问题 - 19bfa32</li>
+</ul>
+<h3 id="其他修复"><a class="header" href="#其他修复">其他修复</a></h3>
+<ul>
+<li>修复 : 通道与启用状态的关联问题 - 5592286</li>
+<li>修复 : 干运行参数传递给子gxl的问题 - 4644a1b</li>
+</ul>
+<h2 id="-其他变更"><a class="header" href="#-其他变更">📋 其他变更</a></h2>
+<h3 id="构建和部署"><a class="header" href="#构建和部署">构建和部署</a></h3>
+<ul>
+<li>更新 : artifact构建更新 ( 9c1193d )</li>
+<li>更新 : 管理配置更新 ( 3dcc127 )</li>
+<li>维护 : 版本号更新到0.8.6 ( 2f4acfe , 5b4dbb0 )</li>
+</ul>
+<h3 id="内部改进"><a class="header" href="#内部改进">内部改进</a></h3>
+<ul>
+<li>重构 : 使用常量字符串优化 ( 64e7d30 , daf17ef )</li>
+<li>新增 : 读取文件日志功能 ( 142b448 )</li>
+</ul>
+<h2 id="-升级建议"><a class="header" href="#-升级建议">📝 升级建议</a></h2>
+<ol>
+<li>
+<ol>
+<li></li>
+</ol>
+平滑升级 : 从v0.8.3升级到v0.8.6是向后兼容的</li>
+<li>
+<ol start="2">
+<li></li>
+</ol>
+新功能试用 : 建议尝试新的日志重定向和逻辑表达式功能</li>
+<li>
+<ol start="3">
+<li></li>
+</ol>
+依赖检查 : 确保所有依赖项已更新到兼容版本</li>
+</ol>
+<h2 id="-变更统计"><a class="header" href="#-变更统计">📊 变更统计</a></h2>
+<ul>
+<li>总提交数 : 30+ 次提交</li>
+<li>功能新增 : 5个主要功能</li>
+<li>问题修复 : 6个关键修复</li>
+<li>代码优化 : 10+ 项改进
+本次发布专注于提升系统稳定性、增加新功能，并修复已知问题，为用户提供更好的DevSecOps自动化体验。</li>
+</ul>
+<h1 id="083"><a class="header" href="#083">0.8.3</a></h1>
+<h2 id="新增"><a class="header" href="#新增">新增</a></h2>
+<ul>
+<li>GXL 支持 数字、BOOL、数组、对象 数据类型</li>
+<li>提供 defined 函数 - 检查变量是否已定义</li>
+<li>提供 gx.shell 方便 shell 调用</li>
+<li>支持 ${VAR:default} 变量定义默认值</li>
+<li>gprj update mod 或 gflow --update mod 支持更新项目依赖的Mod</li>
+</ul>
+<h2 id="改进"><a class="header" href="#改进">改进</a></h2>
+<ul>
+<li>gx.read_file 读取内容到对象，便于后续处理</li>
+<li>winnow 升级 0.7</li>
+<li>对于远程Mod的获取，去掉外部Git 依赖</li>
+<li>修改外部依赖</li>
+</ul>
+<h1 id="070"><a class="header" href="#070">0.7.0</a></h1>
+<h2 id="新增-1"><a class="header" href="#新增-1">新增</a></h2>
+<ul>
+<li>支持事务机制</li>
+<li>支持dryrun机制 - 允许预览操作结果而不实际执行</li>
+</ul>
+<h1 id="064"><a class="header" href="#064">0.6.4</a></h1>
+<h2 id="新增-2"><a class="header" href="#新增-2">新增</a></h2>
+<ul>
+<li>支持 gx.cmd  quiet (静默） - 自定义控制cmd的日志输出与否</li>
+</ul>
+<h1 id="062"><a class="header" href="#062">0.6.2</a></h1>
+<h2 id="新增-3"><a class="header" href="#新增-3">新增</a></h2>
+<ul>
+<li>优化日志输出，增加日志的重定向，支持捕获控制台标准日志输出</li>
+</ul>
+<h1 id="060"><a class="header" href="#060">0.6.0</a></h1>
+<h2 id="新增-4"><a class="header" href="#新增-4">新增</a></h2>
+<ul>
+<li>生成任务报告 - 提供执行过程和结果的详细信息</li>
+<li>支持flow上的Task注解 - 增强流程定义的灵活性</li>
+</ul>
+<h2 id="改进-1"><a class="header" href="#改进-1">改进</a></h2>
+<ul>
+<li>改进 flow 编排语法，由: 变为 |  符号</li>
+</ul>
+<h1 id="gflow-053"><a class="header" href="#gflow-053">gflow-0.5.3</a></h1>
+<h2 id="内置环境变量"><a class="header" href="#内置环境变量">内置环境变量</a></h2>
+<ul>
+<li>GXL_PRJ_ROOT:    最近定义的 _gal/project.toml 的目录</li>
+</ul>
+<h2 id="extern-mod-支持变量"><a class="header" href="#extern-mod-支持变量">extern mod 支持变量</a></h2>
+<pre><code>extern mod head { path = "${GXL_START_ROOT}/_gal/"; }
+</code></pre>
+<p><a href="https://github.com/galaxy-sec/galaxy-flow/releases/tag/v0.5.3">0.5.3 下载</a></p>
+<h1 id="052"><a class="header" href="#052">0.5.2</a></h1>
+<h2 id="内置环境变量-1"><a class="header" href="#内置环境变量-1">内置环境变量</a></h2>
+<ul>
+<li>GXL_START_ROOT:  GXL 启动处理的目录</li>
+<li>GXL_CUR_DIR:  GXL 当前所在目录，在调用gx.run时，与GXL_START_ROOT可能不同</li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="galaxy-operations-system---manual-pages"><a class="header" href="#galaxy-operations-system---manual-pages">Galaxy Operations System - Manual Pages</a></h1>
+<p>本目录包含 Galaxy Operations System 所有命令行工具的 man page 文档。</p>
+<h2 id="可用命令"><a class="header" href="#可用命令">可用命令</a></h2>
+<h3 id="系统管理工具"><a class="header" href="#系统管理工具">系统管理工具</a></h3>
+<ul>
+<li><strong>gsys(1)</strong> - Galaxy Operations System 管理工具
+<ul>
+<li>管理系统配置和部署</li>
+<li>命令：new, update, localize</li>
+</ul>
+</li>
+</ul>
+<h3 id="模块管理工具"><a class="header" href="#模块管理工具">模块管理工具</a></h3>
+<ul>
+<li><strong>gmod(1)</strong> - Galaxy 模块管理工具
+<ul>
+<li>管理模块规范和配置</li>
+<li>命令：example, new, update, localize</li>
+</ul>
+</li>
+</ul>
+<h3 id="操作管理工具"><a class="header" href="#操作管理工具">操作管理工具</a></h3>
+<ul>
+<li><strong>gops(1)</strong> - Galaxy 操作管理工具
+<ul>
+<li>综合操作管理，包括创建、导入、更新</li>
+<li>命令：new, import, update, localize, setting</li>
+</ul>
+</li>
+</ul>
+<h2 id="使用方法"><a class="header" href="#使用方法">使用方法</a></h2>
+<p>查看特定命令的帮助：</p>
+<pre><code class="language-bash">man gsys    # 查看 gsys 命令文档
+man gmod    # 查看 gmod 命令文档
+man gops    # 查看 gops 命令文档
+</code></pre>
+<h2 id="通用选项"><a class="header" href="#通用选项">通用选项</a></h2>
+<p>所有命令都支持以下通用选项：</p>
+<ul>
+<li><code>-d, --debug &lt;level&gt;</code> - 设置调试输出级别 (0-4)</li>
+<li><code>--log &lt;log_config&gt;</code> - 配置日志输出格式</li>
+<li><code>--value &lt;file&gt;</code> - 使用指定的值文件进行本地化</li>
+<li><code>--default</code> - 启用默认模块模式</li>
+</ul>
+<h2 id="安装-man-page"><a class="header" href="#安装-man-page">安装 Man Page</a></h2>
+<p>将 man page 安装到系统：</p>
+<pre><code class="language-bash"># 复制到系统 man page 目录
+sudo cp docs/man/man1/*.1 /usr/local/share/man/man1/
+
+# 更新 man page 索引
+sudo mandb
+</code></pre>
+<h2 id="文档格式"><a class="header" href="#文档格式">文档格式</a></h2>
+<p>所有 man page 使用标准的 troff 格式，符合 Unix man page 规范。</p>
+<h2 id="更新日志"><a class="header" href="#更新日志">更新日志</a></h2>
+<ul>
+<li>2024-12-19: 初始版本，包含 gsys, gmod, gops 的完整文档</li>
+</ul>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="gflow"><a class="header" href="#gflow">gflow</a></h1>
+<pre><code class="language-bash">Usage: gflow [OPTIONS] [FLOW]...
+
+Arguments:
+  [FLOW]...  flow name ; eg: conf,test,package
+
+Options:
+  -e, --env &lt;ENV&gt;      env name ; eg: -e dev [default: default]
+  -d, --debug &lt;DEBUG&gt;  debug level ; eg: -d 1 [default: 0]
+  -f, --conf &lt;CONF&gt;    conf file ;  default is  work(./_rg/work.gxl) adm (./_rg/adm.gxl)
+      --log &lt;LOG&gt;      config log ; eg: --log  cmd=debug,parse=info
+  -q, --quiet          
+  -h, --help           Print help
+  -V, --version        Print version
+</code></pre>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="维护器"><a class="header" href="#维护器">维护器</a></h1>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="系统操作符-system-operator"><a class="header" href="#系统操作符-system-operator">系统操作符 (System Operator)</a></h1>
+<h2 id="概述"><a class="header" href="#概述">概述</a></h2>
+<p>系统操作符用于定义和管理一个完整的系统，它组合了多个模块操作符来构建复杂的系统环境。系统操作符通过 <code>sys_model.yml</code> 定义系统的基本信息，通过 <code>mod_list.yml</code> 定义所包含的模块列表。</p>
+<h2 id="文件结构"><a class="header" href="#文件结构">文件结构</a></h2>
+<p>一个典型的系统操作符项目具有以下文件结构：</p>
+<p>example_sys/
+├── .gitignore
+├── sys_model.yml
+├── mod_list.yml
+├── vars.yml
+├── mods/
+│   ├── mysql_mock/
+│   │   └── arm-mac14-host/
+│   └── redis_mock/
+│       └── arm-mac14-host/
+└── workflows/
+└── operators.gxl</p>
+<h3 id="核心文件说明"><a class="header" href="#核心文件说明">核心文件说明</a></h3>
+<ol>
+<li>
+<p><strong>sys_model.yml</strong>: 定义系统的基本信息</p>
+<pre><code class="language-yaml">name: example_sys
+model: arm-mac14-host
+vender: ''
+</code></pre>
+</li>
+<li>
+<p><strong>mod_list.yml</strong>: 定义系统包含的模块列表</p>
+<pre><code class="language-yaml">- name: redis_mock
+  addr:
+    path: ./example/modules/redis_mock
+  model: arm-mac14-host
+- name: mysql_mock
+  addr:
+    path: ./example/modules/mysql_mock
+  model: arm-mac14-host
+</code></pre>
+</li>
+<li>
+<p><strong>mods/</strong>: 存放系统包含的各个模块的具体实现</p>
+</li>
+<li>
+<p><strong>workflows/operators.gxl</strong>: 定义系统的操作工作流</p>
+</li>
+<li>
+<p><strong>vars.yml</strong>: 系统级别的变量配置文件</p>
+</li>
+</ol>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="galaxy-ops-模块示例说明"><a class="header" href="#galaxy-ops-模块示例说明">Galaxy Ops 模块示例说明</a></h1>
+<p>本目录包含 Galaxy Ops 框架的模块示例，展示了如何创建和管理可复用的运维模块。</p>
+<h2 id="目录结构说明"><a class="header" href="#目录结构说明">目录结构说明</a></h2>
+<h3 id="mysql_mock-示例模块"><a class="header" href="#mysql_mock-示例模块">mysql_mock 示例模块</a></h3>
+<pre><code>mysql/
+├── _gal/                    # 模块构建配置目录
+│   ├── adm.gxl             # 模块管理配置
+│   └── work.gxl            # 工作流环境配置
+├── mod/                     # 平台特定配置目录
+│   ├── arm-mac14-host/     # ARM Mac 平台配置
+│   │   ├── vars.yml        # 环境变量定义
+│   │   └── workflows/      # 平台特定工作流
+│   │       └── operators.gxl
+│   └── x86-ubt22-k8s/      # x86 Ubuntu K8s 平台配置
+│       ├── vars.yml
+│       └── workflows/
+├── mod-prj.yml              # 模块项目配置
+└── version.txt             # 模块版本信息
+</code></pre>
+<h2 id="文件作用详解"><a class="header" href="#文件作用详解">文件作用详解</a></h2>
+<h3 id="1-_galadmgxl---模块管理配置"><a class="header" href="#1-_galadmgxl---模块管理配置">1. <code>_gal/adm.gxl</code> - 模块管理配置</a></h3>
+<ul>
+<li><strong>作用</strong>: 定义模块的版本管理和依赖关系</li>
+<li><strong>关键配置</strong>:
+<ul>
+<li>引入版本管理模块 <code>ver_adm</code> 用于版本控制</li>
+<li>定义默认环境配置</li>
+<li>继承版本管理功能</li>
+</ul>
+</li>
+</ul>
+<h3 id="2-_galworkgxl---工作流环境配置"><a class="header" href="#2-_galworkgxl---工作流环境配置">2. <code>_gal/work.gxl</code> - 工作流环境配置</a></h3>
+<ul>
+<li><strong>作用</strong>: 定义模块支持的不同运行环境和平台配置</li>
+<li><strong>关键配置</strong>:
+<ul>
+<li>引入 <code>mod_ops</code> 模块提供核心运维功能</li>
+<li>定义多个环境配置：
+<ul>
+<li><code>arm_mac</code>: ARM Mac 平台</li>
+<li><code>x86_ubt</code>: x86 Ubuntu 平台</li>
+<li><code>x86_ubt_k8s</code>: x86 Ubuntu K8s 平台</li>
+</ul>
+</li>
+<li>每个环境关联对应的模型目录</li>
+</ul>
+</li>
+</ul>
+<h3 id="3-mod-prjyml---模块项目配置"><a class="header" href="#3-mod-prjyml---模块项目配置">3. <code>mod-prj.yml</code> - 模块项目配置</a></h3>
+<ul>
+<li><strong>作用</strong>: 定义模块的测试环境和依赖关系</li>
+<li><strong>配置说明</strong>:
+<ul>
+<li><code>test_envs.dep_root</code>: 依赖根目录（空表示使用默认）</li>
+<li><code>test_envs.deps</code>: 依赖模块列表（空数组表示无额外依赖）</li>
+</ul>
+</li>
+</ul>
+<h3 id="4-versiontxt---版本信息"><a class="header" href="#4-versiontxt---版本信息">4. <code>version.txt</code> - 版本信息</a></h3>
+<ul>
+<li><strong>作用</strong>: 记录模块的当前版本号</li>
+<li><strong>格式</strong>: 遵循语义化版本规范（如 0.1.0）</li>
+</ul>
+<h3 id="5-modvarsyml---环境变量配置"><a class="header" href="#5-modvarsyml---环境变量配置">5. <code>mod/*/vars.yml</code> - 环境变量配置</a></h3>
+<ul>
+<li><strong>作用</strong>: 定义平台特定的环境变量和参数</li>
+<li><strong>配置结构</strong>:
+<pre><code class="language-yaml">vars:
+- name: 变量名
+  desp: 描述（可选）
+  value: 变量值
+</code></pre>
+</li>
+<li><strong>示例变量</strong>:
+<ul>
+<li><code>EXAMPLE_SIZE</code>: 示例数据大小</li>
+<li><code>HOME_BIN</code>: 用户二进制文件目录</li>
+<li><code>WORK_BIN</code>: 工作目录二进制文件路径</li>
+</ul>
+</li>
+</ul>
+<h3 id="6-modworkflowsoperatorsgxl---工作流定义"><a class="header" href="#6-modworkflowsoperatorsgxl---工作流定义">6. <code>mod/*/workflows/operators.gxl</code> - 工作流定义</a></h3>
+<ul>
+<li><strong>作用</strong>: 定义模块的具体操作流程和任务</li>
+<li><strong>关键功能</strong>:
+<ul>
+<li><code>__into</code>: 初始化流程，加载配置文件</li>
+<li><code>install</code>: 安装任务（空实现，可扩展）</li>
+<li><code>download</code>: 下载任务，处理构件下载</li>
+</ul>
+</li>
+<li><strong>操作说明</strong>:
+<ul>
+<li>读取配置文件 <code>./values/_used.json</code></li>
+<li>解析构件信息 <code>artifact.yml</code></li>
+<li>执行文件下载和解压操作</li>
+</ul>
+</li>
+</ul>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="gxl---语法"><a class="header" href="#gxl---语法">GXL   语法</a></h1>
 <h2 id="结构"><a class="header" href="#结构">结构</a></h2>
 <pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
@@ -349,6 +739,13 @@ mod main {
      executer = "copy_act.sh" ;
 }
 <span class="boring">}</span></code></pre></pre>
+<div style="break-before: page; page-break-before: always;"></div><h2 id="内置常量"><a class="header" href="#内置常量">内置常量</a></h2>
+<ul>
+<li>GXL_PRJ_ROOT:   最近定义了 _gal/project.toml 的目录</li>
+<li>GXL_START_ROOT:  GXL 启动处理的目录</li>
+<li>GXL_CUR_DIR:  GXL 当前所在目录，在调用gx.run时，与GXL_START_ROOT可能不同</li>
+<li>GXL_CMD_ARG:  gflow -- &lt;cmd_arg&gt;</li>
+</ul>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="变量定义"><a class="header" href="#变量定义">变量定义</a></h1>
 <h2 id="示例-3"><a class="header" href="#示例-3">示例</a></h2>
 <pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
@@ -471,194 +868,6 @@ mod main {
         gx.echo (  "${PRJ_ROOT}/test/main.py"  );
     }
 <span class="boring">}</span></code></pre></pre>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="gflow"><a class="header" href="#gflow">gflow</a></h1>
-<pre><code class="language-bash">Usage: gflow [OPTIONS] [FLOW]...
-
-Arguments:
-  [FLOW]...  flow name ; eg: conf,test,package
-
-Options:
-  -e, --env &lt;ENV&gt;      env name ; eg: -e dev [default: default]
-  -d, --debug &lt;DEBUG&gt;  debug level ; eg: -d 1 [default: 0]
-  -f, --conf &lt;CONF&gt;    conf file ;  default is  work(./_rg/work.gxl) adm (./_rg/adm.gxl)
-      --log &lt;LOG&gt;      config log ; eg: --log  cmd=debug,parse=info
-  -q, --quiet          
-  -h, --help           Print help
-  -V, --version        Print version
-</code></pre>
-<div style="break-before: page; page-break-before: always;"></div><h2 id="内置常量"><a class="header" href="#内置常量">内置常量</a></h2>
-<ul>
-<li>GXL_PRJ_ROOT:   最近定义了 _gal/project.toml 的目录</li>
-<li>GXL_START_ROOT:  GXL 启动处理的目录</li>
-<li>GXL_CUR_DIR:  GXL 当前所在目录，在调用gx.run时，与GXL_START_ROOT可能不同</li>
-<li>GXL_CMD_ARG:  gflow -- &lt;cmd_arg&gt;</li>
-</ul>
-<h2 id="gxassert"><a class="header" href="#gxassert">gx.assert</a></h2>
-<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
-</span><span class="boring">fn main() {
-</span>gx.assert ( value = "hello" , expect = "hello"  ); 
-<span class="boring">}</span></code></pre></pre>
-<h3 id="参数"><a class="header" href="#参数">参数</a></h3>
-<ul>
-<li>value    :  [必须]需要验证的变量</li>
-<li>expect   :  [必须] 期待的结果</li>
-<li>result  :  "[true|false]" 默认值为 "true"</li>
-<li>err     :  验证失败后的错误信息。</li>
-</ul>
-<h3 id="示例-4"><a class="header" href="#示例-4">示例:</a></h3>
-<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
-</span><span class="boring">fn main() {
-</span>gx.assert ( value = "hello" , expect : "hello" , result : "false" , err:"test assert"); 
-<span class="boring">}</span></code></pre></pre>
-<h2 id="gxcmd"><a class="header" href="#gxcmd">gx.cmd</a></h2>
-<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
-</span><span class="boring">fn main() {
-</span>gx.cmd (  cmd : "cat ./test.txt" ); 
-// 可省略 cmd 参数名
-gx.cmd (  "cat ./test.txt" ); 
-<span class="boring">}</span></code></pre></pre>
-<h3 id="属性参数"><a class="header" href="#属性参数">属性参数</a></h3>
-<ul>
-<li>cmd       [必须][] 执行命令</li>
-<li>log       日志输出级别</li>
-<li>quiet     静默，不输出出指令和结果</li>
-<li>expect    期待的结果</li>
-</ul>
-<h3 id="示例-5"><a class="header" href="#示例-5">示例:</a></h3>
-<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
-</span><span class="boring">fn main() {
-</span>gx.cmd (  
-	cmd     : "${PRJ_ROOT}/do.sh", 
-    log     : "1" ,
-    quiet   : "true" ,
-    expect  : "[0,1,255]" 
- ) 
-<span class="boring">}</span></code></pre></pre>
-<h2 id="gxshell"><a class="header" href="#gxshell">gx.shell</a></h2>
-<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
-</span><span class="boring">fn main() {
-</span>gx.shell (  arg_file : "./arg.json ", shell: "${PRJ_ROOT}/do.sh" , out_var : "DO_OUT" ); 
-<span class="boring">}</span></code></pre></pre>
-<h3 id="属性参数-1"><a class="header" href="#属性参数-1">属性参数</a></h3>
-<ul>
-<li>shell       [必须] 执行脚本</li>
-<li>arg_file    脚本参数文件</li>
-<li>out_var     输出变量名</li>
-</ul>
-<h2 id="gxrun"><a class="header" href="#gxrun">gx.run</a></h2>
-<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
-</span><span class="boring">fn main() {
-</span>gx.run (  local: "${PRJ_ROOT}/mod/" ,env : "dev", flow : "conf,test" ); 
-<span class="boring">}</span></code></pre></pre>
-<h3 id="属性参数-2"><a class="header" href="#属性参数-2">属性参数</a></h3>
-<ul>
-<li>local   [必须] 运行所在目录</li>
-<li>env     [必须] 运行环境</li>
-<li>flow    [必须]运行的flow</li>
-<li>conf    运行的配置文件</li>
-</ul>
-<h3 id="示例-6"><a class="header" href="#示例-6">示例:</a></h3>
-<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
-</span><span class="boring">fn main() {
-</span>gx.cmd (  
-	cmd     : "${PRJ_ROOT}/do.sh", 
-    log     : "1" ,
-    out     : "true" ,
-    expect  : "[0,1,255]" 
- ) 
-<span class="boring">}</span></code></pre></pre>
-<h2 id="gxecho"><a class="header" href="#gxecho">gx.echo</a></h2>
-<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
-</span><span class="boring">fn main() {
-</span> gx.echo ( value : "${PRJ_ROOT}/test/main.py"  );
-// 可省略 value 参数名
- gx.echo ( "${PRJ_ROOT}/test/main.py"  );
-<span class="boring">}</span></code></pre></pre>
-<h3 id="属性参数-3"><a class="header" href="#属性参数-3">属性参数</a></h3>
-<ul>
-<li>value : [必须]需显示的变量</li>
-</ul>
-<h2 id="gxread"><a class="header" href="#gxread">gx.read</a></h2>
-<p>读取信息到环境变量。</p>
-<h3 id="读取cmd运行结果到-name"><a class="header" href="#读取cmd运行结果到-name">读取CMD运行结果到 name</a></h3>
-<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
-</span><span class="boring">fn main() {
-</span>env dev {
-    gx.read_cmd ( name : "gx" , cmd : "echo rigger-1.0" );
-}
-<span class="boring">}</span></code></pre></pre>
-<h3 id="从ini文件中读取"><a class="header" href="#从ini文件中读取">从INI文件中读取;</a></h3>
-<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
-</span><span class="boring">fn main() {
-</span>    gx.read_file ( file : "${ENV_ROOT}/test.ini" );
-    gx.read_file ( "${ENV_ROOT}/test.ini" );
-<span class="boring">}</span></code></pre></pre>
-<h3 id="从标准输入读取"><a class="header" href="#从标准输入读取">从标准输入读取;</a></h3>
-<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
-</span><span class="boring">fn main() {
-</span>env dev {
-    gx.read_stdin ( prompt : "please input you name", name : "NAME"  );
-    gx.echo (  "${NAME}" );
-}
-<span class="boring">}</span></code></pre></pre>
-<h2 id="gxtpl"><a class="header" href="#gxtpl">gx.tpl</a></h2>
-<p>通过模板生成文件,使用 handlebars 引擎。</p>
-<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
-</span><span class="boring">fn main() {
-</span>gx.tpl (  
-   tpl : "${PRJ_ROOT}/conf_tpl.toml" ,
-   dst : "${PRJ_ROOT}/conf.toml" ,
-);
-<span class="boring">}</span></code></pre></pre>
-<h3 id="属性参数-4"><a class="header" href="#属性参数-4">属性参数</a></h3>
-<ul>
-<li>tpl : [必须]模板文件</li>
-<li>dst : [必须]生成目标文件</li>
-</ul>
-<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
-</span><span class="boring">fn main() {
-</span>gx.tpl (  
-   tpl : "${PRJ_ROOT}/conf_tpl.toml" ,
-   dst : "${PRJ_ROOT}/conf.toml" ,
-   data : r#" { "name" : "xiaoming", "age" : 3 } "#x
-);
-<span class="boring">}</span></code></pre></pre>
-<ul>
-<li>data : 符合Json格式的模板数据</li>
-</ul>
-<h2 id="gxvars"><a class="header" href="#gxvars">gx.vars</a></h2>
-<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
-</span><span class="boring">fn main() {
-</span>gx.vars {  
-   x = "${PRJ_ROOT}/test/main.py" ;
-   y = "${PRJ_ROOT}/test/main.py" ; 
-}
-<span class="boring">}</span></code></pre></pre>
-<p>x,y 自定义的变量，可以在gxL 和扩展脚本使用</p>
-<h2 id="gxver"><a class="header" href="#gxver">gx.ver</a></h2>
-<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
-</span><span class="boring">fn main() {
-</span>gx.ver ( file : "./version.txt" ,  inc : "bugfix"  ); 
-<span class="boring">}</span></code></pre></pre>
-<h3 id="属性参数-5"><a class="header" href="#属性参数-5">属性参数</a></h3>
-<ul>
-<li>file :  version.txt 文件</li>
-<li>inc： 增长单位。   有 null,build,bugfix,feature,main 六个选项</li>
-</ul>
-<h2 id="gxupload"><a class="header" href="#gxupload">gx.upload</a></h2>
-<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
-</span><span class="boring">fn main() {
-</span>gx.upload ( url: "https://github/galaxy-sec" ,  method : "put", local_file : "gflow"  ); 
-<span class="boring">}</span></code></pre></pre>
-<h2 id="gxdownload"><a class="header" href="#gxdownload">gx.download</a></h2>
-<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
-</span><span class="boring">fn main() {
-</span>gx.download( url: "https://github/galaxy-sec" ,   local_file : "gflow"  ); 
-<span class="boring">}</span></code></pre></pre>
-<ul>
-<li>username :   用户名</li>
-<li>password :   密码</li>
-</ul>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="gxl-文件语法"><a class="header" href="#gxl-文件语法">GXL 文件语法</a></h1>
 <h2 id="gxl-语法定义"><a class="header" href="#gxl-语法定义">GXL 语法定义</a></h2>
 <p>GXL（Galaxy Flow Language）是一种为 DevSecOps 自动化工作流设计的领域特定语言。根据代码库中的信息，GXL 的语法定义主要在 galaxy-sec/galaxy-flow 仓库的解析器模块中实现。</p>
@@ -755,7 +964,7 @@ AnnotationName = Identifier;
 AnnotationParams = AnnotationParam, {",", whitespace, AnnotationParam};
 AnnotationParam = Identifier, whitespace, "=", whitespace, String;
 </code></pre>
-<h2 id="示例-7"><a class="header" href="#示例-7">示例</a></h2>
+<h2 id="示例-4"><a class="header" href="#示例-4">示例</a></h2>
 <pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span>env dev {
@@ -792,7 +1001,7 @@ AnnotationParam = Identifier, whitespace, "=", whitespace, String;
     }
 }
 <span class="boring">}</span></code></pre></pre>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="示例-8"><a class="header" href="#示例-8">示例</a></h1>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="示例-5"><a class="header" href="#示例-5">示例</a></h1>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="assert-示例"><a class="header" href="#assert-示例">Assert 示例</a></h1>
 <h2 id="示例代码"><a class="header" href="#示例代码">示例代码</a></h2>
 <pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
@@ -1251,7 +1460,7 @@ mod main {
 </pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="galaxy-flow-内置能力文档"><a class="header" href="#galaxy-flow-内置能力文档">Galaxy Flow 内置能力文档</a></h1>
 <p>本文档详细描述了Galaxy Flow中所有内置能力的语法定义和使用示例。</p>
-<h2 id="gxassert-1"><a class="header" href="#gxassert-1">gx.assert</a></h2>
+<h2 id="gxassert"><a class="header" href="#gxassert">gx.assert</a></h2>
 <h3 id="功能描述"><a class="header" href="#功能描述">功能描述</a></h3>
 <p>执行断言检查，验证表达式的值是否符合预期。</p>
 <h3 id="语法定义"><a class="header" href="#语法定义">语法定义</a></h3>
@@ -1277,7 +1486,7 @@ gx.assert {
   result: "assert_result"
 }
 </code></pre>
-<h2 id="gxcmd-1"><a class="header" href="#gxcmd-1">gx.cmd</a></h2>
+<h2 id="gxcmd"><a class="header" href="#gxcmd">gx.cmd</a></h2>
 <h3 id="功能描述-1"><a class="header" href="#功能描述-1">功能描述</a></h3>
 <p>执行系统命令或脚本。</p>
 <h3 id="语法定义-1"><a class="header" href="#语法定义-1">语法定义</a></h3>
@@ -1310,7 +1519,7 @@ gx.cmd {
   sudo: true
 }
 </code></pre>
-<h2 id="gxecho-1"><a class="header" href="#gxecho-1">gx.echo</a></h2>
+<h2 id="gxecho"><a class="header" href="#gxecho">gx.echo</a></h2>
 <h3 id="功能描述-2"><a class="header" href="#功能描述-2">功能描述</a></h3>
 <p>输出文本信息到控制台。</p>
 <h3 id="语法定义-2"><a class="header" href="#语法定义-2">语法定义</a></h3>
@@ -1346,7 +1555,7 @@ gx.echo {
   export: "ENV_TYPE"
 }
 </code></pre>
-<h2 id="gxread-1"><a class="header" href="#gxread-1">gx.read</a></h2>
+<h2 id="gxread"><a class="header" href="#gxread">gx.read</a></h2>
 <h3 id="功能描述-3"><a class="header" href="#功能描述-3">功能描述</a></h3>
 <p>从不同来源读取数据并存储到变量中。</p>
 <h3 id="语法定义-3"><a class="header" href="#语法定义-3">语法定义</a></h3>
@@ -1388,7 +1597,7 @@ gx.read_cmd {
   name: "commit_hash"
 }
 </code></pre>
-<h2 id="gxvars-1"><a class="header" href="#gxvars-1">gx.vars</a></h2>
+<h2 id="gxvars"><a class="header" href="#gxvars">gx.vars</a></h2>
 <h3 id="功能描述-4"><a class="header" href="#功能描述-4">功能描述</a></h3>
 <p>定义和设置多个变量。</p>
 <h3 id="语法定义-4"><a class="header" href="#语法定义-4">语法定义</a></h3>
@@ -1412,7 +1621,7 @@ gx.vars {
   config_file: "${project_root}/config.yaml"
 }
 </code></pre>
-<h2 id="gxtpl-1"><a class="header" href="#gxtpl-1">gx.tpl</a></h2>
+<h2 id="gxtpl"><a class="header" href="#gxtpl">gx.tpl</a></h2>
 <h3 id="功能描述-5"><a class="header" href="#功能描述-5">功能描述</a></h3>
 <p>使用模板引擎处理文件模板。</p>
 <h3 id="语法定义-5"><a class="header" href="#语法定义-5">语法定义</a></h3>
@@ -1439,7 +1648,7 @@ gx.tpl {
   data: "template_data"
 }
 </code></pre>
-<h2 id="gxver-1"><a class="header" href="#gxver-1">gx.ver</a></h2>
+<h2 id="gxver"><a class="header" href="#gxver">gx.ver</a></h2>
 <h3 id="功能描述-6"><a class="header" href="#功能描述-6">功能描述</a></h3>
 <p>管理和操作版本信息。</p>
 <h3 id="语法定义-6"><a class="header" href="#语法定义-6">语法定义</a></h3>
@@ -1469,7 +1678,7 @@ gx.ver {
   export: "APP_VERSION"
 }
 </code></pre>
-<h2 id="gxshell-1"><a class="header" href="#gxshell-1">gx.shell</a></h2>
+<h2 id="gxshell"><a class="header" href="#gxshell">gx.shell</a></h2>
 <h3 id="功能描述-7"><a class="header" href="#功能描述-7">功能描述</a></h3>
 <p>执行Shell脚本文件。</p>
 <h3 id="语法定义-7"><a class="header" href="#语法定义-7">语法定义</a></h3>
@@ -1578,7 +1787,7 @@ gx.artifact {
   dst_path: "artifacts/v1.0.0/"
 }
 </code></pre>
-<h2 id="gxrun-1"><a class="header" href="#gxrun-1">gx.run</a></h2>
+<h2 id="gxrun"><a class="header" href="#gxrun">gx.run</a></h2>
 <h3 id="功能描述-11"><a class="header" href="#功能描述-11">功能描述</a></h3>
 <p>运行其他GXL工作流文件。</p>
 <h3 id="语法定义-11"><a class="header" href="#语法定义-11">语法定义</a></h3>
@@ -1639,7 +1848,7 @@ gx.artifact {
   dst_path: "artifacts/v1.0.0/"
 }
 </code></pre>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="gxassert-2"><a class="header" href="#gxassert-2">gx.assert</a></h1>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="gxassert-1"><a class="header" href="#gxassert-1">gx.assert</a></h1>
 <h2 id="功能描述-14"><a class="header" href="#功能描述-14">功能描述</a></h2>
 <p>执行断言检查，验证表达式的值是否符合预期。</p>
 <h2 id="语法定义-14"><a class="header" href="#语法定义-14">语法定义</a></h2>
@@ -1665,7 +1874,7 @@ gx.assert {
   result: "assert_result"
 }
 </code></pre>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="gxcmd-2"><a class="header" href="#gxcmd-2">gx.cmd</a></h1>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="gxcmd-1"><a class="header" href="#gxcmd-1">gx.cmd</a></h1>
 <h2 id="功能描述-15"><a class="header" href="#功能描述-15">功能描述</a></h2>
 <p>执行系统命令或脚本。</p>
 <h2 id="语法定义-15"><a class="header" href="#语法定义-15">语法定义</a></h2>
@@ -1747,7 +1956,7 @@ gx.upload {
   method: "POST"
 }
 </code></pre>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="gxecho-2"><a class="header" href="#gxecho-2">gx.echo</a></h1>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="gxecho-1"><a class="header" href="#gxecho-1">gx.echo</a></h1>
 <h2 id="功能描述-18"><a class="header" href="#功能描述-18">功能描述</a></h2>
 <p>输出文本信息到控制台。</p>
 <h2 id="语法定义-18"><a class="header" href="#语法定义-18">语法定义</a></h2>
@@ -1783,7 +1992,7 @@ gx.echo {
   export: "ENV_TYPE"
 }
 </code></pre>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="gxread-2"><a class="header" href="#gxread-2">gx.read</a></h1>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="gxread-1"><a class="header" href="#gxread-1">gx.read</a></h1>
 <h2 id="功能描述-19"><a class="header" href="#功能描述-19">功能描述</a></h2>
 <p>从不同来源读取数据并存储到变量中。</p>
 <h2 id="语法定义-19"><a class="header" href="#语法定义-19">语法定义</a></h2>
@@ -1825,7 +2034,7 @@ gx.read_cmd {
   name: "commit_hash"
 }
 </code></pre>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="gxrun-2"><a class="header" href="#gxrun-2">gx.run</a></h1>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="gxrun-1"><a class="header" href="#gxrun-1">gx.run</a></h1>
 <h2 id="功能描述-20"><a class="header" href="#功能描述-20">功能描述</a></h2>
 <p>运行其他GXL工作流文件。</p>
 <h2 id="语法定义-20"><a class="header" href="#语法定义-20">语法定义</a></h2>
@@ -1856,7 +2065,7 @@ gx.run {
   isolate: true
 }
 </code></pre>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="gxshell-2"><a class="header" href="#gxshell-2">gx.shell</a></h1>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="gxshell-1"><a class="header" href="#gxshell-1">gx.shell</a></h1>
 <h2 id="功能描述-21"><a class="header" href="#功能描述-21">功能描述</a></h2>
 <p>执行Shell脚本文件。</p>
 <h2 id="语法定义-21"><a class="header" href="#语法定义-21">语法定义</a></h2>
@@ -1914,7 +2123,7 @@ gx.untar {
   dst: "extracted/"
 }
 </code></pre>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="gxtpl-2"><a class="header" href="#gxtpl-2">gx.tpl</a></h1>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="gxtpl-1"><a class="header" href="#gxtpl-1">gx.tpl</a></h1>
 <h2 id="功能描述-23"><a class="header" href="#功能描述-23">功能描述</a></h2>
 <p>使用模板引擎处理文件模板。</p>
 <h2 id="语法定义-23"><a class="header" href="#语法定义-23">语法定义</a></h2>
@@ -1941,7 +2150,7 @@ gx.tpl {
   data: "template_data"
 }
 </code></pre>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="gxvars-2"><a class="header" href="#gxvars-2">gx.vars</a></h1>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="gxvars-1"><a class="header" href="#gxvars-1">gx.vars</a></h1>
 <h2 id="功能描述-24"><a class="header" href="#功能描述-24">功能描述</a></h2>
 <p>定义和设置多个变量。</p>
 <h2 id="语法定义-24"><a class="header" href="#语法定义-24">语法定义</a></h2>
@@ -1965,7 +2174,7 @@ gx.vars {
   config_file: "${project_root}/config.yaml"
 }
 </code></pre>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="gxver-2"><a class="header" href="#gxver-2">gx.ver</a></h1>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="gxver-1"><a class="header" href="#gxver-1">gx.ver</a></h1>
 <h2 id="功能描述-25"><a class="header" href="#功能描述-25">功能描述</a></h2>
 <p>管理和操作版本信息。</p>
 <h2 id="语法定义-25"><a class="header" href="#语法定义-25">语法定义</a></h2>
@@ -2017,154 +2226,9 @@ gx.ver {
 - 已将 inner/ 目录移动到 gxl/inner/ 目录下
 - 已清理根目录下的 inner/ 目录
 - 已更新 SUMMARY.md 中的路径引用（包括inner相关路径）
-- 已验证 mdbook build 构建成功</code></pre>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="changelog"><a class="header" href="#changelog">Changelog</a></h1>
-<h1 id="galaxy-flow-v083--v086-发布说明"><a class="header" href="#galaxy-flow-v083--v086-发布说明">Galaxy Flow v0.8.3 → v0.8.6 发布说明</a></h1>
-<h2 id="-版本信息"><a class="header" href="#-版本信息">🚀 版本信息</a></h2>
-<ul>
-<li>起始版本 : v0.8.3</li>
-<li>目标版本 : v0.8.6</li>
-<li>当前版本 : 0.8.6</li>
-</ul>
-<h2 id="-主要新功能"><a class="header" href="#-主要新功能">✨ 主要新功能</a></h2>
-<h3 id="1-日志重定向系统重构"><a class="header" href="#1-日志重定向系统重构">1. 日志重定向系统重构</a></h3>
-<ul>
-<li>新增 : 使用管道(pip)进行日志重定向的全新实现</li>
-<li>优化 : 改进了日志处理机制，提高了性能和稳定性</li>
-<li>提交 : a5bf576 , deea236 , 2e1ce2c , be686b1 , 4e3f1a7</li>
-</ul>
-<h3 id="2-逻辑表达式支持"><a class="header" href="#2-逻辑表达式支持">2. 逻辑表达式支持</a></h3>
-<ul>
-<li>新增 : 逻辑表达式( logic_exp )功能实现</li>
-<li>实现 : 完整的逻辑表达式解析和执行能力</li>
-<li>提交 : d646fd4 , fc7c975</li>
-</ul>
-<h3 id="3-归档功能增强"><a class="header" href="#3-归档功能增强">3. 归档功能增强</a></h3>
-<ul>
-<li>新增 : gx.tar 和 gx.untar 命令支持</li>
-<li>用途 : 提供原生的压缩和解压缩能力</li>
-<li>提交 : 1755d4d</li>
-</ul>
-<h2 id="-改进与优化"><a class="header" href="#-改进与优化">🔧 改进与优化</a></h2>
-<h3 id="代码质量"><a class="header" href="#代码质量">代码质量</a></h3>
-<ul>
-<li>重构 : 成功状态处理逻辑重构 ( 6dce866 )</li>
-<li>优化 : 表达式逻辑更新 ( 73dcb46 )</li>
-<li>清理 : 取消taskvalue中的日志信息 ( 523f85b )</li>
-</ul>
-<h3 id="依赖更新"><a class="header" href="#依赖更新">依赖更新</a></h3>
-<ul>
-<li>更新 : clap依赖升级到最新版本 ( 9246378 )</li>
-<li>更新 : 多个crate依赖项更新 ( 1051001 , 352e19a )</li>
-<li>维护 : 代码格式化和clippy修复 ( 08b51f2 , c57879b , b049906 )</li>
-</ul>
-<h2 id="-问题修复"><a class="header" href="#-问题修复">🐛 问题修复</a></h2>
-<h3 id="关键修复"><a class="header" href="#关键修复">关键修复</a></h3>
-<ul>
-<li>修复 : 模块路径错误问题 (#61) - d099a55</li>
-<li>修复 : 多个相关问题 (#62, #61) - 4419cad</li>
-<li>修复 : 模块名称列表问题 - 19bfa32</li>
-</ul>
-<h3 id="其他修复"><a class="header" href="#其他修复">其他修复</a></h3>
-<ul>
-<li>修复 : 通道与启用状态的关联问题 - 5592286</li>
-<li>修复 : 干运行参数传递给子gxl的问题 - 4644a1b</li>
-</ul>
-<h2 id="-其他变更"><a class="header" href="#-其他变更">📋 其他变更</a></h2>
-<h3 id="构建和部署"><a class="header" href="#构建和部署">构建和部署</a></h3>
-<ul>
-<li>更新 : artifact构建更新 ( 9c1193d )</li>
-<li>更新 : 管理配置更新 ( 3dcc127 )</li>
-<li>维护 : 版本号更新到0.8.6 ( 2f4acfe , 5b4dbb0 )</li>
-</ul>
-<h3 id="内部改进"><a class="header" href="#内部改进">内部改进</a></h3>
-<ul>
-<li>重构 : 使用常量字符串优化 ( 64e7d30 , daf17ef )</li>
-<li>新增 : 读取文件日志功能 ( 142b448 )</li>
-</ul>
-<h2 id="-升级建议"><a class="header" href="#-升级建议">📝 升级建议</a></h2>
-<ol>
-<li>
-<ol>
-<li></li>
-</ol>
-平滑升级 : 从v0.8.3升级到v0.8.6是向后兼容的</li>
-<li>
-<ol start="2">
-<li></li>
-</ol>
-新功能试用 : 建议尝试新的日志重定向和逻辑表达式功能</li>
-<li>
-<ol start="3">
-<li></li>
-</ol>
-依赖检查 : 确保所有依赖项已更新到兼容版本</li>
-</ol>
-<h2 id="-变更统计"><a class="header" href="#-变更统计">📊 变更统计</a></h2>
-<ul>
-<li>总提交数 : 30+ 次提交</li>
-<li>功能新增 : 5个主要功能</li>
-<li>问题修复 : 6个关键修复</li>
-<li>代码优化 : 10+ 项改进
-本次发布专注于提升系统稳定性、增加新功能，并修复已知问题，为用户提供更好的DevSecOps自动化体验。</li>
-</ul>
-<h1 id="083"><a class="header" href="#083">0.8.3</a></h1>
-<h2 id="新增"><a class="header" href="#新增">新增</a></h2>
-<ul>
-<li>GXL 支持 数字、BOOL、数组、对象 数据类型</li>
-<li>提供 defined 函数 - 检查变量是否已定义</li>
-<li>提供 gx.shell 方便 shell 调用</li>
-<li>支持 ${VAR:default} 变量定义默认值</li>
-<li>gprj update mod 或 gflow --update mod 支持更新项目依赖的Mod</li>
-</ul>
-<h2 id="改进"><a class="header" href="#改进">改进</a></h2>
-<ul>
-<li>gx.read_file 读取内容到对象，便于后续处理</li>
-<li>winnow 升级 0.7</li>
-<li>对于远程Mod的获取，去掉外部Git 依赖</li>
-<li>修改外部依赖</li>
-</ul>
-<h1 id="070"><a class="header" href="#070">0.7.0</a></h1>
-<h2 id="新增-1"><a class="header" href="#新增-1">新增</a></h2>
-<ul>
-<li>支持事务机制</li>
-<li>支持dryrun机制 - 允许预览操作结果而不实际执行</li>
-</ul>
-<h1 id="064"><a class="header" href="#064">0.6.4</a></h1>
-<h2 id="新增-2"><a class="header" href="#新增-2">新增</a></h2>
-<ul>
-<li>支持 gx.cmd  quiet (静默） - 自定义控制cmd的日志输出与否</li>
-</ul>
-<h1 id="062"><a class="header" href="#062">0.6.2</a></h1>
-<h2 id="新增-3"><a class="header" href="#新增-3">新增</a></h2>
-<ul>
-<li>优化日志输出，增加日志的重定向，支持捕获控制台标准日志输出</li>
-</ul>
-<h1 id="060"><a class="header" href="#060">0.6.0</a></h1>
-<h2 id="新增-4"><a class="header" href="#新增-4">新增</a></h2>
-<ul>
-<li>生成任务报告 - 提供执行过程和结果的详细信息</li>
-<li>支持flow上的Task注解 - 增强流程定义的灵活性</li>
-</ul>
-<h2 id="改进-1"><a class="header" href="#改进-1">改进</a></h2>
-<ul>
-<li>改进 flow 编排语法，由: 变为 |  符号</li>
-</ul>
-<h1 id="gflow-053"><a class="header" href="#gflow-053">gflow-0.5.3</a></h1>
-<h2 id="内置环境变量"><a class="header" href="#内置环境变量">内置环境变量</a></h2>
-<ul>
-<li>GXL_PRJ_ROOT:    最近定义的 _gal/project.toml 的目录</li>
-</ul>
-<h2 id="extern-mod-支持变量"><a class="header" href="#extern-mod-支持变量">extern mod 支持变量</a></h2>
-<pre><code>extern mod head { path = "${GXL_START_ROOT}/_gal/"; }
+- 已验证 mdbook build 构建成功
 </code></pre>
-<p><a href="https://github.com/galaxy-sec/galaxy-flow/releases/tag/v0.5.3">0.5.3 下载</a></p>
-<h1 id="052"><a class="header" href="#052">0.5.2</a></h1>
-<h2 id="内置环境变量-1"><a class="header" href="#内置环境变量-1">内置环境变量</a></h2>
-<ul>
-<li>GXL_START_ROOT:  GXL 启动处理的目录</li>
-<li>GXL_CUR_DIR:  GXL 当前所在目录，在调用gx.run时，与GXL_START_ROOT可能不同</li>
-</ul>
+<p>[ ] 增加了cmd,operator 相关的文档， 更新 SUMMARY.md</p>
 
                     </main>
 
