@@ -24,3 +24,4 @@
     - 已清理根目录下的 inner/ 目录
     - 已更新 SUMMARY.md 中的路径引用（包括inner相关路径）
     - 已验证 mdbook build 构建成功
+[ ] 增加了cmd,operator 相关的文档， 更新 SUMMARY.md

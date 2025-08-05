@@ -7,7 +7,7 @@
 ### mysql_mock 示例模块
 
 ```
-mysql_mock/
+mysql/
 ├── _gal/                    # 模块构建配置目录
 │   ├── adm.gxl             # 模块管理配置
 │   └── work.gxl            # 工作流环境配置
@@ -76,24 +76,3 @@ mysql_mock/
   - 读取配置文件 `./values/_used.json`
   - 解析构件信息 `artifact.yml`
   - 执行文件下载和解压操作
-
-## 使用指南
-
-### 创建新模块
-
-1. **复制模板**: 复制 `mysql_mock` 目录作为新模块的基础
-2. **修改配置**: 更新 `mod-prj.yml` 和 `version.txt`
-3. **定义变量**: 在 `mod/*/vars.yml` 中定义平台特定变量
-4. **实现工作流**: 在 `workflows/operators.gxl` 中实现具体操作逻辑
-5. **测试验证**: 在对应平台上测试模块功能
-
-### 模块版本管理
-
-- 使用 `version.txt` 跟踪版本变更
-- 通过 `_gal/adm.gxl` 集成版本管理功能
-- 支持多平台并行开发和测试
-
-### 环境适配
-
-- 每个平台目录（如 `arm-mac14-host`、`x86-ubt22-k8s`）可以定义独立的变量和工作流
-- 通过 `_gal/work.gxl` 统一管理不同环境的配置映射
