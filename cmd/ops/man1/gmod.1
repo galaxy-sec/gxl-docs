@@ -1,0 +1,57 @@
+.TH GMOD 1 "2024-12-19" "Galaxy Ops v0.10.6" "Galaxy Operations System Manual"
+.SH NAME
+gmod \- Galaxy Module management tool
+.SH SYNOPSIS
+.B gmod
+[\fB\-d\fR|\fB\-\-debug\fR \fIlevel\fR]
+[\fB\-\-log\fR \fIlog_config\fR]
+{\fBexample\fR|\fBnew\fR|\fBupdate\fR|\fBlocalize\fR}
+.SH DESCRIPTION
+.B gmod
+is a command-line tool for managing Galaxy module specifications and configurations. It provides functionality to create new module definitions, update existing module specifications, and localize modules for different environments.
+.SH COMMANDS
+.TP
+.B example
+Display example module configurations.
+.TP
+.B new
+Create a new module specification with the specified name.
+.TP
+.B update
+Update existing module specifications, including references and dependencies.
+.TP
+.B localize
+Localize module configurations for specific environments using value files.
+.SH OPTIONS
+.TP
+.B \-d, \-\-debug \fIlevel\fR
+Set debug output level (0-4, default: 0)
+.TP
+.B \-\-log \fIlog_config\fR
+Configure logging output. Format: \fIcomponent=level\fR[,...]
+.br
+Example: \-\-log cmd=debug,parse=info
+.TP
+.B \-f, \-\-force \fIlevel\fR
+Force update remote git repositories (1-3, default: 0)
+.TP
+.B \-\-value \fIfile\fR
+Use specified value file for localization
+.TP
+.B \-\-default
+Enable default module mode (skip user value.yml)
+.SH EXAMPLES
+.TP
+Create a new module:
+.B gmod new \-\-name my_module
+.TP
+Update module with force level 2:
+.B gmod update \-\-force 2 \-\-debug 1
+.TP
+Localize module with custom values:
+.B gmod localize \-\-value staging.yml
+.SH SEE ALSO
+.BR gsys (1),
+.BR gops (1)
+.SH AUTHOR
+Galaxy Operations Team
