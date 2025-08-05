@@ -181,7 +181,8 @@
 <p>系统操作符用于定义和管理一个完整的系统，它组合了多个模块操作符来构建复杂的系统环境。系统操作符通过 <code>sys_model.yml</code> 定义系统的基本信息，通过 <code>mod_list.yml</code> 定义所包含的模块列表。</p>
 <h2 id="文件结构"><a class="header" href="#文件结构">文件结构</a></h2>
 <p>一个典型的系统操作符项目具有以下文件结构：</p>
-<p>example_sys/
+<pre><code>
+example_sys/
 ├── .gitignore
 ├── sys_model.yml
 ├── mod_list.yml
@@ -192,7 +193,9 @@
 │   └── redis_mock/
 │       └── arm-mac14-host/
 └── workflows/
-└── operators.gxl</p>
+    └── operators.gxl
+
+</code></pre>
 <h3 id="核心文件说明"><a class="header" href="#核心文件说明">核心文件说明</a></h3>
 <ol>
 <li>
