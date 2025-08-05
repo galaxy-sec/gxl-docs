@@ -1,0 +1,66 @@
+.TH GOPS 1 "2024-12-19" "Galaxy Ops v0.10.6" "Galaxy Operations System Manual"
+.SH NAME
+gops \- Galaxy Operations management tool
+.SH SYNOPSIS
+.B gops
+[\fB\-d\fR|\fB\-\-debug\fR \fIlevel\fR]
+[\fB\-\-log\fR \fIlog_config\fR]
+{\fBnew\fR|\fBimport\fR|\fBupdate\fR|\fBlocalize\fR|\fBsetting\fR}
+.SH DESCRIPTION
+.B gops
+is a comprehensive command-line tool for managing Galaxy operations, including creating new operations, importing existing configurations, updating system states, and localizing settings for different environments.
+.SH COMMANDS
+.TP
+.B new
+Create a new operation with the specified name.
+.TP
+.B import
+Import operation configurations from the specified path.
+.TP
+.B update
+Update existing operations, optionally forcing remote git updates.
+.TP
+.B localize
+Localize operation configurations for specific environments using value files.
+.TP
+.B setting
+Configure system settings and debug options.
+.SH OPTIONS
+.TP
+.B \-d, \-\-debug \fIlevel\fR
+Set debug output level (0-4, default: 0)
+.TP
+.B \-\-log \fIlog_config\fR
+Configure logging output. Format: \fIcomponent=level\fR[,...]
+.br
+Example: \-\-log cmd=debug,parse=info
+.TP
+.B \-f, \-\-force \fIlevel\fR
+Force update remote git repositories (1-3, default: 0)
+.TP
+.B \-p, \-\-path \fIpath\fR
+Specify import path (used with import command)
+.TP
+.B \-\-value \fIfile\fR
+Use specified value file for localization
+.TP
+.B \-\-default
+Enable default module mode (skip user value.yml)
+.SH EXAMPLES
+.TP
+Create a new operation:
+.B gops new \-\-name my_operation
+.TP
+Import configuration from path:
+.B gops import \-\-path /path/to/config
+.TP
+Update with force and debug:
+.B gops update \-\-force 2 \-\-debug 3
+.TP
+Configure settings:
+.B gops setting \-\-debug 1 \-\-log cmd=debug
+.SH SEE ALSO
+.BR gsys (1),
+.BR gmod (1)
+.SH AUTHOR
+Galaxy Operations Team

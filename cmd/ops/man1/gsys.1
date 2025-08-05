@@ -1,0 +1,54 @@
+.TH GSYS 1 "2024-12-19" "Galaxy Ops v0.10.6" "Galaxy Operations System Manual"
+.SH NAME
+gsys \- Galaxy Operations System management tool
+.SH SYNOPSIS
+.B gsys
+[\fB\-d\fR|\fB\-\-debug\fR \fIlevel\fR]
+[\fB\-\-log\fR \fIlog_config\fR]
+{\fBnew\fR|\fBupdate\fR|\fBlocalize\fR}
+.SH DESCRIPTION
+.B gsys
+is a command-line tool for managing Galaxy Operations System configurations and deployments. It provides functionality to create new system configurations, update existing ones, and localize system settings for different environments.
+.SH COMMANDS
+.TP
+.B new
+Create a new system configuration with the specified name.
+.TP
+.B update
+Update existing system configurations, optionally forcing remote git updates.
+.TP
+.B localize
+Localize system configurations for specific environments using value files.
+.SH OPTIONS
+.TP
+.B \-d, \-\-debug \fIlevel\fR
+Set debug output level (0-4, default: 0)
+.TP
+.B \-\-log \fIlog_config\fR
+Configure logging output. Format: \fIcomponent=level\fR[,...]
+.br
+Example: \-\-log cmd=debug,parse=info
+.TP
+.B \-f, \-\-force \fIlevel\fR
+Force update remote git repositories (1-3, default: 0)
+.TP
+.B \-\-value \fIfile\fR
+Use specified value file for localization
+.TP
+.B \-\-default
+Enable default module mode (skip user value.yml)
+.SH EXAMPLES
+.TP
+Create a new system configuration:
+.B gsys new \-\-name my_system
+.TP
+Update system with debug level 2:
+.B gsys update \-\-debug 2
+.TP
+Localize with custom values:
+.B gsys localize \-\-value production.yml
+.SH SEE ALSO
+.BR gmod (1),
+.BR gops (1)
+.SH AUTHOR
+Galaxy Operations Team
