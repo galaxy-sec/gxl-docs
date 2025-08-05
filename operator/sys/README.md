@@ -6,6 +6,8 @@
 ## 文件结构
 一个典型的系统操作符项目具有以下文件结构：
 
+```
+
 example_sys/
 ├── .gitignore
 ├── sys_model.yml
@@ -18,6 +20,8 @@ example_sys/
 │       └── arm-mac14-host/
 └── workflows/
     └── operators.gxl
+
+```
 
 ### 核心文件说明
 
