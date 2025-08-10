@@ -1,0 +1,681 @@
+<!DOCTYPE HTML>
+<html lang="zh" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>gops - galaxy-sec operator ecosystem</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../favicon.svg">
+        <link rel="shortcut icon" href="../favicon.png">
+        <link rel="stylesheet" href="../css/variables.css">
+        <link rel="stylesheet" href="../css/general.css">
+        <link rel="stylesheet" href="../css/chrome.css">
+        <link rel="stylesheet" href="../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="../highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="../tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href=".././mermaid.css">
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "../";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "../searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">galaxy-sec operator ecosystem</h1>
+
+                    <div class="right-buttons">
+                        <a href="../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="gops---galaxy-operations-system-系统操作管理工具"><a class="header" href="#gops---galaxy-operations-system-系统操作管理工具">gops - Galaxy Operations System 系统操作管理工具</a></h1>
+<h2 id="概述"><a class="header" href="#概述">概述</a></h2>
+<p><code>gops</code> 是 Galaxy Operations System 的核心管理工具，用于管理系统配置、导入模块、更新引用等操作。它提供了完整的系统操作功能，帮助开发者高效地管理 Galaxy 系统的各种配置和操作。</p>
+<h2 id="安装"><a class="header" href="#安装">安装</a></h2>
+<pre><code class="language-bash"># 从源代码安装
+cargo install --path .
+
+# 或者使用二进制分发
+https://github.com/galaxy-sec/galaxy-ops/releases/latest/
+</code></pre>
+<h2 id="基本用法"><a class="header" href="#基本用法">基本用法</a></h2>
+<h3 id="显示版本信息"><a class="header" href="#显示版本信息">显示版本信息</a></h3>
+<pre><code class="language-bash">gops
+# 输出示例：gops: 1.0.0
+</code></pre>
+<h3 id="显示帮助信息"><a class="header" href="#显示帮助信息">显示帮助信息</a></h3>
+<pre><code class="language-bash">gops --help
+gops &lt;command&gt; --help
+</code></pre>
+<h2 id="命令详解"><a class="header" href="#命令详解">命令详解</a></h2>
+<h3 id="gops-new"><a class="header" href="#gops-new">gops new</a></h3>
+<p>创建新的系统配置</p>
+<p><strong>语法：</strong></p>
+<pre><code class="language-bash">gops new [OPTIONS]
+</code></pre>
+<p><strong>选项：</strong></p>
+<ul>
+<li><code>-n, --name &lt;NAME&gt;</code> - 系统配置名称（必填）
+<ul>
+<li>系统配置的唯一标识名称</li>
+<li>支持字母数字、连字符和下划线</li>
+<li>必须为非空字符串</li>
+</ul>
+</li>
+</ul>
+<p><strong>功能：</strong></p>
+<ul>
+<li>创建指定名称的新系统配置</li>
+<li>初始化系统配置目录结构</li>
+<li>生成所有必需的配置文件</li>
+<li>设置默认的系统配置参数</li>
+</ul>
+<p><strong>示例：</strong></p>
+<pre><code class="language-bash"># 创建名为 "my-config" 的新系统配置
+gops new --name my-config
+
+# 创建带详细调试的系统配置
+gops new --name debug-config --debug 2
+</code></pre>
+<p><strong>输出：</strong></p>
+<pre><code>创建目录：my-config/
+生成配置文件：my-config/ops_config.yml
+生成模板文件：my-config/templates/
+生成示例文件：my-config/examples/
+生成脚本文件：my-config/scripts/
+</code></pre>
+<h3 id="gops-import"><a class="header" href="#gops-import">gops import</a></h3>
+<p>导入外部模块到当前系统</p>
+<p><strong>语法：</strong></p>
+<pre><code class="language-bash">gops import [OPTIONS]
+</code></pre>
+<p><strong>选项：</strong></p>
+<ul>
+<li><code>-d, --debug &lt;LEVEL&gt;</code> - 调试级别（0-4）
+<ul>
+<li>0：关闭调试输出</li>
+<li>1：基础调试信息</li>
+<li>2：详细调试信息</li>
+<li>3：跟踪调试信息</li>
+<li>4：完整调试信息</li>
+</ul>
+</li>
+<li><code>--log &lt;LOG&gt;</code> - 日志配置（格式：模块=级别,模块=级别）</li>
+<li><code>-f, --force &lt;LEVEL&gt;</code> - 强制更新级别
+<ul>
+<li>0：不强制更新</li>
+<li>1：强制更新引用</li>
+<li>2：强制更新依赖</li>
+<li>3：强制更新所有内容</li>
+</ul>
+</li>
+<li><code>-p, --path &lt;PATH&gt;</code> - 模块导入路径（必填）
+<ul>
+<li>可以是相对路径或绝对路径</li>
+<li>指定要导入的模块所在位置</li>
+</ul>
+</li>
+</ul>
+<p><strong>功能：</strong></p>
+<ul>
+<li>从指定路径导入模块配置</li>
+<li>将模块集成到当前系统</li>
+<li>自动处理模块依赖关系</li>
+<li>支持强制导入模式</li>
+</ul>
+<p><strong>示例：</strong></p>
+<pre><code class="language-bash"># 从指定路径导入模块
+gops import --path /path/to/module
+
+# 跳过确认导入
+gops import --path /path/to/module --force 1
+
+# 详细调试导入过程
+gops import --path /path/to/module --debug 3 --log import=debug
+
+# 强制更新所有内容
+gops import --path /path/to/module --force 3
+</code></pre>
+<h3 id="gops-update"><a class="header" href="#gops-update">gops update</a></h3>
+<p>更新系统模块和引用</p>
+<p><strong>语法：</strong></p>
+<pre><code class="language-bash">gops update [OPTIONS]
+</code></pre>
+<p><strong>选项：</strong></p>
+<ul>
+<li><code>-d, --debug &lt;LEVEL&gt;</code> - 调试级别（0-4）</li>
+<li><code>--log &lt;LOG&gt;</code> - 日志配置</li>
+<li><code>-f, --force &lt;LEVEL&gt;</code> - 强制更新级别
+<ul>
+<li>0：不强制更新</li>
+<li>1：强制更新引用</li>
+<li>2：强制更新依赖</li>
+<li>3：强制更新所有内容</li>
+</ul>
+</li>
+</ul>
+<p><strong>功能：</strong></p>
+<ul>
+<li>更新系统模块的引用关系</li>
+<li>更新模块的依赖配置</li>
+<li>下载远程资源引用</li>
+<li>支持多种强制更新模式</li>
+</ul>
+<p><strong>示例：</strong></p>
+<pre><code class="language-bash"># 正常更新系统
+gops update
+
+# 强制更新引用
+gops update --force 1
+
+# 详细调试更新过程
+gops update --debug 3 --log all=debug
+</code></pre>
+<h3 id="gops-localize"><a class="header" href="#gops-localize">gops localize</a></h3>
+<p>本地化模块配置</p>
+<p><strong>语法：</strong></p>
+<pre><code class="language-bash">gops localize [OPTIONS]
+</code></pre>
+<p><strong>选项：</strong></p>
+<ul>
+<li><code>-d, --debug &lt;LEVEL&gt;</code> - 调试级别（0-4）</li>
+<li><code>--log &lt;LOG&gt;</code> - 日志配置</li>
+<li><code>--value &lt;PATH&gt;</code> - 本地化值文件路径
+<ul>
+<li>指定用于本地化的值文件路径</li>
+<li>通常是 YAML 格式的配置文件</li>
+</ul>
+</li>
+<li><code>--default</code> - 使用默认模块配置
+<ul>
+<li>启用默认模块模式</li>
+<li>不使用用户自定义的 value.yml 文件</li>
+</ul>
+</li>
+</ul>
+<p><strong>功能：</strong></p>
+<ul>
+<li>根据环境特定的值本地化模块配置</li>
+<li>适配不同环境的配置需求</li>
+<li>支持多环境配置管理</li>
+<li>可选择使用自定义或默认值</li>
+</ul>
+<p><strong>示例：</strong></p>
+<pre><code class="language-bash"># 使用默认配置本地化
+gops localize --default
+
+# 使用自定义值文件本地化
+gops localize --value prod-values.yml
+
+# 使用自定义值文件并启用调试
+gops localize --value dev-values.yml --debug 2
+</code></pre>
+<blockquote>
+<p><strong>注意：</strong> 目前 <code>gops localize</code> 命令实现为 <code>todo!()</code>，功能尚未完成。</p>
+</blockquote>
+<h3 id="gops-setting"><a class="header" href="#gops-setting">gops setting</a></h3>
+<p>系统设置管理</p>
+<p><strong>语法：</strong></p>
+<pre><code class="language-bash">gops setting [OPTIONS]
+</code></pre>
+<p><strong>选项：</strong></p>
+<ul>
+<li><code>-d, --debug &lt;LEVEL&gt;</code> - 调试级别（0-4）</li>
+<li><code>--log &lt;LOG&gt;</code> - 日志配置
+<ul>
+<li>格式：模块=级别,模块=级别</li>
+<li>例如：--log setting=debug,system=info</li>
+</ul>
+</li>
+</ul>
+<p><strong>功能：</strong></p>
+<ul>
+<li>管理系统级别的配置设置</li>
+<li>查看和修改系统配置参数</li>
+<li>提供系统状态信息</li>
+<li>支持调试和日志配置</li>
+</ul>
+<p><strong>示例：</strong></p>
+<pre><code class="language-bash"># 查看系统设置
+gops setting
+
+# 启用调试输出查看设置
+gops setting --debug 2
+
+# 配置日志级别查看设置
+gops setting --log setting=debug,system=info
+</code></pre>
+<h2 id="环境变量"><a class="header" href="#环境变量">环境变量</a></h2>
+<ul>
+<li><code>TEST_MODE</code> - 测试模式设置</li>
+<li><code>MOCK_SUCCESS</code> - 模拟成功状态</li>
+<li><code>TEST_MODE</code> 和 <code>MOCK_SUCCESS</code> 用于测试环境，确保测试的安全性和隔离性</li>
+</ul>
+<h2 id="配置文件"><a class="header" href="#配置文件">配置文件</a></h2>
+<h3 id="系统配置结构"><a class="header" href="#系统配置结构">系统配置结构</a></h3>
+<pre><code>my-config/
+├── ops_config.yml              # 系统主配置文件
+├── templates/                  # 模板目录
+├── examples/                  # 示例文件
+├── scripts/                   # 脚本文件
+├── modules/                   # 模块目录
+├── config/                    # 配置文件
+│   ├── default.yml           # 默认配置
+│   ├── local.yml             # 本地配置
+│   └── env/                  # 环境特定配置
+│       ├── dev.yml
+│       ├── staging.yml
+│       └── prod.yml
+└── settings/                  # 系统设置
+    ├── system.yml
+    ├── security.yml
+    └── performance.yml
+</code></pre>
+<h3 id="ops_configyml-示例"><a class="header" href="#ops_configyml-示例">ops_config.yml 示例</a></h3>
+<pre><code class="language-yaml"># 系统配置文件
+system_name: my-ops-system
+version: "1.0.0"
+description: "My Galaxy Operations System"
+
+# 模块配置
+modules:
+  - name: core
+    type: system
+    version: "1.0.0"
+  - name: database
+    type: external
+    path: "/path/to/database-module"
+    version: "2.1.0"
+
+# 依赖配置
+dependencies:
+  - galaxy/core: "&gt;=1.0.0"
+  - galaxy/utils: "~2.0.0"
+  - galaxy/security: "^1.5.0"
+
+# 导入配置
+imports:
+  - name: user-service
+    path: "/path/to/user-service"
+    version: "1.2.0"
+
+# 输出配置
+outputs:
+  - name: artifacts
+    path: "build/artifacts"
+    format: tar.gz
+
+# 系统设置
+settings:
+  debug_level: 1
+  log_level: info
+  auto_update: true
+</code></pre>
+<h2 id="最佳实践"><a class="header" href="#最佳实践">最佳实践</a></h2>
+<h3 id="配置命名"><a class="header" href="#配置命名">配置命名</a></h3>
+<ul>
+<li>使用小写字母、数字、连字符和下划线</li>
+<li>避免特殊字符和空格</li>
+<li>使用有意义的名称，如：<code>production-config</code></li>
+<li>区分环境和用途：<code>dev-api-config</code></li>
+</ul>
+<h3 id="模块管理"><a class="header" href="#模块管理">模块管理</a></h3>
+<pre><code class="language-bash"># 导入新模块
+gops import --path /path/to/new-module --force 1
+
+# 更新现有模块
+gops update --force 2
+
+# 验证配置
+gops setting --debug 2
+</code></pre>
+<h3 id="配置管理"><a class="header" href="#配置管理">配置管理</a></h3>
+<pre><code class="language-bash"># 开发环境配置
+gops localize --value dev-config.yml --debug 2
+
+# 测试环境配置
+gops localize --value test-config.yml
+
+# 生产环境配置
+gops localize --value prod-config.yml --default
+</code></pre>
+<h3 id="调试技巧"><a class="header" href="#调试技巧">调试技巧</a></h3>
+<pre><code class="language-bash"># 启用完整调试输出
+gops import --path /test --debug 4 --log all=debug
+
+# 检查系统设置
+gops setting --debug 3 --log setting=debug
+
+# 使用详细日志进行故障排除
+gops update --debug 2 --log cmd=debug,net=trace
+</code></pre>
+<h2 id="故障排除"><a class="header" href="#故障排除">故障排除</a></h2>
+<h3 id="常见问题"><a class="header" href="#常见问题">常见问题</a></h3>
+<p><strong>Q: 创建配置失败</strong></p>
+<pre><code>错误：无法创建目录 "my-config"
+原因：目录已存在或权限不足
+解决：删除现有目录或检查权限
+</code></pre>
+<p><strong>Q: 导入模块失败</strong></p>
+<pre><code>错误：无法导入模块
+原因：路径不存在或权限不足
+解决：检查路径是否正确，确保有读取权限
+gops import --path /test/path --debug 3 --log import=debug
+</code></pre>
+<p><strong>Q: 更新模块时网络错误</strong></p>
+<pre><code>错误：无法下载依赖
+解决：检查网络连接和 git 配置
+gops update --debug 3 --log net=debug
+</code></pre>
+<p><strong>Q: 本地化功能未实现</strong></p>
+<pre><code>错误：localize 功能尚未完成
+原因：当前版本实现为 todo!()
+解决：等待后续版本支持，或使用其他配置管理方式
+</code></pre>
+<h3 id="调试模式"><a class="header" href="#调试模式">调试模式</a></h3>
+<p>使用调试模式获取详细的执行信息：</p>
+<pre><code class="language-bash"># 最高级别调试
+gops import --path /test --debug 4 --log all=debug
+
+# 关键模块调试
+gops new --name test --debug 3 --log cmd=debug
+
+# 设置调试
+gops setting --debug 2 --log setting=debug
+</code></pre>
+<h3 id="系统诊断"><a class="header" href="#系统诊断">系统诊断</a></h3>
+<pre><code class="language-bash"># 检查配置文件
+ls -la my-config/
+
+# 验证系统配置
+cat my-config/ops_config.yml
+
+# 检查模块目录
+ls -la my-config/modules/
+
+# 查看系统设置
+gops setting --debug 1
+</code></pre>
+<h2 id="测试"><a class="header" href="#测试">测试</a></h2>
+<p>项目包含完整的测试套件：</p>
+<pre><code class="language-bash"># 运行所有测试
+cargo test
+
+# 运行特定测试
+cargo test test_gxops_run_success
+
+# 运行测试并显示输出
+cargo test -- --nocapture
+
+# 测试环境隔离
+TEST_MODE=true cargo test
+</code></pre>
+<h2 id="示例工作流"><a class="header" href="#示例工作流">示例工作流</a></h2>
+<h3 id="开发新系统"><a class="header" href="#开发新系统">开发新系统</a></h3>
+<pre><code class="language-bash"># 1. 创建新系统配置
+gops new --name my-ops-system
+
+# 2. 导入外部模块
+gops import --path /path/to/user-service --force 1
+
+# 3. 导入数据库模块
+gops import --path /path/to/database-module --force 2
+
+# 4. 更新系统模块
+gops update
+
+# 5. 查看系统设置
+gops setting --debug 1
+
+# 6. 本地化配置（功能待实现）
+gops localize --value dev-config.yml
+</code></pre>
+<h3 id="部署到生产环境"><a class="header" href="#部署到生产环境">部署到生产环境</a></h3>
+<pre><code class="language-bash"># 1. 创建生产系统配置
+gops new --name production-system
+
+# 2. 导入生产模块
+gops import --path /path/to/production-modules --force 3
+
+# 3. 更新到最新版本
+gops update --force 3
+
+# 4. 查看生产设置
+gops setting --log production=debug
+
+# 5. 使用生产配置本地化
+gops localize --value prod-config.yml --default
+</code></pre>
+<h2 id="版本历史"><a class="header" href="#版本历史">版本历史</a></h2>
+<h3 id="当前版本100"><a class="header" href="#当前版本100">当前版本：1.0.0</a></h3>
+<ul>
+<li>初始版本</li>
+<li>支持系统配置创建</li>
+<li>支持模块导入功能</li>
+<li>支持系统模块更新</li>
+<li>支持系统设置管理</li>
+<li>本地化功能标记为待实现（todo!()）</li>
+<li>完整的错误处理和日志记录</li>
+</ul>
+<h2 id="功能开发状态"><a class="header" href="#功能开发状态">功能开发状态</a></h2>
+<div class="table-wrapper"><table><thead><tr><th>功能</th><th>状态</th><th>说明</th></tr></thead><tbody>
+<tr><td>new</td><td>✅ 完成</td><td>创建新的系统配置</td></tr>
+<tr><td>import</td><td>✅ 完成</td><td>导入外部模块到当前系统</td></tr>
+<tr><td>update</td><td>✅ 完成</td><td>更新系统模块和引用</td></tr>
+<tr><td>localize</td><td>⏳ 待开发</td><td>本地化模块配置（当前为 todo!()）</td></tr>
+<tr><td>setting</td><td>✅ 完成</td><td>系统设置管理</td></tr>
+</tbody></table>
+</div>
+<h2 id="贡献指南"><a class="header" href="#贡献指南">贡献指南</a></h2>
+<p>欢迎贡献代码和建议：</p>
+<ol>
+<li>Fork 项目</li>
+<li>创建特性分支</li>
+<li>提交更改</li>
+<li>推送到分支</li>
+<li>创建 Pull Request</li>
+</ol>
+<h2 id="许可证"><a class="header" href="#许可证">许可证</a></h2>
+<p>本项目采用 MIT 许可证 - 详见 LICENSE 文件</p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../cmd/gmod.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../cmd/gprj.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../cmd/gmod.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../cmd/gprj.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../elasticlunr.min.js"></script>
+        <script src="../mark.min.js"></script>
+        <script src="../searcher.js"></script>
+
+        <script src="../clipboard.min.js"></script>
+        <script src="../highlight.js"></script>
+        <script src="../book.js"></script>
+
+        <!-- Custom JS scripts -->
+        <script src=".././mermaid.min.js"></script>
+
+
+
+    </div>
+    </body>
+</html>

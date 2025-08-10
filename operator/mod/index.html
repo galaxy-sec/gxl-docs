@@ -3,7 +3,7 @@
     <head>
         <!-- Book generated using mdBook -->
         <meta charset="UTF-8">
-        <title>模块维护器 - gxl</title>
+        <title>模块维护器 - galaxy-sec operator ecosystem</title>
 
 
         <!-- Custom HTML head -->
@@ -139,7 +139,7 @@
                         </button>
                     </div>
 
-                    <h1 class="menu-title">gxl</h1>
+                    <h1 class="menu-title">galaxy-sec operator ecosystem</h1>
 
                     <div class="right-buttons">
                         <a href="../../print.html" title="Print this book" aria-label="Print this book">
@@ -176,105 +176,143 @@
 
                 <div id="content" class="content">
                     <main>
-                        <h1 id="galaxy-ops-模块示例说明"><a class="header" href="#galaxy-ops-模块示例说明">Galaxy Ops 模块示例说明</a></h1>
-<p>本目录包含 Galaxy Ops 框架的模块示例，展示了如何创建和管理可复用的运维模块。</p>
-<h2 id="目录结构说明"><a class="header" href="#目录结构说明">目录结构说明</a></h2>
-<h3 id="mysql_mock-示例模块"><a class="header" href="#mysql_mock-示例模块">mysql_mock 示例模块</a></h3>
-<pre><code>mysql/
-├── _gal/                    # 模块构建配置目录
-│   ├── adm.gxl             # 模块管理配置
-│   └── work.gxl            # 工作流环境配置
-├── mod/                     # 平台特定配置目录
-│   ├── arm-mac14-host/     # ARM Mac 平台配置
-│   │   ├── vars.yml        # 环境变量定义
-│   │   └── workflows/      # 平台特定工作流
-│   │       └── operators.gxl
-│   └── x86-ubt22-k8s/      # x86 Ubuntu K8s 平台配置
-│       ├── vars.yml
-│       └── workflows/
-├── mod-prj.yml              # 模块项目配置
-└── version.txt             # 模块版本信息
+                        <h1 id="mod-operator-开发指南"><a class="header" href="#mod-operator-开发指南">Mod-Operator 开发指南</a></h1>
+<h2 id="概述"><a class="header" href="#概述">概述</a></h2>
+<p>Mod-Operator 是 Galaxy Ops 框架的核心组件，用于定义和管理可复用的运维模块。每个 Mod-Operator 代表一个独立的软件组件或服务，包含完整的生命周期管理能力，包括安装、配置、启动、停止、监控等操作。</p>
+<h3 id="核心特性"><a class="header" href="#核心特性">核心特性</a></h3>
+<ul>
+<li><strong>多平台支持</strong>: 支持不同的 CPU 架构、操作系统和运行环境组合</li>
+<li><strong>模块化设计</strong>: 每个模块都是独立的，可单独开发和版本管理</li>
+<li><strong>工作流驱动</strong>: 使用 GXL 语言定义复杂的运维操作流程</li>
+<li><strong>模板本地化</strong>: 支持配置模板渲染和环境适配</li>
+<li><strong>依赖管理</strong>: 处理模块间的依赖关系</li>
+<li><strong>构件管理</strong>: 统一的软件包下载、缓存和分发机制</li>
+</ul>
+<h3 id="在-galaxy-ops-生态系统中的位置"><a class="header" href="#在-galaxy-ops-生态系统中的位置">在 Galaxy Ops 生态系统中的位置</a></h3>
+<pre><code>gmod (创建模块) → gsys (组合系统) → gops (工程管理) → gflow (执行工作流)
 </code></pre>
-<h2 id="文件作用详解"><a class="header" href="#文件作用详解">文件作用详解</a></h2>
-<h3 id="1-_galadmgxl---模块管理配置"><a class="header" href="#1-_galadmgxl---模块管理配置">1. <code>_gal/adm.gxl</code> - 模块管理配置</a></h3>
+<p>Mod-Operator 是整个运维体系的基础构建块，由 <code>gmod</code> 工具创建和管理，最终通过 <code>gflow</code> 执行具体的运维操作。</p>
+<h2 id="文档索引"><a class="header" href="#文档索引">文档索引</a></h2>
+<p>本指南被拆分为以下文档以便于维护：</p>
 <ul>
-<li><strong>作用</strong>: 定义模块的版本管理和依赖关系</li>
-<li><strong>关键配置</strong>:
-<ul>
-<li>引入版本管理模块 <code>ver_adm</code> 用于版本控制</li>
-<li>定义默认环境配置</li>
-<li>继承版本管理功能</li>
+<li><strong><a href="./CONFIGURATION.html">配置说明</a></strong> - 核心配置文件详细说明</li>
+<li><strong><a href="./DEVELOPMENT.html">开发指南</a></strong> - 开发工作流和最佳实践</li>
+<li><strong><a href="./TROUBLESHOOTING.html">故障排除</a></strong> - 调试和故障排除</li>
+<li><strong><a href="./REFERENCE.html">API 参考</a></strong> - API 和枚举参考</li>
 </ul>
-</li>
-</ul>
-<h3 id="2-_galworkgxl---工作流环境配置"><a class="header" href="#2-_galworkgxl---工作流环境配置">2. <code>_gal/work.gxl</code> - 工作流环境配置</a></h3>
-<ul>
-<li><strong>作用</strong>: 定义模块支持的不同运行环境和平台配置</li>
-<li><strong>关键配置</strong>:
-<ul>
-<li>引入 <code>mod_ops</code> 模块提供核心运维功能</li>
-<li>定义多个环境配置：
-<ul>
-<li><code>arm_mac</code>: ARM Mac 平台</li>
-<li><code>x86_ubt</code>: x86 Ubuntu 平台</li>
-<li><code>x86_ubt_k8s</code>: x86 Ubuntu K8s 平台</li>
-</ul>
-</li>
-<li>每个环境关联对应的模型目录</li>
-</ul>
-</li>
-</ul>
-<h3 id="3-mod-prjyml---模块项目配置"><a class="header" href="#3-mod-prjyml---模块项目配置">3. <code>mod-prj.yml</code> - 模块项目配置</a></h3>
-<ul>
-<li><strong>作用</strong>: 定义模块的测试环境和依赖关系</li>
-<li><strong>配置说明</strong>:
-<ul>
-<li><code>test_envs.dep_root</code>: 依赖根目录（空表示使用默认）</li>
-<li><code>test_envs.deps</code>: 依赖模块列表（空数组表示无额外依赖）</li>
-</ul>
-</li>
-</ul>
-<h3 id="4-versiontxt---版本信息"><a class="header" href="#4-versiontxt---版本信息">4. <code>version.txt</code> - 版本信息</a></h3>
-<ul>
-<li><strong>作用</strong>: 记录模块的当前版本号</li>
-<li><strong>格式</strong>: 遵循语义化版本规范（如 0.1.0）</li>
-</ul>
-<h3 id="5-modvarsyml---环境变量配置"><a class="header" href="#5-modvarsyml---环境变量配置">5. <code>mod/*/vars.yml</code> - 环境变量配置</a></h3>
-<ul>
-<li><strong>作用</strong>: 定义平台特定的环境变量和参数</li>
-<li><strong>配置结构</strong>:
-<pre><code class="language-yaml">vars:
-- name: 变量名
-  desp: 描述（可选）
-  value: 变量值
+<h2 id="快速开始"><a class="header" href="#快速开始">快速开始</a></h2>
+<h3 id="创建新模块"><a class="header" href="#创建新模块">创建新模块</a></h3>
+<pre><code class="language-bash"># 创建基础模块
+gmod new postgresql
+
+# 创建带目标的模块
+gmod new postgresql --targets arm-mac14-host,x86-ubt22-k8s
+
+# 从模板创建
+gmod new postgresql --template database
 </code></pre>
-</li>
-<li><strong>示例变量</strong>:
+<h3 id="基本文件结构"><a class="header" href="#基本文件结构">基本文件结构</a></h3>
+<pre><code>module_name/
+├── mod/                              # 模块定义目录
+│   ├── arm-mac14-host/              # ARM + macOS14 + Host 环境
+│   │   ├── _gal/                    # 项目配置目录
+│   │   ├── local/                   # 本地化生成的配置
+│   │   ├── spec/                    # 规范文件目录
+│   │   ├── values/                  # 值文件目录
+│   │   ├── vars.yml                 # 变量定义
+│   │   ├── setting.yml              # 本地化设置
+│   │   └── workflows/               # 工作流定义
+│   └── x86-ubt22-k8s/              # x86 + Ubuntu22 + K8s 环境
+│       └── [相同的子目录结构]
+├── mod-prj.yml                      # 模块项目配置
+├── version.txt                      # 版本文件
+├── .gitignore                       # Git 忽略文件
+└── test_res/                        # 测试资源目录
+</code></pre>
+<h3 id="支持的目标平台"><a class="header" href="#支持的目标平台">支持的目标平台</a></h3>
+<div class="table-wrapper"><table><thead><tr><th>组合</th><th>CPU架构</th><th>操作系统</th><th>运行环境</th><th>适用场景</th></tr></thead><tbody>
+<tr><td><code>arm-mac14-host</code></td><td>ARM</td><td>macOS 14+</td><td>Host 宿主机</td><td>Apple Silicon Mac 本地开发</td></tr>
+<tr><td><code>x86-ubt22-host</code></td><td>x86_64</td><td>Ubuntu 22.04</td><td>Host 宿主机</td><td>Linux 服务器本地部署</td></tr>
+<tr><td><code>x86-ubt22-k8s</code></td><td>x86_64</td><td>Ubuntu 22.04</td><td>Kubernetes</td><td>K8s 集群容器化部署</td></tr>
+</tbody></table>
+</div>
+<h2 id="开发工作流"><a class="header" href="#开发工作流">开发工作流</a></h2>
+<h3 id="1-定义模块规范"><a class="header" href="#1-定义模块规范">1. 定义模块规范</a></h3>
 <ul>
-<li><code>EXAMPLE_SIZE</code>: 示例数据大小</li>
-<li><code>HOME_BIN</code>: 用户二进制文件目录</li>
-<li><code>WORK_BIN</code>: 工作目录二进制文件路径</li>
+<li>编辑 <code>spec/artifact.yml</code> - 构件定义</li>
+<li>编辑 <code>spec/depends.yml</code> - 依赖定义</li>
 </ul>
-</li>
-</ul>
-<h3 id="6-modworkflowsoperatorsgxl---工作流定义"><a class="header" href="#6-modworkflowsoperatorsgxl---工作流定义">6. <code>mod/*/workflows/operators.gxl</code> - 工作流定义</a></h3>
+<h3 id="2-配置变量"><a class="header" href="#2-配置变量">2. 配置变量</a></h3>
 <ul>
-<li><strong>作用</strong>: 定义模块的具体操作流程和任务</li>
-<li><strong>关键功能</strong>:
+<li>编辑 <code>vars.yml</code> - 变量定义</li>
+<li>编辑 <code>values/_value.yml</code> - 默认值</li>
+</ul>
+<h3 id="3-编写工作流"><a class="header" href="#3-编写工作流">3. 编写工作流</a></h3>
 <ul>
-<li><code>__into</code>: 初始化流程，加载配置文件</li>
-<li><code>install</code>: 安装任务（空实现，可扩展）</li>
-<li><code>download</code>: 下载任务，处理构件下载</li>
+<li>编辑 <code>workflows/operators.gxl</code> - 使用 GXL 定义工作流</li>
 </ul>
-</li>
-<li><strong>操作说明</strong>:
+<h3 id="4-测试和验证"><a class="header" href="#4-测试和验证">4. 测试和验证</a></h3>
 <ul>
-<li>读取配置文件 <code>./values/_used.json</code></li>
-<li>解析构件信息 <code>artifact.yml</code></li>
-<li>执行文件下载和解压操作</li>
+<li>使用 <code>gflow</code> 测试工作流</li>
+<li>使用 <code>gmod validate</code> 验证配置</li>
 </ul>
-</li>
+<h3 id="5-本地化模块"><a class="header" href="#5-本地化模块">5. 本地化模块</a></h3>
+<ul>
+<li>使用 <code>gmod localize</code> 生成特定环境配置</li>
 </ul>
+<h2 id="关键概念"><a class="header" href="#关键概念">关键概念</a></h2>
+<h3 id="modelstd-标准型号"><a class="header" href="#modelstd-标准型号">ModelSTD 标准型号</a></h3>
+<p>Mod-Operator 使用 <code>ModelSTD</code> 标准型号来定义目标平台，格式为 <code>arch-os-spc</code>：</p>
+<ul>
+<li><strong>CPU 架构</strong>: X86 (x86_64), ARM</li>
+<li><strong>操作系统</strong>: MAC14 (macOS 14+), UBT22 (Ubuntu 22.04), WIN10 (Windows 10+), COS7 (CentOS 7)</li>
+<li><strong>运行空间</strong>: Host (宿主机环境), K8S (Kubernetes 环境)</li>
+</ul>
+<h3 id="构件管理"><a class="header" href="#构件管理">构件管理</a></h3>
+<p>构件定义了模块所需的软件包和下载资源，包括：</p>
+<ul>
+<li>名称 (name)</li>
+<li>版本 (version)</li>
+<li>原始地址 (origin_addr)</li>
+<li>缓存地址 (cache_addr)</li>
+<li>缓存启用 (cache_enable)</li>
+<li>本地文件名 (local)</li>
+</ul>
+<h3 id="依赖管理"><a class="header" href="#依赖管理">依赖管理</a></h3>
+<p>模块可以依赖其他模块或资源，支持：</p>
+<ul>
+<li>本地路径依赖</li>
+<li>Git 仓库依赖</li>
+<li>条件依赖（根据变量启用/禁用）</li>
+<li>版本约束</li>
+</ul>
+<h3 id="工作流引擎"><a class="header" href="#工作流引擎">工作流引擎</a></h3>
+<p>使用 GXL (Galaxy eXecution Language) 定义运维操作：</p>
+<ul>
+<li>支持任务定义和执行</li>
+<li>变量模板渲染</li>
+<li>条件分支和循环</li>
+<li>外部命令执行</li>
+<li>错误处理和重试机制</li>
+</ul>
+<h2 id="相关工具"><a class="header" href="#相关工具">相关工具</a></h2>
+<ul>
+<li><strong>gmod</strong>: 模块创建和管理工具</li>
+<li><strong>gops</strong>: 工程管理工具</li>
+<li><strong>gflow</strong>: 工作流执行工具</li>
+<li><strong>gsys</strong>: 系统组合工具</li>
+</ul>
+<h2 id="更多信息"><a class="header" href="#更多信息">更多信息</a></h2>
+<p>查看详细文档：</p>
+<ul>
+<li>📖 <a href="./CONFIGURATION.html">配置说明</a> - 完整的配置文件参考</li>
+<li>📖 <a href="./DEVELOPMENT.html">开发指南</a> - 开发最佳实践</li>
+<li>📖 <a href="./TROUBLESHOOTING.html">故障排除</a> - 调试和问题解决</li>
+<li>📖 <a href="./EXAMPLES.html">示例参考</a> - 完整的模块示例</li>
+<li>📖 <a href="./REFERENCE.html">API 参考</a> - API 和枚举定义</li>
+</ul>
+<hr />
+<p><em>Mod-Operator 是 Galaxy Ops 框架的核心构建块，通过标准化的文件结构、配置管理和工作流定义，实现了软件组件的模块化运维管理。</em></p>
 
                     </main>
 
@@ -284,7 +322,7 @@
                                 <i class="fa fa-angle-left"></i>
                             </a>
 
-                            <a rel="next prefetch" href="../../gxl/gxl.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                            <a rel="next prefetch" href="../../operator/mod/DEVELOPMENT.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                                 <i class="fa fa-angle-right"></i>
                             </a>
 
@@ -298,7 +336,7 @@
                         <i class="fa fa-angle-left"></i>
                     </a>
 
-                    <a rel="next prefetch" href="../../gxl/gxl.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                    <a rel="next prefetch" href="../../operator/mod/DEVELOPMENT.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                         <i class="fa fa-angle-right"></i>
                     </a>
             </nav>
