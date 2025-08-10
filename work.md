@@ -24,4 +24,17 @@
     - 已清理根目录下的 inner/ 目录
     - 已更新 SUMMARY.md 中的路径引用（包括inner相关路径）
     - 已验证 mdbook build 构建成功
-[ ] 增加了cmd,operator 相关的文档， 更新 SUMMARY.md
+[x]  更新了文档， 更新相应的SUMMARY.md
+    
+    完成结果：
+    - 优化了SUMMARY.md的结构，使用清晰的章节层次
+    - 将文档按主题分组：命令行工具、维护器、GXL语言
+    - 在GXL语言下细分：介绍、语言基础、流程控制、函数定义、语法说明
+    - 添加了示例教程和内置指令的独立章节
+    - 将syntax.md移动到gxl目录下
+    - 添加了图表可视化高级功能章节
+    - 将工作任务移动到附录部分
+    - 补充了所有缺失的markdown文件链接：
+      * 命令行工具：gmod.md, gops.md, gprj.md, gsys.md, buildin.md
+      * 配置：net-access-ctrl-guide.md
+      * 模块维护器详细文档：DEVELOPMENT.md, CONFIGURATION.md, REFERENCE.md, TROUBLESHOOTING.md

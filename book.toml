@@ -3,7 +3,7 @@ authors = ["wukong"]
 language = "zh"
 multilingual = true
 src = "./"
-title = "gxl"
+title = "galaxy-sec operator ecosystem"
 
 [preprocessor.mermaid]
 command = "mdbook-mermaid"
