@@ -138,7 +138,6 @@ vender: "TechCorp"
     tag: v3.5.0
   model: x86-ubt22-k8s
   enable: true
-  priority: 70
 
 
 # 支付服务模块
@@ -156,8 +155,7 @@ vender: "TechCorp"
     repo: https://github.com/techcorp/notification-service
     tag: v1.6.0
   model: x86-ubt22-k8s
-  enable: true
-  priority: 60
+
 
 
 # 数据库模块
@@ -212,33 +210,32 @@ vars:
 - name: ENVIRONMENT
   value: "production"
   description: "部署环境"
-  group: environment
 
 - name: CLUSTER_NAME
   value: "${CLUSTER_NAME:production-cluster}"
   description: "Kubernetes集群名称"
-  group: environment
+
 
 - name: NAMESPACE
   value: "${NAMESPACE:microservices}"
   description: "Kubernetes命名空间"
-  group: environment
+
 
 # 应用配置
 - name: APP_VERSION
   value: "2.3.0"
   description: "应用版本"
-  group: application
+
 
 - name: DOMAIN_NAME
   value: "${DOMAIN_NAME:platform.techcorp.com}"
   description: "系统域名"
-  group: application
+
 
 - name: BASE_URL
   value: "https://${DOMAIN_NAME}"
   description: "基础URL"
-  group: application
+
 
 # 安全配置
 - name: ENABLE_MTLS
@@ -261,13 +258,13 @@ vars:
   type: integer
   min: 5
   max: 1440
-  group: security
+
 
 # 数据库配置
 - name: DATABASE_BACKUP_SCHEDULE
   value: "${DATABASE_BACKUP_SCHEDULE:0 1 * * *}"
   description: "数据库备份计划"
-  group: database
+
 
 - name: DATABASE_RETENTION_DAYS
   value: "${DATABASE_RETENTION_DAYS:30}"
@@ -275,7 +272,7 @@ vars:
   type: integer
   min: 7
   max: 365
-  group: database
+
 
 - name: CONNECTION_POOL_SIZE
   value: "${CONNECTION_POOL_SIZE:20}"
@@ -283,7 +280,7 @@ vars:
   type: integer
   min: 1
   max: 100
-  group: database
+
 
 # 缓存配置
 - name: CACHE_DEFAULT_TTL
@@ -292,7 +289,7 @@ vars:
   type: integer
   min: 60
   max: 86400
-  group: cache
+
 
 - name: CACHE_MAX_SIZE
   value: "${CACHE_MAX_SIZE:10000}"
@@ -300,7 +297,7 @@ vars:
   type: integer
   min: 100
   max: 100000
-  group: cache
+
 
 - name: CACHE_REFRESH_INTERVAL
   value: "${CACHE_REFRESH_INTERVAL:300}"
@@ -325,7 +322,7 @@ vars:
   type: integer
   min: 10
   max: 3600
-  group: messaging
+
 
 # 高可用配置
 - name: HIGH_AVAILABILITY_ENABLED
@@ -340,7 +337,6 @@ vars:
   type: integer
   min: 10
   max: 300
-  group: ha
 
 - name: FAILURE_DETECTION_SECONDS
   value: "${FAILURE_DETECTION_SECONDS:60}"
@@ -354,7 +350,7 @@ vars:
   value: "${AUTO_FAILOVER_ENABLED:true}"
   description: "启用自动故障转移"
   type: boolean
-  group: ha
+
 
 # 性能配置
 - name: DEFAULT_REPLICAS
@@ -363,7 +359,7 @@ vars:
   type: integer
   min: 1
   max: 10
-  group: performance
+
 
 - name: MAX_REPLICAS
   value: "${MAX_REPLICAS:10}"
@@ -371,27 +367,27 @@ vars:
   type: integer
   min: 1
   max: 100
-  group: performance
+
 
 - name: CPU_REQUEST
   value: "${CPU_REQUEST:100m}"
   description: "CPU请求值"
-  group: performance
+
 
 - name: MEMORY_REQUEST
   value: "${MEMORY_REQUEST:256Mi}"
   description: "内存请求值"
-  group: performance
+
 
 - name: CPU_LIMIT
   value: "${CPU_LIMIT:2000m}"
   description: "CPU限制值"
-  group: performance
+
 
 - name: MEMORY_LIMIT
   value: "${MEMORY_LIMIT:4Gi}"
   description: "内存限制值"
-  group: performance
+
 
 # 监控配置
 - name: MONITORING_ENABLED
@@ -403,565 +399,48 @@ vars:
 - name: ALERT_EMAIL_RECIPIENTS
   value: "${ALERT_EMAIL_RECIPIENTS:devops-alerts@techcorp.com}"
   description: "告警邮件接收者"
-  group: monitoring
+
 
 - name: SLACK_WEBHOOK_URL
   value: "${SLACK_WEBHOOK_URL}"
   description: "Slack Webhook URL"
-  group: monitoring
+
 
 - name: PAGERDUTY_SERVICE_KEY
   value: "${PAGERDUTY_SERVICE_KEY}"
   description: "PagerDuty服务密钥"
-  group: monitoring
+
 
 # 业务配置
 - name: BUSINESS_HOURS_START
   value: "${BUSINESS_HOURS_START:09:00}"
   description: "业务开始时间"
-  group: business
+
 
 - name: BUSINESS_HOURS_END
   value: "${BUSINESS_HOURS_END:18:00}"
   description: "业务结束时间"
-  group: business
+
 
 - name: MAINTENANCE_WINDOW_START
   value: "${MAINTENANCE_WINDOW_START:02:00}"
   description: "维护窗口开始时间"
-  group: business
+
 
 - name: MAINTENANCE_WINDOW_END
   value: "${MAINTENANCE_WINDOW_END:04:00}"
   description: "维护窗口结束时间"
-  group: business
+
 
 - name: FEATURE_FLAGS
   value: "${FEATURE_FLAGS:new-dashboard,advanced-analytics}"
   description: "功能开关"
-  group: business
+
 ```
 
 ### 4. 系统工作流配置 (`sys/workflows/operators.gxl`)
 
-```gxl
-// 系统操作符工作流
-mod operators : sys_ops {
-    // 自动加载入口
-    #[auto_load(entry)]
-    flow __into {
-        // 加载系统配置
-        gx.read_file(
-            file : "sys/sys_model.yml",
-            name : "SYSTEM_DEFINE"
-        );
-
-        gx.read_file(
-            file : "sys/mod_list.yml",
-            name : "MODULE_LIST"
-        );
-
-        gx.read_file(
-            file : "sys/vars.yml",
-            name : "SYSTEM_VARS"
-        );
-    }
-
-    // 系统初始化任务
-    #[task(name="gsys@init")]
-    flow init {
-        gx.echo("=== 开始微服务系统初始化 ===");
-        gx.echo("系统名称: ${SYSTEM_DEFINE.NAME}");
-        gx.echo("目标平台: ${SYSTEM_DEFINE.MODEL}");
-
-        // 1. 基础环境检查
-        gx.echo("1. 检查基础环境...");
-        gx.check_environment();
-        gx.check_kubernetes_cluster();
-        gx.check_network_connectivity();
-
-        // 2. 创建系统目录
-        gx.echo("2. 创建系统目录结构...");
-        gx.cmd("mkdir -p sys/mods");
-        gx.cmd("mkdir -p sys/workflows");
-        gx.cmd("mkdir -p config/helm");
-
-        // 3. 下载和验证模块
-        gx.echo("3. 下载和验证系统模块...");
-        let module_count = 0;
-        for ${MODULE} in ${MODULE_LIST} {
-            if ${MODULE.ENABLE} {
-                gx.echo("  处理模块: ${MODULE.NAME}");
-
-                // 下载模块
-                gx.download_module(${MODULE});
-
-                // 验证模块
-                gx.validate_module(${MODULE});
-
-                // 生成本地化配置
-                gx.generate_local_config(${MODULE});
-
-                module_count = module_count + 1;
-            }
-        }
-        gx.echo("  总计处理 ${module_count} 个模块");
-
-        // 4. 生成Helm图表
-        gx.echo("4. 生成Helm部署图表...");
-        gx.generate_helm_charts();
-
-        // 5. 验证系统配置
-        gx.echo("5. 验证系统配置...");
-        gx.validate_system_config();
-
-        gx.echo("=== 微服务系统初始化完成 ===");
-    }
-
-    // 系统本地化任务
-    #[task(name="gsys@localize")]
-    flow localize {
-        gx.echo("=== 开始微服务系统本地化 ===");
-
-        // 1. 本地化系统配置
-        gx.echo("1. 本地化系统配置...");
-        gx.localize_system_config();
-
-        // 2. 本地化各个模块
-        gx.echo("2. 本地化系统模块...");
-        for ${MODULE} in ${MODULE_LIST} {
-            if ${MODULE.ENABLE} {
-                gx.echo("  本地化模块: ${MODULE.NAME}");
-                gx.localize_module(${MODULE});
-            }
-        }
-
-        // 3. 生成本地化报告
-        gx.echo("3. 生成本地化报告...");
-        gx.generate_localization_report();
-
-        // 4. 生成环境特定配置
-        gx.echo("4. 生成环境特定配置...");
-        gx.generate_environment_configs();
-
-        gx.echo("=== 微服务系统本地化完成 ===");
-    }
-
-    // 系统部署任务
-    #[task(name="gsys@deploy")]
-    flow deploy {
-        gx.echo("=== 开始微服务系统部署 ===");
-
-        // 1. 部署基础设施组件
-        gx.echo("1. 部署基础设施组件...");
-        gx.deploy_infrastructure();
-
-        // 2. 部署数据库组件
-        gx.echo("2. 部署数据库组件...");
-        gx.deploy_database_components();
-
-        // 3. 部署缓存组件
-        gx.echo("3. 部署缓存组件...");
-        gx.deploy_cache_components();
-
-        // 4. 部署业务服务
-        gx.echo("4. 部署业务服务...");
-        gx.deploy_business_services();
-
-        // 5. 部署网关和负载均衡
-        gx.echo("5. 部署网关和负载均衡...");
-        gx.deploy_gateway_components();
-
-        // 6. 部署监控系统
-        gx.echo("6. 部署监控系统...");
-        gx.deploy_monitoring_components();
-
-        // 7. 验证部署结果
-        gx.echo("7. 验证部署结果...");
-        gx.validate_deployment();
-
-        gx.echo("=== 微服务系统部署完成 ===");
-    }
-
-    // 系统健康检查任务
-    #[task(name="gsys@health")]
-    flow health {
-        gx.echo("=== 开始微服务系统健康检查 ===");
-
-        // 1. 检查基础设施健康
-        gx.echo("1. 检查基础设施健康...");
-        gx.check_infrastructure_health();
-
-        // 2. 检查数据库健康
-        gx.echo("2. 检查数据库健康...");
-        gx.check_database_health();
-
-        // 3. 检查缓存健康
-        gx.echo("3. 检查缓存健康...");
-        gx.check_cache_health();
-
-        // 4. 检查业务服务健康
-        gx.echo("4. 检查业务服务健康...");
-        gx.check_service_health();
-
-        // 5. 检查网关健康
-        gx.echo("5. 检查网关健康...");
-        gx.check_gateway_health();
-
-        // 6. 生成健康报告
-        gx.echo("6. 生成健康报告...");
-        gx.generate_health_report();
-
-        gx.echo("=== 微服务系统健康检查完成 ===");
-    }
-
-    // 系统扩缩容任务
-    #[task(name="gsys@scale")]
-    flow scale {
-        gx.echo("=== 开始微服务系统扩缩容 ===");
-
-        // 1. 分析负载情况
-        gx.echo("1. 分析系统负载...");
-        let load_analysis = gx.analyze_system_load();
-
-        // 2. 确定扩缩容策略
-        gx.echo("2. 确定扩缩容策略...");
-        let scale_strategy = gx.determine_scale_strategy(load_analysis);
-
-        // 3. 执行扩缩容操作
-        gx.echo("3. 执行扩缩容操作...");
-        gx.execute_scaling(scale_strategy);
-
-        // 4. 验证扩缩容结果
-        gx.echo("4. 验证扩缩容结果...");
-        gx.validate_scaling_result();
-
-        gx.echo("=== 微服务系统扩缩容完成 ===");
-    }
-
-    // 系统备份任务
-    #[task(name="gsys@backup")]
-    flow backup {
-        gx.echo("=== 开始微服务系统备份 ===");
-
-        // 1. 备份数据库
-        gx.echo("1. 备份数据库...");
-        gx.backup_databases();
-
-        // 2. 备份配置文件
-        gx.echo("2. 备份配置文件...");
-        gx.backup_configurations();
-
-        // 3. 备份应用数据
-        gx.echo("3. 备份应用数据...");
-        gx.backup_application_data();
-
-        // 4. 备份监控系统数据
-        gx.echo("4. 备份监控系统数据...");
-        gx.backup_monitoring_data();
-
-        // 5. 生成备份报告
-        gx.echo("5. 生成备份报告...");
-        gx.generate_backup_report();
-
-        gx.echo("=== 微服务系统备份完成 ===");
-    }
-
-    // 系统恢复任务
-    #[task(name="gsys@restore")]
-    flow restore {
-        gx.echo("=== 开始微服务系统恢复 ===");
-
-        // 1. 验证备份完整性
-        gx.echo("1. 验证备份完整性...");
-        gx.validate_backup_integrity();
-
-        // 2. 恢复数据库
-        gx.echo("2. 恢复数据库...");
-        gx.restore_databases();
-
-        // 3. 恢复配置文件
-        gx.echo("3. 恢复配置文件...");
-        gx.restore_configurations();
-
-        // 4. 恢复应用数据
-        gx.echo("4. 恢复应用数据...");
-        gx.restore_application_data();
-
-        // 5. 验证恢复结果
-        gx.echo("5. 验证恢复结果...");
-        gx.validate_restore_result();
-
-        gx.echo("=== 微服务系统恢复完成 ===");
-    }
-}
+```rust
+TODO
 ```
 
-## 部署指南
-
-### 1. 前置要求
-
-- **Kubernetes集群**: 1.20+ 版本
-- **存储支持**: 支持动态配置的存储类
-- **网络插件**: 支持LoadBalancer服务
-- **监控系统**: Prometheus + Grafana
-- **日志系统**: EFK 或类似方案
-
-### 2. 快速部署
-
-```bash
-# 1. 创建系统目录
-mkdir microservice-platform
-cd microservice-platform
-
-# 2. 初始化系统结构
-gsys init
-
-# 3. 复制配置文件
-cp ../config/sys_model.yml sys/
-cp ../config/mod_list.yml sys/
-cp ../config/vars.yml sys/
-
-# 4. 部署系统
-gsys deploy
-
-# 5. 检查部署状态
-gsys health
-```
-
-### 3. Helm部署
-
-```bash
-# 1. 生成本地Helm图表
-gsys generate-helm-charts
-
-# 2. 部署基础组件
-helm install infra ./helm/infrastructure/
-
-# 3. 部署数据库
-helm install db ./helm/database/
-
-# 4. 部署缓存
-helm install cache ./helm/cache/
-
-# 5. 部署业务服务
-helm install services ./helm/services/
-
-# 6. 部署监控
-helm install monitoring ./helm/monitoring/
-```
-
-### 4. 环境配置
-
-#### 开发环境
-
-```yaml
-# 开发环境配置
-env: "development"
-cluster_name: "dev-cluster"
-namespace: "dev-microservices"
-
-# 数据库配置
-database_host: "dev-postgresql"
-database_port: 5432
-max_connections: 50
-
-# 缓存配置
-cache_enabled: true
-cache_ttl: 300
-
-# 监控配置
-monitoring_enabled: false
-logging_level: "debug"
-```
-
-#### 生产环境
-
-```yaml
-# 生产环境配置
-env: "production"
-cluster_name: "prod-cluster"
-namespace: "prod-microservices"
-
-# 数据库配置
-database_host: "prod-postgresql-primary"
-database_port: 5432
-max_connections: 500
-backup_enabled: true
-
-# 缓存配置
-cache_enabled: true
-cache_ttl: 3600
-
-# 监控配置
-monitoring_enabled: true
-logging_level: "info"
-```
-
-### 5. 监控配置
-
-#### Prometheus配置
-
-```yaml
-# prometheus-config.yaml
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: prometheus-config
-  namespace: monitoring
-data:
-  prometheus.yml: |
-    global:
-      scrape_interval: 15s
-      evaluation_interval: 15s
-
-    scrape_configs:
-    - job_name: 'kubernetes-pods'
-      kubernetes_sd_configs:
-      - role: pod
-      relabel_configs:
-      - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_scrape]
-        action: keep
-        regex: true
-```
-
-#### Grafana仪表板
-
-```json
-{
-  "dashboard": {
-    "title": "微服务平台监控",
-    "panels": [
-      {
-        "title": "API响应时间",
-        "targets": [
-          {
-            "expr": "histogram_quantile(0.95, rate(http_request_duration_seconds_bucket[5m]))",
-            "legendFormat": "{{method}} {{status}}"
-          }
-        ]
-      },
-      {
-        "title": "API请求量",
-        "targets": [
-          {
-            "expr": "sum(rate(http_requests_total[5m]))",
-            "legendFormat": "Total requests"
-          }
-        ]
-      },
-      {
-        "title": "数据库连接数",
-        "targets": [
-          {
-            "expr": "pg_stat_database_numbackends",
-            "legendFormat": "Database connections"
-          }
-        ]
-      }
-    ]
-  }
-}
-```
-
-## 最佳实践
-
-### 1. 架构设计原则
-
-#### 微服务拆分原则
-- **单一职责**: 每个微服务只负责单一业务功能
-- **团队自治**: 服务由独立团队开发和维护
-- **服务粒度**: 服务大小适中，避免过细或过粗
-- **数据自治**: 每个服务管理自己的数据
-
-#### 服务发现原则
-- **注册中心**: 使用服务注册中心管理服务实例
-- **健康检查**: 定期检查服务健康状态
-- **负载均衡**: 实现客户端和服务端负载均衡
-- **容错机制**: 实现熔断、重试、降级等容错机制
-
-### 2. 数据管理原则
-
-#### 数据一致性
-- **最终一致性**: 优先采用最终一致性模型
-- **补偿事务**: 使用补偿事务处理分布式事务
-- **事件驱动**: 采用事件驱动架构保持数据同步
-- **数据备份**: 实现定期数据备份和恢复机制
-
-#### 数据安全
-- **加密存储**: 敏感数据加密存储
-- **访问控制**: 实现细粒度的数据访问控制
-- **审计日志**: 记录数据访问和变更日志
-- **合规性**: 遵循数据保护和隐私合规要求
-
-### 3. 运维管理原则
-
-#### 监控告警
-- **全面监控**: 实现基础设施、平台、应用三层监控
-- **智能告警**: 基于机器学习的智能告警策略
-- **多渠道通知**: 支持邮件、短信、即时通讯等多渠道通知
-- **告警收敛**: 实现告警聚合和收敛机制
-
-#### 发布策略
-- **蓝绿部署**: 使用蓝绿部署减少停机时间
-- **金丝雀发布**: 采用金丝雀发布降低风险
-- **自动化测试**: 实现自动化测试和验证
-- **快速回滚**: 支持快速故障回滚机制
-
-### 4. 性能优化建议
-
-#### 服务优化
-- **缓存策略**: 合理使用缓存减少数据库访问
-- **异步处理**: 使用消息队列处理异步任务
-- **连接池**: 使用数据库和HTTP连接池
-- **资源限制**: 设置合理的CPU和内存限制
-
-#### 网络优化
-- **CDN加速**: 使用CDN加速静态资源
-- **负载均衡**: 实现多级负载均衡
-- **网络隔离**: 网络流量隔离和安全隔离
-- **压缩传输**: 启用GZIP等压缩传输
-
-## 故障排除
-
-### 1. 常见问题
-
-#### 服务启动失败
-```bash
-# 检查服务日志
-kubectl logs -f service/user-service -n microservices
-
-# 检查资源使用
-kubectl top pods -n microservices
-
-# 检查服务状态
-kubectl get pods -n microservices -l app=user-service
-```
-
-#### 数据库连接问题
-```bash
-# 检查数据库服务状态
-kubectl get deployment -n microservices
-
-# 检查数据库连接
-kubectl exec -it deployment/postgres-primary -n microservices -- psql -U postgres
-
-# 检查网络连通性
-kubectl exec -it deployment/user-service -n microservices -- curl postgres-primary:5432
-```
-
-
-
-## 总结
-
-本微服务系统示例展示了如何使用 Sys-Operator 构建复杂的微服务平台。通过模块化的设计和标准化的配置管理，实现了：
-
-
-### 运维价值
-- **自动化**: 自动化的部署和扩缩容
-
-通过遵循最佳实践和本示例的设计模式，可以构建出稳定可靠、易于维护的微服务平台，为业务发展提供强有力的技术支撑。
-
----
-
-*更多详情请参考相关配置文档和运维手册。*

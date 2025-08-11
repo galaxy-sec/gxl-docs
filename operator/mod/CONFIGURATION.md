@@ -96,19 +96,6 @@ Mod-Operator 使用多种配置文件来定义模块的行为和属性：
   local: openssl-3.0.0
 ```
 
-### 缓存配置
-
-```yaml
-- name: large-package
-  version: 2.0.0
-  origin_addr:
-    url: https://example.com/large-package.tar.gz
-  cache_addr:
-    url: https://cache.example.com/large-package.tar.gz
-  cache_enable: true
-  local: large-package.tar.gz
-```
-
 ## spec/depends.yml - 依赖定义
 
 `depends.yml` 定义模块依赖的其他模块或资源，支持多种依赖类型和条件依赖。

@@ -20,17 +20,6 @@
 name: system_name                    # 系统名称（必需）
 model: arm-mac14-host               # 目标平台模型（必需）
 vender: "Galaxy-Ops"                # 厂商信息（可选）
-
-# 扩展元数据
-metadata:
-  description: "系统描述"            # 系统描述
-  version: "1.0.0"                  # 系统版本
-  tags: [production, web]            # 系统标签
-  authors: ["dev-team@example.com"] # 作者信息
-  maintainers: ["ops-team@example.com"] # 维护者信息
-  documentation: "docs/README.md"   # 文档路径
-  homepage: "https://github.com/..." # 项目主页
-  repository: "https://github.com/..." # 代码仓库
 ```
 
 **命名规范**:
@@ -62,15 +51,10 @@ metadata:
     tag: "v2.0.0"
   model: x86-ubt22-k8s
   enable: true
-  priority: 100                         # 启动优先级（可选）
-  depends_on: ["base_module"]           # 依赖关系（可选）
-  condition: "${ENV:development}" == "production" # 启用条件（可选）
   setting:                              # 模块特定设置（可选）
     src: "${GXL_PRJ_ROOT}/sys/setting/module"
     dst: "${GXL_PRJ_ROOT}/sys/mods/module/local/"
-  vars:                                 # 模块变量覆盖（可选）
-    - name: VAR_NAME
-      value: "custom_value"
+
 ```
 
 **配置验证**:
@@ -156,7 +140,7 @@ vars:
 **文件作用**: 定义系统的版本管理和发布配置
 
 **配置结构**:
-```gxl
+```rust
 // 引入版本管理模块
 extern mod ver,git,ver_adm {
     git = "https://github.com/galaxy-operators/cfm-gxl.git",
@@ -203,7 +187,7 @@ mod main : ver_adm {
 **文件作用**: 定义系统的工作流环境和执行配置
 
 **配置结构**:
-```gxl
+```rust
 // 引入操作符和版本管理模块
 extern mod operators { path = "./sys/workflows"; }
 extern mod ver,git {
@@ -234,13 +218,6 @@ mod envs {
         FORCE_FLAG = "-f 2";
         LOG_LEVEL = "--log info";
         MODULE_ENV = "production";
-    }
-
-    // 开发环境
-    env development {
-        FORCE_FLAG = "";
-        LOG_LEVEL = "--log debug";
-        MODULE_ENV = "development";
     }
 
     // 通用配置
@@ -327,34 +304,11 @@ vars:
   value: 8080
   description: "服务端口"
 
-# 继承系统变量
-vars:
-- name: GLOBAL_CONFIG_PATH
-  value: "${GLOBAL_CONFIG_PATH}"
-  description: "全局配置路径"
 ```
 
 **`setting.yml` - 本地化设置**:
 ```yaml
-# 本地化设置
-setting:
-  # 源配置路径
-  src:
-    - "${GXL_PRJ_ROOT}/sys/setting/module/*"
-    - "${GXL_PRJ_ROOT}/common/settings/*"
-  
-  # 目标路径
-  dst: "${GXL_PRJ_ROOT}/sys/mods/module/local/"
-  
-  # 文件映射
-  mapping:
-    "config.template": "config.yml"
-    "env.template": "env.yml"
-  
-  # 过滤器
-  filters:
-    - "*.yml"          # 只处理 YAML 文件
-    - exclude: "*.tmp" # 排除临时文件
+TODO
 ```
 
 #### 模块工作流文件
@@ -401,112 +355,7 @@ mod install {
 
 **配置结构**:
 ```gxl
-// 引入系统操作模块
-extern mod sys_ops {
-    git = "https://github.com/galaxy-operators/ops-gxl.git",
-    channel = "${GXL_CHANNEL:main}"
-}
-
-// 系统操作符模块
-mod operators : sys_ops {
-    // 自动加载入口
-    #[auto_load(entry)]
-    flow __into {
-        // 加载系统配置
-        gx.read_file(
-            file : "sys/sys_model.yml",
-            name : "SYSTEM_DEFINE"
-        );
-
-        gx.read_file(
-            file : "sys/mod_list.yml",
-            name : "MODULE_LIST"
-        );
-
-        gx.read_file(
-            file : "sys/vars.yml",
-            name : "SYSTEM_VARS"
-        );
-    }
-
-    // 系统初始化任务
-    #[task(name="gsys@init")]
-    flow init {
-        gx.echo("=== 开始系统初始化 ===");
-        gx.echo("系统名称: ${SYSTEM_DEFINE.NAME}");
-        gx.echo("目标平台: ${SYSTEM_DEFINE.MODEL}");
-
-        // 检查系统环境
-        gx.echo("1. 检查系统环境...");
-        gx.check_environment();
-
-        // 初始化系统目录
-        gx.echo("2. 初始化系统目录...");
-        gx.cmd("mkdir -p sys/mods");
-        gx.cmd("mkdir -p sys/workflows");
-
-        // 初始化各个模块
-        gx.echo("3. 初始化系统模块...");
-        for ${MODULE} in ${MODULE_LIST} {
-            if ${MODULE.ENABLE} {
-                gx.echo("初始化模块: ${MODULE.NAME}");
-                gx.init_module(${MODULE});
-            }
-        }
-
-        gx.echo("=== 系统初始化完成 ===");
-    }
-
-    // 系统更新任务
-    #[task(name="gsys@update")]
-    flow update {
-        gx.echo("=== 开始系统更新 ===");
-
-        // 更新系统定义
-        gx.echo("1. 更新系统定义...");
-        gx.update_system_definition();
-
-        // 更新模块列表
-        gx.echo("2. 更新模块列表...");
-        for ${MODULE} in ${MODULE_LIST} {
-            if ${MODULE.ENABLE} {
-                gx.echo("更新模块: ${MODULE.NAME}");
-                gx.update_module(${MODULE});
-            }
-        }
-
-        // 验证系统完整性
-        gx.echo("3. 验证系统完整性...");
-        gx.validate_system_integrity();
-
-        gx.echo("=== 系统更新完成 ===");
-    }
-
-    // 系统本地化任务
-    #[task(name="gsys@localize")]
-    flow localize {
-        gx.echo("=== 开始系统本地化 ===");
-
-        // 本地化系统配置
-        gx.echo("1. 本地化系统配置...");
-        gx.localize_system_config();
-
-        // 本地化各个模块
-        gx.echo("2. 本地化系统模块...");
-        for ${MODULE} in ${MODULE_LIST} {
-            if ${MODULE.ENABLE} {
-                gx.echo("本地化模块: ${MODULE.NAME}");
-                gx.localize_module(${MODULE});
-            }
-        }
-
-        // 生成本地化报告
-        gx.echo("3. 生成本地化报告...");
-        gx.generate_localization_report();
-
-        gx.echo("=== 系统本地化完成 ===");
-    }
-}
+TODO
 ```
 
 ### 5. 项目配置文件
@@ -532,255 +381,13 @@ test_envs:
       rename: bit-common                    # 重命名
       enable: true                          # 是否启用
 
-    - addr:
-        path: ./test_deps/test-data         # 本地路径依赖
-      local: test-data
-      enable: true
 
-# 构建配置
-build:
-  # 构建目标
-  targets:
-    - arm-mac14-host
-    - x86-ubt22-host
-    - x86-ubt22-k8s
 
-  # 构建选项
-  options:
-    parallel: true                          # 并行构建
-    cache_enabled: true                     # 启用缓存
-    cache_dir: "./build/cache"             # 缓存目录
 
-  # 构建输出
-  output:
-    format: "tar.gz"                       # 输出格式
-    destination: "./build/dist"            # 输出目录
-
-# 发布配置
-publish:
-  repo: "https://github.com/galaxy-operators/systems"  # 发布仓库
-  branch: "main"                           # 发布分支
-  tag_format: "v${version}"                # 标签格式
-
-  # 发布环境
-  environments:
-    staging:
-      repo: "https://github.com/galaxy-operators/systems-staging"
-      branch: "staging"
-    production:
-      repo: "https://github.com/galaxy-operators/systems-production"
-      branch: "main"
-      auto_tag: true                        # 自动打标签
-
-# 质量检查
-quality:
-  # 代码检查
-  lint:
-    enabled: true
-    rules:
-      - no-hardcoded-secrets
-      - consistent-naming
-      - security-checks
-
-  # 测试配置
-  test:
-    enabled: true
-    types:
-      - unit
-      - integration
-      - e2e
-    coverage_threshold: 80                 # 覆盖率阈值
-
-# 安全配置
-security:
-  # 敏感信息扫描
-  secret_scanning:
-    enabled: true
-    patterns:
-      - "API_KEY"
-      - "PASSWORD"
-      - "TOKEN"
-      - "SECRET"
-
-  # 许可证检查
-  license_check:
-    enabled: true
-    allowed:
-      - "MIT"
-      - "Apache-2.0"
-      - "BSD-3-Clause"
-    forbidden:
-      - "GPL-3.0"
-      - "AGPL-3.0"
-
-# 监控配置
-monitoring:
-  # 构建监控
-  build:
-    enabled: true
-    metrics:
-      - build_duration
-      - build_success_rate
-      - artifact_size
-
-  # 运行时监控
-  runtime:
-    enabled: true
-    endpoints:
-      - health
-      - metrics
-      - logging
 ```
 
-## 文件验证与组织
 
-### 1. 配置文件验证
 
-**YAML 文件验证**:
-```bash
-# 验证 sys_model.yml
-yq eval . sys/sys_model.yml > /dev/null
-
-# 验证 mod_list.yml
-yq eval . sys/mod_list.yml > /dev/null
-
-# 验证 vars.yml
-yq eval . sys/vars.yml > /dev/null
-
-# 验证 sys-prj.yml
-yq eval . sys-prj.yml > /dev/null
-```
-
-**GXL 文件验证**:
-```bash
-# 验证语法
-gxl-validate sys/workflows/operators.gxl
-gxl-validate _gal/adm.gxl
-gxl-validate _gal/work.gxl
-```
-
-### 2. 文件组织检查
-
-**目录结构检查**:
-```bash
-# 检查必需文件
-check_required_files() {
-    local dir=$1
-    local required_files=(
-        "sys/sys_model.yml"
-        "sys/mod_list.yml"
-        "sys/vars.yml"
-        "sys/workflows/operators.gxl"
-    )
-    
-    for file in "${required_files[@]}"; do
-        if [[ ! -f "$dir/$file" ]]; then
-            echo "错误: 缺少必需文件 $file"
-            return 1
-        fi
-    done
-    return 0
-}
-```
-
-**重复文件检查**:
-```bash
-# 检查重复配置
-check_duplicate_config() {
-    local dir=$1
-    local temp_file=$(mktemp)
-    
-    # 提取所有配置项
-    find "$dir" -name "*.yml" -exec yq eval '.' {} \; > "$temp_file"
-    
-    # 检查重复项
-    sort "$temp_file" | uniq -d > "${temp_file}.duplicates"
-    
-    if [[ -s "${temp_file}.duplicates" ]]; then
-        echo "警告: 发现重复配置项"
-        cat "${temp_file}.duplicates"
-    fi
-    
-    rm -f "$temp_file" "${temp_file}.duplicates"
-}
-```
-
-## 最佳实践
-
-### 1. 文件组织原则
-
-#### 分离关注点
-- **配置文件**: 纯配置信息，不包含业务逻辑
-- **工作流文件**: 包含操作逻辑，引用配置文件
-- **模块文件**: 平台特定的配置和文件
-
-#### 减少重复
-- 使用变量和引用机制
-- 避免硬编码相同配置
-- 使用模板和继承
-
-#### 保持一致性
-- 遵循命名规范
-- 使用统一的格式和风格
-- 保持目录结构的清晰
-
-### 2. 维护策略
-
-#### 版本控制
-- 使用 .gitignore 管理临时文件
-- 使用语义化版本管理
-- 分支管理策略
-
-#### 文档更新
-- 配置变更时更新文档
-- 维护文件变更日志
-- 定期审核文件结构
-
-#### 自动化
-- 使用脚本验证文件结构
-- 自动生成配置文件模板
-- 定期备份重要配置
-
-## 故障排除
-
-### 1. 配置错误
-
-**常见问题**:
-- YAML 语法错误
-- GXL 语法错误
-- 文件路径错误
-- 模型不存在
-
-**解决方案**:
-- 使用验证工具检查语法
-- 检查文件路径引用
-- 确认模型定义存在
-
-### 2. 文件组织问题
-
-**常见问题**:
-- 目录结构混乱
-- 文件重复定义
-- 平台配置冲突
-- 版本控制问题
-
-**解决方案**:
-- 重新组织目录结构
-- 消除重复定义
-- 平台配置隔离
-- 完善版本控制
-
-### 3. 权限和访问
-
-**常见问题**:
-- 文件权限不足
-- 网络访问限制
-- 路径解析错误
-
-**解决方案**:
-- 设置适当的文件权限
-- 确保网络访问正常
-- 使用绝对路径或相对路径
 
 ## 总结
 
