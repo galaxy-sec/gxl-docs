@@ -1,0 +1,918 @@
+<!DOCTYPE HTML>
+<html lang="zh" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>命名规范 - galaxy-sec operator ecosystem</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../../../favicon.svg">
+        <link rel="shortcut icon" href="../../../favicon.png">
+        <link rel="stylesheet" href="../../../css/variables.css">
+        <link rel="stylesheet" href="../../../css/general.css">
+        <link rel="stylesheet" href="../../../css/chrome.css">
+        <link rel="stylesheet" href="../../../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../../../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../../../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="../../../highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="../../../tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="../../../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="../../.././mermaid.css">
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "../../../";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "../../../searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../../../toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../../../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">galaxy-sec operator ecosystem</h1>
+
+                    <div class="right-buttons">
+                        <a href="../../../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="命名规范"><a class="header" href="#命名规范">命名规范</a></h1>
+<h2 id="概述"><a class="header" href="#概述">概述</a></h2>
+<p>本文档详细说明 Sys-Operator 中的命名规范，包括文件名、变量名、模块名、系统名等的命名约定，帮助你保持命名的一致性和可读性。</p>
+<h2 id="命名原则"><a class="header" href="#命名原则">命名原则</a></h2>
+<h3 id="1-可读性原则"><a class="header" href="#1-可读性原则">1. 可读性原则</a></h3>
+<p><strong>目标</strong>: 命名应该清晰表达其用途，便于理解和维护。</p>
+<p><strong>规则</strong>:</p>
+<ul>
+<li>使用有意义的名称，避免缩写和模糊的词汇</li>
+<li>名称应该自解释，减少额外的注释需求</li>
+<li>保持名称的简洁性，不过度冗长</li>
+</ul>
+<p><strong>示例</strong>:</p>
+<pre><code class="language-yaml"># 好的命名
+name: "production_web_system"
+name: "user_management_service"
+name: "database_connection_pool"
+
+# 不好的命名
+name: "prod_sys"         # 缩写不清晰
+name: "system_1"         # 无意义
+name: "usermgmt_service" # 缩写不规范
+</code></pre>
+<h3 id="2-一致性原则"><a class="header" href="#2-一致性原则">2. 一致性原则</a></h3>
+<p><strong>目标</strong>: 保持整个项目命名风格的一致性。</p>
+<p><strong>规则</strong>:</p>
+<ul>
+<li>统一的命名风格（全小写、驼峰、下划线等）</li>
+<li>相同概念使用相同的术语</li>
+<li>遵循项目的现有命名约定</li>
+</ul>
+<p><strong>示例</strong>:</p>
+<pre><code class="language-yaml"># 一致的命名风格
+vars:
+  - name: database_host           # 下划线分隔
+  - name: database_port
+  - name: database_name
+
+# 不一致的命名风格
+vars:
+  - name: databaseHost           # 混合风格
+  - name: DB_PORT                # 大写缩写
+  - name: databaseName           # 驼峰命名
+</code></pre>
+<h3 id="3-可扩展性原则"><a class="header" href="#3-可扩展性原则">3. 可扩展性原则</a></h3>
+<p><strong>目标</strong>: 命名应该支持项目的扩展和演进。</p>
+<p><strong>规则</strong>:</p>
+<ul>
+<li>避免硬编码的数字和版本</li>
+<li>使用通用的术语，便于复用</li>
+<li>支持多环境和多部署</li>
+</ul>
+<p><strong>示例</strong>:</p>
+<pre><code class="language-yaml"># 可扩展的命名
+name: "web_application_system"    # 通用的名称
+name: "microservice_platform"      # 可扩展的平台名称
+
+# 不可扩展的命名
+name: "system_v2_1_production   # 硬编码版本
+name: "legacy_app_deprecated     # 硬编码状态
+</code></pre>
+<h2 id="文件命名规范"><a class="header" href="#文件命名规范">文件命名规范</a></h2>
+<h3 id="1-配置文件"><a class="header" href="#1-配置文件">1. 配置文件</a></h3>
+<p><strong>YAML 配置文件</strong>:</p>
+<pre><code>sys_model.yml           # 系统模型定义（必需）
+mod_list.yml            # 模块列表定义（必需）
+vars.yml               # 系统变量定义（必需）
+admin-config.gxl       # 系统管理配置（推荐）
+work-config.gxl        # 工作流环境配置（推荐）
+project-config.toml    # 项目配置（推荐）
+</code></pre>
+<p><strong>命名规则</strong>:</p>
+<ul>
+<li>使用小写字母</li>
+<li>多个单词用下划线分隔</li>
+<li>扩展名表示文件格式（.yml, .gxl, .toml）</li>
+<li>文件名应该反映文件内容</li>
+</ul>
+<p><strong>错误示例</strong>:</p>
+<pre><code>SysModel.yaml          # 大写字母和错误扩展名
+model_list.yml         # 缩写不清晰
+config.yml             # 过于通用
+system_configs.yml     # 复数形式不必要
+</code></pre>
+<h3 id="2-工作流文件"><a class="header" href="#2-工作流文件">2. 工作流文件</a></h3>
+<p><strong>GXL 工作流文件</strong>:</p>
+<pre><code>operators.gxl          # 系统操作符工作流（必需）
+system-workflows.gxl   # 系统工作流（可选）
+module-workflows.gxl   # 模块工作流（可选）
+custom-workflows.gxl   # 自定义工作流（可选）
+</code></pre>
+<p><strong>命名规则</strong>:</p>
+<ul>
+<li>工作流文件应该以 <code>-workflows.gxl</code> 结尾</li>
+<li>自定义工作流应该有明确的前缀</li>
+<li>系统级和模块级工作流应该区分</li>
+</ul>
+<h3 id="3-模块文件"><a class="header" href="#3-模块文件">3. 模块文件</a></h3>
+<p><strong>模块目录名</strong>:</p>
+<pre><code>sys/mods/
+├── web_server/
+├── database_server/
+├── cache_manager/
+├── message_queue/
+├── load_balancer/
+└── monitoring_agent/
+</code></pre>
+<p><strong>命名规则</strong>:</p>
+<ul>
+<li>使用小写字母</li>
+<li>多个单词用下划线分隔</li>
+<li>描述性名称，明确模块功能</li>
+<li>避免缩写和简写</li>
+</ul>
+<h3 id="4-平台目录名"><a class="header" href="#4-平台目录名">4. 平台目录名</a></h3>
+<p><strong>平台模型目录</strong>:</p>
+<pre><code>arm-mac14-host
+x86-ubt22-host
+x86-ubt22-k8s
+x86-centos8-host
+arm-linux-k8s
+</code></pre>
+<p><strong>命名规则</strong>:</p>
+<ul>
+<li>格式：<code>arch-os-spc</code></li>
+<li>架构：<code>arm</code>, <code>x86</code>, <code>amd64</code></li>
+<li>操作系统：<code>mac14</code>, <code>ubt22</code>, <code>centos8</code>, <code>linux</code></li>
+<li>环境：<code>host</code>, <code>k8s</code>, <code>docker</code></li>
+</ul>
+<h2 id="变量命名规范"><a class="header" href="#变量命名规范">变量命名规范</a></h2>
+<h3 id="1-系统变量"><a class="header" href="#1-系统变量">1. 系统变量</a></h3>
+<p><strong>命名规则</strong>:</p>
+<ul>
+<li>使用全大写字母</li>
+<li>单词间用下划线分隔</li>
+<li>前缀标识变量类型</li>
+<li>包含适当的命名空间</li>
+</ul>
+<p><strong>示例</strong>:</p>
+<pre><code class="language-yaml"># 系统配置
+- name: SYSTEM_NAME
+  value: "production_system"
+
+- name: SYSTEM_VERSION
+  value: "1.0.0"
+
+- name: SYSTEM_ENVIRONMENT
+  value: "production"
+
+# 网络配置
+- name: NETWORK_HOST
+  value: "localhost"
+
+- name: NETWORK_PORT
+  value: 8080
+
+- name: NETWORK_PROTOCOL
+  value: "https"
+
+# 数据库配置
+- name: DATABASE_HOST
+  value: "postgres-primary"
+
+- name: DATABASE_PORT
+  value: 5432
+
+- name: DATABASE_NAME
+  value: "production_db"
+
+# 安全配置
+- name: SECURITY_ENCRYPTION_KEY
+  value: "generated_key_here"
+
+- name: SECURITY_SSL_CERT_PATH
+  value: "/etc/ssl/certs/server.crt"
+
+# 性能配置
+- name: PERFORMANCE_MAX_THREADS
+  value: 100
+
+- name: PERFORMANCE_MEMORY_LIMIT
+  value: "4GB"
+</code></pre>
+<h3 id="2-模块变量"><a class="header" href="#2-模块变量">2. 模块变量</a></h3>
+<p><strong>命名规则</strong>:</p>
+<ul>
+<li>模块名作为前缀</li>
+<li>跟随具体的配置项</li>
+<li>使用统一的术语</li>
+</ul>
+<p><strong>示例</strong>:</p>
+<pre><code class="language-yaml"># web_server 模块变量
+vars:
+  - name: WEB_SERVER_PORT
+    value: 80
+
+  - name: WEB_SERVER_SSL_PORT
+    value: 443
+
+  - name: WEB_SERVER_WORKERS
+    value: 4
+
+  - name: WEB_SERVER_KEEP_ALIVE
+    value: "75s"
+
+# database_server 模块变量
+vars:
+  - name: DATABASE_SERVER_HOST
+    value: "db-primary"
+
+  - name: DATABASE_SERVER_PORT
+    value: 5432
+
+  - name: DATABASE_SERVER_MAX_CONNECTIONS
+    value: 100
+
+  - name: DATABASE_SERVER_TIMEOUT
+    value: "30s"
+</code></pre>
+<h3 id="3-环境变量"><a class="header" href="#3-环境变量">3. 环境变量</a></h3>
+<p><strong>命名规则</strong>:</p>
+<ul>
+<li>支持环境变量替换</li>
+<li>使用默认值语法</li>
+<li>变量名与配置名对应</li>
+</ul>
+<p><strong>示例</strong>:</p>
+<pre><code class="language-yaml"># 环境变量替换
+vars:
+  - name: DATABASE_HOST
+    value: "${DATABASE_HOST:localhost}"
+
+  - name: DATABASE_PORT
+    value: "${DATABASE_PORT:5432}"
+
+  - name: ENABLE_DEBUG
+    value: "${ENABLE_DEBUG:false}"
+
+  - name: LOG_LEVEL
+    value: "${LOG_LEVEL:info}"
+
+  - name: CONFIG_PATH
+    value: "${CONFIG_PATH:/etc/app/config}"
+
+  - name: API_KEY
+    value: "${API_KEY}"
+</code></pre>
+<h3 id="4-分组变量"><a class="header" href="#4-分组变量">4. 分组变量</a></h3>
+<p><strong>命名规则</strong>:</p>
+<ul>
+<li>使用 <code>group</code> 字段进行分类</li>
+<li>组名与功能相关</li>
+<li>组内变量命名保持一致</li>
+</ul>
+<p><strong>示例</strong>:</p>
+<pre><code class="language-yaml"># 按功能分组的变量
+vars:
+# 网络配置组
+- name: HTTP_PORT
+  group: network
+  value: 80
+
+- name: HTTPS_PORT
+  group: network
+  value: 443
+
+- name: DOMAIN_NAME
+  group: network
+  value: "example.com"
+
+# 数据库配置组
+- name: DB_HOST
+  group: database
+  value: "postgres"
+
+- name: DB_PORT
+  group: database
+  value: 5432
+
+- name: DB_NAME
+  group: database
+  value: "app_db"
+
+# 安全配置组
+- name: ENABLE_SSL
+  group: security
+  value: true
+
+- name: SSL_CERT_PATH
+  group: security
+  value: "/etc/ssl/certs/server.crt"
+
+- name: SSL_KEY_PATH
+  group: security
+  value: "/etc/ssl/private/server.key"
+
+# 监控配置组
+- name: ENABLE_MONITORING
+  group: monitoring
+  value: true
+
+- name: METRICS_PORT
+  group: monitoring
+  value: 9090
+
+- name: LOG_LEVEL
+  group: monitoring
+  value: "info"
+</code></pre>
+<h2 id="模块命名规范"><a class="header" href="#模块命名规范">模块命名规范</a></h2>
+<h3 id="1-模块名"><a class="header" href="#1-模块名">1. 模块名</a></h3>
+<p><strong>命名规则</strong>:</p>
+<ul>
+<li>使用小写字母</li>
+<li>单词间用下划线分隔</li>
+<li>描述性名称</li>
+<li>避免缩写</li>
+</ul>
+<p><strong>示例</strong>:</p>
+<pre><code class="language-yaml"># 好的模块名
+- name: web_server
+- name: database_server
+- name: cache_manager
+- name: message_queue
+- name: load_balancer
+- name: monitoring_agent
+- name: file_storage
+- name: authentication_service
+
+# 不好的模块名
+- name: web
+- name: db
+- name: cache
+- name: mq
+- name: lb
+- name: monitor
+- name: storage
+- name: auth
+</code></pre>
+<h3 id="2-模块类型"><a class="header" href="#2-模块类型">2. 模块类型</a></h3>
+<p><strong>常用模块类型</strong>:</p>
+<pre><code>server      # 服务器服务
+client      # 客户端服务
+proxy       # 代理服务
+gateway     # 网关服务
+cache       # 缓存服务
+storage     # 存储服务
+queue       # 消息队列
+monitor     # 监控服务
+security    # 安全服务
+network     # 网络服务
+</code></pre>
+<p><strong>命名模式</strong>:</p>
+<ul>
+<li><code>{function}_{type}</code>: <code>web_server</code>, <code>database_server</code></li>
+<li><code>{type}_{service}</code>: <code>cache_redis</code>, <code>queue_rabbitmq</code></li>
+<li><code>{service}_{tool}</code>: <code>monitor_grafana</code>, <code>security_consul</code></li>
+</ul>
+<h2 id="系统命名规范"><a class="header" href="#系统命名规范">系统命名规范</a></h2>
+<h3 id="1-系统名"><a class="header" href="#1-系统名">1. 系统名</a></h3>
+<p><strong>命名规则</strong>:</p>
+<ul>
+<li>使用小写字母</li>
+<li>单词间用下划线分隔</li>
+<li>描述性名称</li>
+<li>包含环境标识（可选）</li>
+</ul>
+<p><strong>示例</strong>:</p>
+<pre><code class="language-yaml"># 生产环境
+name: production_web_system
+name: staging_api_gateway
+name: development_database_cluster
+
+# 开发环境
+name: dev_web_system
+name: test_user_service
+name: local_message_queue
+
+# 通用环境
+name: microservice_platform
+name: data_processing_system
+name: enterprise_application
+</code></pre>
+<h3 id="2-系统标识"><a class="header" href="#2-系统标识">2. 系统标识</a></h3>
+<p><strong>命名规则</strong>:</p>
+<ul>
+<li>系统名作为基础</li>
+<li>添加环境前缀（可选）</li>
+<li>添加版本标识（可选）</li>
+</ul>
+<p><strong>标识格式</strong>:</p>
+<pre><code>{environment}_{system_name}_{version}
+</code></pre>
+<p><strong>示例</strong>:</p>
+<pre><code>prod_web_system_v1.0.0
+staging_api_gateway_v2.1.0
+dev_database_cluster_v0.9.0
+</code></pre>
+<h2 id="工作流命名规范"><a class="header" href="#工作流命名规范">工作流命名规范</a></h2>
+<h3 id="1-任务名"><a class="header" href="#1-任务名">1. 任务名</a></h3>
+<p><strong>命名规则</strong>:</p>
+<ul>
+<li>使用动词开头</li>
+<li>描述具体操作</li>
+<li>动词+名词结构</li>
+</ul>
+<p><strong>常用动词</strong>:</p>
+<pre><code>install     # 安装
+start       # 启动
+stop        # 停止
+restart     # 重启
+update      # 更新
+configure   # 配置
+deploy      # 部署
+backup      # 备份
+restore     # 恢复
+validate    # 验证
+check       # 检查
+monitor     # 监控
+</code></pre>
+<p><strong>示例</strong>:</p>
+<pre><code class="language-gxl"># 好的任务名
+#[task(name="install_service")]
+#[task(name="start_application")]
+#[task(name="stop_database")]
+#[task(name="update_config")]
+#[task(name="deploy_system")]
+#[task(name="validate_environment")]
+
+# 不好的任务名
+#[task(name="install")]        # 过于简单
+#[task(name="do_start")]        # 冗余
+#[task(name="run_installer")]   # 间接
+</code></pre>
+<h3 id="2-流程名"><a class="header" href="#2-流程名">2. 流程名</a></h3>
+<p><strong>命名规则</strong>:</p>
+<ul>
+<li>使用多个单词</li>
+<li>描述完整流程</li>
+<li>包含系统标识</li>
+</ul>
+<p><strong>示例</strong>:</p>
+<pre><code class="language-gxl"># 系统操作流程
+flow system_installation
+flow system_configuration
+flow system_deployment
+flow system_monitoring
+
+# 模块操作流程
+flow module_initialization
+flow module_configuration
+flow module_deployment
+flow module_validation
+</code></pre>
+<h2 id="gxl-元素命名规范"><a class="header" href="#gxl-元素命名规范">GXL 元素命名规范</a></h2>
+<h3 id="1-变量名"><a class="header" href="#1-变量名">1. 变量名</a></h3>
+<p><strong>命名规则</strong>:</p>
+<ul>
+<li>使用大写字母</li>
+<li>单词间用下划线分隔</li>
+<li>描述变量内容</li>
+</ul>
+<p><strong>示例</strong>:</p>
+<pre><code class="language-gxl">// 系统配置变量
+let SYSTEM_NAME = "web_system"
+let SYSTEM_MODEL = "arm-mac14-host"
+let MODULE_COUNT = 5
+
+// 环境变量
+let ENVIRONMENT = "production"
+let LOG_LEVEL = "info"
+let FORCE_FLAG = ""
+
+// 路径变量
+let PROJECT_ROOT = "${GXL_PRJ_ROOT}"
+let CONFIG_PATH = "${PROJECT_ROOT}/config"
+let DEPLOY_PATH = "${PROJECT_ROOT}/deploy"
+</code></pre>
+<h3 id="2-函数名"><a class="header" href="#2-函数名">2. 函数名</a></h3>
+<p><strong>命名规则</strong>:</p>
+<ul>
+<li>使用动词+名词结构</li>
+<li>动词用现在时</li>
+<li>描述函数功能</li>
+</ul>
+<p><strong>示例</strong>:</p>
+<pre><code class="language-gxl">// 检查函数
+function check_environment()
+function check_dependencies()
+function check_health()
+
+// 安装函数
+function install_system()
+function install_module(module_name)
+function install_dependencies()
+
+// 配置函数
+function configure_system()
+function configure_module(module)
+function apply_settings()
+
+// 工具函数
+function read_file(file_path)
+function write_file(file_path, content)
+function validate_config()
+</code></pre>
+<h3 id="3-标签名"><a class="header" href="#3-标签名">3. 标签名</a></h3>
+<p><strong>命名规则</strong>:</p>
+<ul>
+<li>使用小写字母</li>
+<li>单词间用下划线分隔</li>
+<li>标签语义明确</li>
+</ul>
+<p><strong>示例</strong>:</p>
+<pre><code class="language-gxl">// 系统标签
+label system_initialized
+label system_running
+label system_stopped
+label system_error
+
+// 模块标签
+label module_installed
+label module_started
+label module_stopped
+label module_failed
+
+// 流程标签
+label installation_complete
+label deployment_successful
+label validation_passed
+label configuration_applied
+</code></pre>
+<h2 id="避免的命名模式"><a class="header" href="#避免的命名模式">避免的命名模式</a></h2>
+<h3 id="1-不推荐的命名"><a class="header" href="#1-不推荐的命名">1. 不推荐的命名</a></h3>
+<p><strong>避免使用</strong>:</p>
+<ul>
+<li>单字符变量名（a, b, c）</li>
+<li>缩写不明确的名称（cfg, tmp, var）</li>
+<li>硬编码数字和版本</li>
+<li>保留关键字和特殊字符</li>
+<li>过于通用的名称</li>
+</ul>
+<p><strong>示例</strong>:</p>
+<pre><code class="language-yaml"># 不推荐的命名
+- name: a                    # 单字符
+- name: cfg                  # 缩写不明确
+- name: v1                  # 硬编码版本
+- name: temp_123             # 临时编号
+- name: system               # 过于通用
+- name: config               # 过于通用
+- name: data                 # 过于通用
+</code></pre>
+<h3 id="2-特殊字符和保留字"><a class="header" href="#2-特殊字符和保留字">2. 特殊字符和保留字</a></h3>
+<p><strong>避免使用的字符</strong>:</p>
+<ul>
+<li>空格和特殊字符</li>
+<li>连字符（-）</li>
+<li>斜杠（/）</li>
+<li>点号（.）开头或结尾</li>
+<li>保留关键字</li>
+</ul>
+<p><strong>示例</strong>:</p>
+<pre><code class="language-yaml"># 错误的命名
+- name: web server          # 包含空格
+- name: api-gateway        # 使用连字符
+- name: config/backup       # 包含斜杠
+- name: .hidden            # 以点号开头
+- name: system$            # 包含特殊字符
+- name: null               # 保留关键字
+</code></pre>
+<h2 id="命名验证工具"><a class="header" href="#命名验证工具">命名验证工具</a></h2>
+<h3 id="1-自动验证脚本"><a class="header" href="#1-自动验证脚本">1. 自动验证脚本</a></h3>
+<p><strong>bash 脚本示例</strong>:</p>
+<pre><code class="language-bash">#!/bin/bash
+
+# 验证 YAML 配置文件
+validate_naming_conventions() {
+    local file=$1
+    local errors=0
+    
+    # 检查变量名
+    if [[ $file == *"vars.yml" ]]; then
+        local invalid_vars=$(yq eval '.vars[] | select(.name | ascii_downcase != .name)' "$file")
+        if [[ -n "$invalid_vars" ]]; then
+            echo "错误: 变量名必须全小写"
+            echo "$invalid_vars"
+            errors=$((errors + 1))
+        fi
+    fi
+    
+    # 检查模块名
+    if [[ $file == *"mod_list.yml" ]]; then
+        local invalid_modules=$(yq eval '.[] | select(.name | ascii_downcase != .name)' "$file")
+        if [[ -n "$invalid_modules" ]]; then
+            echo "错误: 模块名必须全小写"
+            echo "$invalid_modules"
+            errors=$((errors + 1))
+        fi
+    fi
+    
+    return $errors
+}
+
+# 验证所有配置文件
+for file in sys/*.yml; do
+    if [[ -f "$file" ]]; then
+        echo "验证文件: $file"
+        validate_naming_conventions "$file"
+        if [[ $? -eq 0 ]]; then
+            echo "✓ 通过验证"
+        else
+            echo "✗ 验证失败"
+        fi
+    fi
+done
+</code></pre>
+<h3 id="2-集成验证"><a class="header" href="#2-集成验证">2. 集成验证</a></h3>
+<p><strong>Git 钩子示例</strong>:</p>
+<pre><code class="language-bash">#!/bin/bash
+# .git/hooks/pre-commit
+
+# 检查提交的文件是否包含配置文件
+changed_files=$(git diff --cached --name-only --diff-filter=ACM | grep -E '\.(yml|gxl)$')
+
+if [[ -n "$changed_files" ]]; then
+    echo "验证命名规范..."
+    
+    for file in $changed_files; do
+        echo "检查文件: $file"
+        
+        # 执行命名规范检查
+        if ! validate_naming_conventions "$file"; then
+            echo "错误: $file 不符合命名规范"
+            exit 1
+        fi
+    done
+fi
+
+echo "命名规范验证通过"
+</code></pre>
+<h2 id="最佳实践"><a class="header" href="#最佳实践">最佳实践</a></h2>
+<h3 id="1-创建命名规范文档"><a class="header" href="#1-创建命名规范文档">1. 创建命名规范文档</a></h3>
+<p><strong>内容建议</strong>:</p>
+<ul>
+<li>项目特定的命名规则</li>
+<li>术语表和缩写定义</li>
+<li>示例和反例</li>
+<li>验证工具使用方法</li>
+<li>维护更新策略</li>
+</ul>
+<h3 id="2-自动化验证"><a class="header" href="#2-自动化验证">2. 自动化验证</a></h3>
+<p><strong>工具集成</strong>:</p>
+<ul>
+<li>CI/CD 流水线集成</li>
+<li>代码审查工具集成</li>
+<li>文档生成工具集成</li>
+<li>开发环境配置集成</li>
+</ul>
+<h3 id="3-定期审查"><a class="header" href="#3-定期审查">3. 定期审查</a></h3>
+<p><strong>审查频率</strong>:</p>
+<ul>
+<li>新功能开发时</li>
+<li>代码审查阶段</li>
+<li>版本发布前</li>
+<li>定期维护更新</li>
+</ul>
+<h3 id="4-团队协作"><a class="header" href="#4-团队协作">4. 团队协作</a></h3>
+<p><strong>团队实践</strong>:</p>
+<ul>
+<li>命名规范培训</li>
+<li>代码审查重点</li>
+<li>示例代码库</li>
+<li>常见问题解答</li>
+</ul>
+<h2 id="总结"><a class="header" href="#总结">总结</a></h2>
+<p>良好的命名规范是项目成功的重要因素。Sys-Operator 的命名规范注重可读性、一致性和可扩展性，通过清晰的命名约定可以：</p>
+<ul>
+<li>提高代码可读性和维护性</li>
+<li>减少沟通成本和理解误差</li>
+<li>支持项目的长期演进</li>
+<li>便于团队协作和代码审查</li>
+<li>提供更好的开发体验</li>
+</ul>
+<p>遵循这些命名规范，并与团队保持一致的命名约定，将有助于建立高质量、可维护的系统配置。</p>
+<hr />
+<p><em>更多详情请参考 <a href="./directory.html">目录结构</a> 和 <a href="./file-organization.html">文件组织方式</a>。</em></p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../../../operator/sys/structure/file-organization.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../../../operator/sys/troubleshooting/common-issues.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../../../operator/sys/structure/file-organization.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../../../operator/sys/troubleshooting/common-issues.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../../../elasticlunr.min.js"></script>
+        <script src="../../../mark.min.js"></script>
+        <script src="../../../searcher.js"></script>
+
+        <script src="../../../clipboard.min.js"></script>
+        <script src="../../../highlight.js"></script>
+        <script src="../../../book.js"></script>
+
+        <!-- Custom JS scripts -->
+        <script src="../../.././mermaid.min.js"></script>
+
+
+
+    </div>
+    </body>
+</html>

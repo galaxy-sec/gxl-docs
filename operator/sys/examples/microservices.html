@@ -1,0 +1,1149 @@
+<!DOCTYPE HTML>
+<html lang="zh" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>示例 - galaxy-sec operator ecosystem</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../../../favicon.svg">
+        <link rel="shortcut icon" href="../../../favicon.png">
+        <link rel="stylesheet" href="../../../css/variables.css">
+        <link rel="stylesheet" href="../../../css/general.css">
+        <link rel="stylesheet" href="../../../css/chrome.css">
+        <link rel="stylesheet" href="../../../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../../../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../../../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="../../../highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="../../../tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="../../../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="../../.././mermaid.css">
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "../../../";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "../../../searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../../../toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../../../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">galaxy-sec operator ecosystem</h1>
+
+                    <div class="right-buttons">
+                        <a href="../../../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="微服务系统示例"><a class="header" href="#微服务系统示例">微服务系统示例</a></h1>
+<h2 id="概述"><a class="header" href="#概述">概述</a></h2>
+<p>本文档提供了一个完整的微服务系统示例，展示如何使用 Sys-Operator 构建和管理复杂的微服务架构。该示例包含 Web 前端、API 网关、用户服务、订单服务和数据库等多个模块，体现了现代微服务系统的典型架构模式。</p>
+<h2 id="系统架构"><a class="header" href="#系统架构">系统架构</a></h2>
+<h3 id="整体架构图"><a class="header" href="#整体架构图">整体架构图</a></h3>
+<pre class="mermaid">graph TB
+    subgraph &quot;客户端层&quot;
+        A[Web浏览器]
+        B[移动应用]
+        C[API客户端]
+    end
+
+    subgraph &quot;接入层&quot;
+        D[Nginx Ingress]
+        E[API Gateway]
+    end
+
+    subgraph &quot;业务服务层&quot;
+        F[用户服务]
+        G[订单服务]
+        H[支付服务]
+        I[通知服务]
+    end
+
+    subgraph &quot;数据层&quot;
+        J[PostgreSQL主库]
+        K[PostgreSQL从库]
+        L[Redis缓存]
+    end
+
+    subgraph &quot;基础设施层&quot;
+        M[Kubernetes集群]
+        N[监控系统]
+        O[日志系统]
+    end
+
+    A --&gt; D
+    B --&gt; D
+    C --&gt; E
+
+    D --&gt; E
+    E --&gt; F
+    E --&gt; G
+    E --&gt; H
+    E --&gt; I
+
+    F --&gt; J
+    G --&gt; J
+    H --&gt; J
+    I --&gt; L
+
+    J --&gt; K
+    J --&gt; L
+
+    F --&gt; M
+    G --&gt; M
+    H --&gt; M
+    I --&gt; M
+
+    M --&gt; N
+    M --&gt; O
+</pre>
+<h3 id="服务依赖关系"><a class="header" href="#服务依赖关系">服务依赖关系</a></h3>
+<pre><code>┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
+│   用户服务      │───▶│   订单服务      │───▶│   支付服务      │
+│ (UserService)   │    │ (OrderService)  │    │ (PaymentService) │
+└─────────────────┘    └─────────────────┘    └─────────────────┘
+         │                       │                       │
+         │                       │                       │
+         ▼                       ▼                       ▼
+┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
+│   PostgreSQL    │    │   PostgreSQL    │    │   PostgreSQL    │
+│    主库         │    │    主库         │    │    主库         │
+└─────────────────┘    └─────────────────┘    └─────────────────┘
+         │                       │                       │
+         ▼                       ▼                       ▼
+┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
+│    Redis缓存    │    │    Redis缓存    │    │    Redis缓存    │
+│ (用户会话)      │    │ (订单状态)      │    │ (支付状态)      │
+└─────────────────┘    └─────────────────┘    └─────────────────┘
+</code></pre>
+<h2 id="系统配置"><a class="header" href="#系统配置">系统配置</a></h2>
+<h3 id="1-系统模型定义-syssys_modelyml"><a class="header" href="#1-系统模型定义-syssys_modelyml">1. 系统模型定义 (<code>sys/sys_model.yml</code>)</a></h3>
+<pre><code class="language-yaml"># 系统基本信息
+name: microservice_platform
+model: x86-ubt22-k8s
+vender: "TechCorp"
+
+
+### 2. 模块列表配置 (`sys/mod_list.yml`)
+
+```yaml
+# 接入层模块
+- name: nginx_ingress
+  addr:
+    repo: https://github.com/galaxy-operators/nginx
+    tag: v1.25.3
+  model: x86-ubt22-k8s
+  enable: true
+
+
+- name: api_gateway
+  addr:
+    repo: https://github.com/galaxy-operators/api-gateway
+    tag: v3.0.0
+  model: x86-ubt22-k8s
+  enable: true
+  priority: 90
+
+
+# 用户服务模块
+- name: user_service
+  addr:
+    repo: https://github.com/techcorp/user-service
+    tag: v4.1.0
+  model: x86-ubt22-k8s
+  enable: true
+  priority: 80
+
+
+# 订单服务模块
+- name: order_service
+  addr:
+    repo: https://github.com/techcorp/order-service
+    tag: v3.5.0
+  model: x86-ubt22-k8s
+  enable: true
+  priority: 70
+
+
+# 支付服务模块
+- name: payment_service
+  addr:
+    repo: https://github.com/techcorp/payment-service
+    tag: v2.8.0
+  model: x86-ubt22-k8s
+  enable: true
+
+
+# 通知服务模块
+- name: notification_service
+  addr:
+    repo: https://github.com/techcorp/notification-service
+    tag: v1.6.0
+  model: x86-ubt22-k8s
+  enable: true
+  priority: 60
+
+
+# 数据库模块
+- name: postgres_primary
+  addr:
+    repo: https://github.com/galaxy-operators/postgresql-ha
+    tag: v15.5.0
+  model: x86-ubt22-k8s
+  enable: true
+
+
+- name: postgres_readonly
+  addr:
+    repo: https://github.com/galaxy-operators/postgresql-ha
+    tag: v15.5.0
+  model: x86-ubt22-k8s
+  enable: true
+
+
+# 缓存模块
+- name: redis_cache
+  addr:
+    repo: https://github.com/galaxy-operators/redis-ha
+    tag: v7.2.4
+  model: x86-ubt22-k8s
+  enable: true
+
+
+# 外部服务模块
+- name: external_payment_gateway
+  addr:
+    path: ./external-gateways/payment-gateway
+  model: x86-ubt22-k8s
+
+
+# 监控模块
+- name: monitoring_stack
+  addr:
+    repo: https://github.com/galaxy-operators/enterprise-monitoring
+    tag: v2.5.0
+  model: x86-ubt22-k8s
+  enable: true
+
+</code></pre>
+<h3 id="3-系统变量配置-sysvarsyml"><a class="header" href="#3-系统变量配置-sysvarsyml">3. 系统变量配置 (<code>sys/vars.yml</code>)</a></h3>
+<pre><code class="language-yaml"># 系统配置
+vars:
+# 环境配置
+- name: ENVIRONMENT
+  value: "production"
+  description: "部署环境"
+  group: environment
+
+- name: CLUSTER_NAME
+  value: "${CLUSTER_NAME:production-cluster}"
+  description: "Kubernetes集群名称"
+  group: environment
+
+- name: NAMESPACE
+  value: "${NAMESPACE:microservices}"
+  description: "Kubernetes命名空间"
+  group: environment
+
+# 应用配置
+- name: APP_VERSION
+  value: "2.3.0"
+  description: "应用版本"
+  group: application
+
+- name: DOMAIN_NAME
+  value: "${DOMAIN_NAME:platform.techcorp.com}"
+  description: "系统域名"
+  group: application
+
+- name: BASE_URL
+  value: "https://${DOMAIN_NAME}"
+  description: "基础URL"
+  group: application
+
+# 安全配置
+- name: ENABLE_MTLS
+  value: "${ENABLE_MTLS:true}"
+  description: "启用双向TLS"
+  type: boolean
+  group: security
+
+- name: API_RATE_LIMIT
+  value: "${API_RATE_LIMIT:1000}"
+  description: "API速率限制"
+  type: integer
+  min: 1
+  max: 10000
+  group: security
+
+- name: SESSION_TIMEOUT_MINUTES
+  value: "${SESSION_TIMEOUT_MINUTES:30}"
+  description: "会话超时时间"
+  type: integer
+  min: 5
+  max: 1440
+  group: security
+
+# 数据库配置
+- name: DATABASE_BACKUP_SCHEDULE
+  value: "${DATABASE_BACKUP_SCHEDULE:0 1 * * *}"
+  description: "数据库备份计划"
+  group: database
+
+- name: DATABASE_RETENTION_DAYS
+  value: "${DATABASE_RETENTION_DAYS:30}"
+  description: "数据保留天数"
+  type: integer
+  min: 7
+  max: 365
+  group: database
+
+- name: CONNECTION_POOL_SIZE
+  value: "${CONNECTION_POOL_SIZE:20}"
+  description: "连接池大小"
+  type: integer
+  min: 1
+  max: 100
+  group: database
+
+# 缓存配置
+- name: CACHE_DEFAULT_TTL
+  value: "${CACHE_DEFAULT_TTL:3600}"
+  description: "默认缓存TTL（秒）"
+  type: integer
+  min: 60
+  max: 86400
+  group: cache
+
+- name: CACHE_MAX_SIZE
+  value: "${CACHE_MAX_SIZE:10000}"
+  description: "缓存最大条目数"
+  type: integer
+  min: 100
+  max: 100000
+  group: cache
+
+- name: CACHE_REFRESH_INTERVAL
+  value: "${CACHE_REFRESH_INTERVAL:300}"
+  description: "缓存刷新间隔（秒）"
+  type: integer
+  min: 60
+  max: 3600
+  group: cache
+
+# 消息队列配置
+- name: MESSAGE_QUEUE_MAX_RETRIES
+  value: "${MESSAGE_QUEUE_MAX_RETRIES:3}"
+  description: "消息队列最大重试次数"
+  type: integer
+  min: 1
+  max: 10
+  group: messaging
+
+- name: MESSAGE_QUEUE_DELAY_SECONDS
+  value: "${MESSAGE_QUEUE_DELAY_SECONDS:60}"
+  description: "消息队列重试延迟"
+  type: integer
+  min: 10
+  max: 3600
+  group: messaging
+
+# 高可用配置
+- name: HIGH_AVAILABILITY_ENABLED
+  value: "${HIGH_AVAILABILITY_ENABLED:true}"
+  description: "启用高可用"
+  type: boolean
+  group: ha
+
+- name: HEALTH_CHECK_INTERVAL_SECONDS
+  value: "${HEALTH_CHECK_INTERVAL_SECONDS:30}"
+  description: "健康检查间隔"
+  type: integer
+  min: 10
+  max: 300
+  group: ha
+
+- name: FAILURE_DETECTION_SECONDS
+  value: "${FAILURE_DETECTION_SECONDS:60}"
+  description: "故障检测时间"
+  type: integer
+  min: 30
+  max: 300
+  group: ha
+
+- name: AUTO_FAILOVER_ENABLED
+  value: "${AUTO_FAILOVER_ENABLED:true}"
+  description: "启用自动故障转移"
+  type: boolean
+  group: ha
+
+# 性能配置
+- name: DEFAULT_REPLICAS
+  value: "${DEFAULT_REPLICAS:2}"
+  description: "默认副本数"
+  type: integer
+  min: 1
+  max: 10
+  group: performance
+
+- name: MAX_REPLICAS
+  value: "${MAX_REPLICAS:10}"
+  description: "最大副本数"
+  type: integer
+  min: 1
+  max: 100
+  group: performance
+
+- name: CPU_REQUEST
+  value: "${CPU_REQUEST:100m}"
+  description: "CPU请求值"
+  group: performance
+
+- name: MEMORY_REQUEST
+  value: "${MEMORY_REQUEST:256Mi}"
+  description: "内存请求值"
+  group: performance
+
+- name: CPU_LIMIT
+  value: "${CPU_LIMIT:2000m}"
+  description: "CPU限制值"
+  group: performance
+
+- name: MEMORY_LIMIT
+  value: "${MEMORY_LIMIT:4Gi}"
+  description: "内存限制值"
+  group: performance
+
+# 监控配置
+- name: MONITORING_ENABLED
+  value: "${MONITORING_ENABLED:true}"
+  description: "启用监控"
+  type: boolean
+  group: monitoring
+
+- name: ALERT_EMAIL_RECIPIENTS
+  value: "${ALERT_EMAIL_RECIPIENTS:devops-alerts@techcorp.com}"
+  description: "告警邮件接收者"
+  group: monitoring
+
+- name: SLACK_WEBHOOK_URL
+  value: "${SLACK_WEBHOOK_URL}"
+  description: "Slack Webhook URL"
+  group: monitoring
+
+- name: PAGERDUTY_SERVICE_KEY
+  value: "${PAGERDUTY_SERVICE_KEY}"
+  description: "PagerDuty服务密钥"
+  group: monitoring
+
+# 业务配置
+- name: BUSINESS_HOURS_START
+  value: "${BUSINESS_HOURS_START:09:00}"
+  description: "业务开始时间"
+  group: business
+
+- name: BUSINESS_HOURS_END
+  value: "${BUSINESS_HOURS_END:18:00}"
+  description: "业务结束时间"
+  group: business
+
+- name: MAINTENANCE_WINDOW_START
+  value: "${MAINTENANCE_WINDOW_START:02:00}"
+  description: "维护窗口开始时间"
+  group: business
+
+- name: MAINTENANCE_WINDOW_END
+  value: "${MAINTENANCE_WINDOW_END:04:00}"
+  description: "维护窗口结束时间"
+  group: business
+
+- name: FEATURE_FLAGS
+  value: "${FEATURE_FLAGS:new-dashboard,advanced-analytics}"
+  description: "功能开关"
+  group: business
+</code></pre>
+<h3 id="4-系统工作流配置-sysworkflowsoperatorsgxl"><a class="header" href="#4-系统工作流配置-sysworkflowsoperatorsgxl">4. 系统工作流配置 (<code>sys/workflows/operators.gxl</code>)</a></h3>
+<pre><code class="language-gxl">// 系统操作符工作流
+mod operators : sys_ops {
+    // 自动加载入口
+    #[auto_load(entry)]
+    flow __into {
+        // 加载系统配置
+        gx.read_file(
+            file : "sys/sys_model.yml",
+            name : "SYSTEM_DEFINE"
+        );
+
+        gx.read_file(
+            file : "sys/mod_list.yml",
+            name : "MODULE_LIST"
+        );
+
+        gx.read_file(
+            file : "sys/vars.yml",
+            name : "SYSTEM_VARS"
+        );
+    }
+
+    // 系统初始化任务
+    #[task(name="gsys@init")]
+    flow init {
+        gx.echo("=== 开始微服务系统初始化 ===");
+        gx.echo("系统名称: ${SYSTEM_DEFINE.NAME}");
+        gx.echo("目标平台: ${SYSTEM_DEFINE.MODEL}");
+
+        // 1. 基础环境检查
+        gx.echo("1. 检查基础环境...");
+        gx.check_environment();
+        gx.check_kubernetes_cluster();
+        gx.check_network_connectivity();
+
+        // 2. 创建系统目录
+        gx.echo("2. 创建系统目录结构...");
+        gx.cmd("mkdir -p sys/mods");
+        gx.cmd("mkdir -p sys/workflows");
+        gx.cmd("mkdir -p config/helm");
+
+        // 3. 下载和验证模块
+        gx.echo("3. 下载和验证系统模块...");
+        let module_count = 0;
+        for ${MODULE} in ${MODULE_LIST} {
+            if ${MODULE.ENABLE} {
+                gx.echo("  处理模块: ${MODULE.NAME}");
+
+                // 下载模块
+                gx.download_module(${MODULE});
+
+                // 验证模块
+                gx.validate_module(${MODULE});
+
+                // 生成本地化配置
+                gx.generate_local_config(${MODULE});
+
+                module_count = module_count + 1;
+            }
+        }
+        gx.echo("  总计处理 ${module_count} 个模块");
+
+        // 4. 生成Helm图表
+        gx.echo("4. 生成Helm部署图表...");
+        gx.generate_helm_charts();
+
+        // 5. 验证系统配置
+        gx.echo("5. 验证系统配置...");
+        gx.validate_system_config();
+
+        gx.echo("=== 微服务系统初始化完成 ===");
+    }
+
+    // 系统本地化任务
+    #[task(name="gsys@localize")]
+    flow localize {
+        gx.echo("=== 开始微服务系统本地化 ===");
+
+        // 1. 本地化系统配置
+        gx.echo("1. 本地化系统配置...");
+        gx.localize_system_config();
+
+        // 2. 本地化各个模块
+        gx.echo("2. 本地化系统模块...");
+        for ${MODULE} in ${MODULE_LIST} {
+            if ${MODULE.ENABLE} {
+                gx.echo("  本地化模块: ${MODULE.NAME}");
+                gx.localize_module(${MODULE});
+            }
+        }
+
+        // 3. 生成本地化报告
+        gx.echo("3. 生成本地化报告...");
+        gx.generate_localization_report();
+
+        // 4. 生成环境特定配置
+        gx.echo("4. 生成环境特定配置...");
+        gx.generate_environment_configs();
+
+        gx.echo("=== 微服务系统本地化完成 ===");
+    }
+
+    // 系统部署任务
+    #[task(name="gsys@deploy")]
+    flow deploy {
+        gx.echo("=== 开始微服务系统部署 ===");
+
+        // 1. 部署基础设施组件
+        gx.echo("1. 部署基础设施组件...");
+        gx.deploy_infrastructure();
+
+        // 2. 部署数据库组件
+        gx.echo("2. 部署数据库组件...");
+        gx.deploy_database_components();
+
+        // 3. 部署缓存组件
+        gx.echo("3. 部署缓存组件...");
+        gx.deploy_cache_components();
+
+        // 4. 部署业务服务
+        gx.echo("4. 部署业务服务...");
+        gx.deploy_business_services();
+
+        // 5. 部署网关和负载均衡
+        gx.echo("5. 部署网关和负载均衡...");
+        gx.deploy_gateway_components();
+
+        // 6. 部署监控系统
+        gx.echo("6. 部署监控系统...");
+        gx.deploy_monitoring_components();
+
+        // 7. 验证部署结果
+        gx.echo("7. 验证部署结果...");
+        gx.validate_deployment();
+
+        gx.echo("=== 微服务系统部署完成 ===");
+    }
+
+    // 系统健康检查任务
+    #[task(name="gsys@health")]
+    flow health {
+        gx.echo("=== 开始微服务系统健康检查 ===");
+
+        // 1. 检查基础设施健康
+        gx.echo("1. 检查基础设施健康...");
+        gx.check_infrastructure_health();
+
+        // 2. 检查数据库健康
+        gx.echo("2. 检查数据库健康...");
+        gx.check_database_health();
+
+        // 3. 检查缓存健康
+        gx.echo("3. 检查缓存健康...");
+        gx.check_cache_health();
+
+        // 4. 检查业务服务健康
+        gx.echo("4. 检查业务服务健康...");
+        gx.check_service_health();
+
+        // 5. 检查网关健康
+        gx.echo("5. 检查网关健康...");
+        gx.check_gateway_health();
+
+        // 6. 生成健康报告
+        gx.echo("6. 生成健康报告...");
+        gx.generate_health_report();
+
+        gx.echo("=== 微服务系统健康检查完成 ===");
+    }
+
+    // 系统扩缩容任务
+    #[task(name="gsys@scale")]
+    flow scale {
+        gx.echo("=== 开始微服务系统扩缩容 ===");
+
+        // 1. 分析负载情况
+        gx.echo("1. 分析系统负载...");
+        let load_analysis = gx.analyze_system_load();
+
+        // 2. 确定扩缩容策略
+        gx.echo("2. 确定扩缩容策略...");
+        let scale_strategy = gx.determine_scale_strategy(load_analysis);
+
+        // 3. 执行扩缩容操作
+        gx.echo("3. 执行扩缩容操作...");
+        gx.execute_scaling(scale_strategy);
+
+        // 4. 验证扩缩容结果
+        gx.echo("4. 验证扩缩容结果...");
+        gx.validate_scaling_result();
+
+        gx.echo("=== 微服务系统扩缩容完成 ===");
+    }
+
+    // 系统备份任务
+    #[task(name="gsys@backup")]
+    flow backup {
+        gx.echo("=== 开始微服务系统备份 ===");
+
+        // 1. 备份数据库
+        gx.echo("1. 备份数据库...");
+        gx.backup_databases();
+
+        // 2. 备份配置文件
+        gx.echo("2. 备份配置文件...");
+        gx.backup_configurations();
+
+        // 3. 备份应用数据
+        gx.echo("3. 备份应用数据...");
+        gx.backup_application_data();
+
+        // 4. 备份监控系统数据
+        gx.echo("4. 备份监控系统数据...");
+        gx.backup_monitoring_data();
+
+        // 5. 生成备份报告
+        gx.echo("5. 生成备份报告...");
+        gx.generate_backup_report();
+
+        gx.echo("=== 微服务系统备份完成 ===");
+    }
+
+    // 系统恢复任务
+    #[task(name="gsys@restore")]
+    flow restore {
+        gx.echo("=== 开始微服务系统恢复 ===");
+
+        // 1. 验证备份完整性
+        gx.echo("1. 验证备份完整性...");
+        gx.validate_backup_integrity();
+
+        // 2. 恢复数据库
+        gx.echo("2. 恢复数据库...");
+        gx.restore_databases();
+
+        // 3. 恢复配置文件
+        gx.echo("3. 恢复配置文件...");
+        gx.restore_configurations();
+
+        // 4. 恢复应用数据
+        gx.echo("4. 恢复应用数据...");
+        gx.restore_application_data();
+
+        // 5. 验证恢复结果
+        gx.echo("5. 验证恢复结果...");
+        gx.validate_restore_result();
+
+        gx.echo("=== 微服务系统恢复完成 ===");
+    }
+}
+</code></pre>
+<h2 id="部署指南"><a class="header" href="#部署指南">部署指南</a></h2>
+<h3 id="1-前置要求"><a class="header" href="#1-前置要求">1. 前置要求</a></h3>
+<ul>
+<li><strong>Kubernetes集群</strong>: 1.20+ 版本</li>
+<li><strong>存储支持</strong>: 支持动态配置的存储类</li>
+<li><strong>网络插件</strong>: 支持LoadBalancer服务</li>
+<li><strong>监控系统</strong>: Prometheus + Grafana</li>
+<li><strong>日志系统</strong>: EFK 或类似方案</li>
+</ul>
+<h3 id="2-快速部署"><a class="header" href="#2-快速部署">2. 快速部署</a></h3>
+<pre><code class="language-bash"># 1. 创建系统目录
+mkdir microservice-platform
+cd microservice-platform
+
+# 2. 初始化系统结构
+gsys init
+
+# 3. 复制配置文件
+cp ../config/sys_model.yml sys/
+cp ../config/mod_list.yml sys/
+cp ../config/vars.yml sys/
+
+# 4. 部署系统
+gsys deploy
+
+# 5. 检查部署状态
+gsys health
+</code></pre>
+<h3 id="3-helm部署"><a class="header" href="#3-helm部署">3. Helm部署</a></h3>
+<pre><code class="language-bash"># 1. 生成本地Helm图表
+gsys generate-helm-charts
+
+# 2. 部署基础组件
+helm install infra ./helm/infrastructure/
+
+# 3. 部署数据库
+helm install db ./helm/database/
+
+# 4. 部署缓存
+helm install cache ./helm/cache/
+
+# 5. 部署业务服务
+helm install services ./helm/services/
+
+# 6. 部署监控
+helm install monitoring ./helm/monitoring/
+</code></pre>
+<h3 id="4-环境配置"><a class="header" href="#4-环境配置">4. 环境配置</a></h3>
+<h4 id="开发环境"><a class="header" href="#开发环境">开发环境</a></h4>
+<pre><code class="language-yaml"># 开发环境配置
+env: "development"
+cluster_name: "dev-cluster"
+namespace: "dev-microservices"
+
+# 数据库配置
+database_host: "dev-postgresql"
+database_port: 5432
+max_connections: 50
+
+# 缓存配置
+cache_enabled: true
+cache_ttl: 300
+
+# 监控配置
+monitoring_enabled: false
+logging_level: "debug"
+</code></pre>
+<h4 id="生产环境"><a class="header" href="#生产环境">生产环境</a></h4>
+<pre><code class="language-yaml"># 生产环境配置
+env: "production"
+cluster_name: "prod-cluster"
+namespace: "prod-microservices"
+
+# 数据库配置
+database_host: "prod-postgresql-primary"
+database_port: 5432
+max_connections: 500
+backup_enabled: true
+
+# 缓存配置
+cache_enabled: true
+cache_ttl: 3600
+
+# 监控配置
+monitoring_enabled: true
+logging_level: "info"
+</code></pre>
+<h3 id="5-监控配置"><a class="header" href="#5-监控配置">5. 监控配置</a></h3>
+<h4 id="prometheus配置"><a class="header" href="#prometheus配置">Prometheus配置</a></h4>
+<pre><code class="language-yaml"># prometheus-config.yaml
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: prometheus-config
+  namespace: monitoring
+data:
+  prometheus.yml: |
+    global:
+      scrape_interval: 15s
+      evaluation_interval: 15s
+
+    scrape_configs:
+    - job_name: 'kubernetes-pods'
+      kubernetes_sd_configs:
+      - role: pod
+      relabel_configs:
+      - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_scrape]
+        action: keep
+        regex: true
+</code></pre>
+<h4 id="grafana仪表板"><a class="header" href="#grafana仪表板">Grafana仪表板</a></h4>
+<pre><code class="language-json">{
+  "dashboard": {
+    "title": "微服务平台监控",
+    "panels": [
+      {
+        "title": "API响应时间",
+        "targets": [
+          {
+            "expr": "histogram_quantile(0.95, rate(http_request_duration_seconds_bucket[5m]))",
+            "legendFormat": "{{method}} {{status}}"
+          }
+        ]
+      },
+      {
+        "title": "API请求量",
+        "targets": [
+          {
+            "expr": "sum(rate(http_requests_total[5m]))",
+            "legendFormat": "Total requests"
+          }
+        ]
+      },
+      {
+        "title": "数据库连接数",
+        "targets": [
+          {
+            "expr": "pg_stat_database_numbackends",
+            "legendFormat": "Database connections"
+          }
+        ]
+      }
+    ]
+  }
+}
+</code></pre>
+<h2 id="最佳实践"><a class="header" href="#最佳实践">最佳实践</a></h2>
+<h3 id="1-架构设计原则"><a class="header" href="#1-架构设计原则">1. 架构设计原则</a></h3>
+<h4 id="微服务拆分原则"><a class="header" href="#微服务拆分原则">微服务拆分原则</a></h4>
+<ul>
+<li><strong>单一职责</strong>: 每个微服务只负责单一业务功能</li>
+<li><strong>团队自治</strong>: 服务由独立团队开发和维护</li>
+<li><strong>服务粒度</strong>: 服务大小适中，避免过细或过粗</li>
+<li><strong>数据自治</strong>: 每个服务管理自己的数据</li>
+</ul>
+<h4 id="服务发现原则"><a class="header" href="#服务发现原则">服务发现原则</a></h4>
+<ul>
+<li><strong>注册中心</strong>: 使用服务注册中心管理服务实例</li>
+<li><strong>健康检查</strong>: 定期检查服务健康状态</li>
+<li><strong>负载均衡</strong>: 实现客户端和服务端负载均衡</li>
+<li><strong>容错机制</strong>: 实现熔断、重试、降级等容错机制</li>
+</ul>
+<h3 id="2-数据管理原则"><a class="header" href="#2-数据管理原则">2. 数据管理原则</a></h3>
+<h4 id="数据一致性"><a class="header" href="#数据一致性">数据一致性</a></h4>
+<ul>
+<li><strong>最终一致性</strong>: 优先采用最终一致性模型</li>
+<li><strong>补偿事务</strong>: 使用补偿事务处理分布式事务</li>
+<li><strong>事件驱动</strong>: 采用事件驱动架构保持数据同步</li>
+<li><strong>数据备份</strong>: 实现定期数据备份和恢复机制</li>
+</ul>
+<h4 id="数据安全"><a class="header" href="#数据安全">数据安全</a></h4>
+<ul>
+<li><strong>加密存储</strong>: 敏感数据加密存储</li>
+<li><strong>访问控制</strong>: 实现细粒度的数据访问控制</li>
+<li><strong>审计日志</strong>: 记录数据访问和变更日志</li>
+<li><strong>合规性</strong>: 遵循数据保护和隐私合规要求</li>
+</ul>
+<h3 id="3-运维管理原则"><a class="header" href="#3-运维管理原则">3. 运维管理原则</a></h3>
+<h4 id="监控告警"><a class="header" href="#监控告警">监控告警</a></h4>
+<ul>
+<li><strong>全面监控</strong>: 实现基础设施、平台、应用三层监控</li>
+<li><strong>智能告警</strong>: 基于机器学习的智能告警策略</li>
+<li><strong>多渠道通知</strong>: 支持邮件、短信、即时通讯等多渠道通知</li>
+<li><strong>告警收敛</strong>: 实现告警聚合和收敛机制</li>
+</ul>
+<h4 id="发布策略"><a class="header" href="#发布策略">发布策略</a></h4>
+<ul>
+<li><strong>蓝绿部署</strong>: 使用蓝绿部署减少停机时间</li>
+<li><strong>金丝雀发布</strong>: 采用金丝雀发布降低风险</li>
+<li><strong>自动化测试</strong>: 实现自动化测试和验证</li>
+<li><strong>快速回滚</strong>: 支持快速故障回滚机制</li>
+</ul>
+<h3 id="4-性能优化建议"><a class="header" href="#4-性能优化建议">4. 性能优化建议</a></h3>
+<h4 id="服务优化"><a class="header" href="#服务优化">服务优化</a></h4>
+<ul>
+<li><strong>缓存策略</strong>: 合理使用缓存减少数据库访问</li>
+<li><strong>异步处理</strong>: 使用消息队列处理异步任务</li>
+<li><strong>连接池</strong>: 使用数据库和HTTP连接池</li>
+<li><strong>资源限制</strong>: 设置合理的CPU和内存限制</li>
+</ul>
+<h4 id="网络优化"><a class="header" href="#网络优化">网络优化</a></h4>
+<ul>
+<li><strong>CDN加速</strong>: 使用CDN加速静态资源</li>
+<li><strong>负载均衡</strong>: 实现多级负载均衡</li>
+<li><strong>网络隔离</strong>: 网络流量隔离和安全隔离</li>
+<li><strong>压缩传输</strong>: 启用GZIP等压缩传输</li>
+</ul>
+<h2 id="故障排除"><a class="header" href="#故障排除">故障排除</a></h2>
+<h3 id="1-常见问题"><a class="header" href="#1-常见问题">1. 常见问题</a></h3>
+<h4 id="服务启动失败"><a class="header" href="#服务启动失败">服务启动失败</a></h4>
+<pre><code class="language-bash"># 检查服务日志
+kubectl logs -f service/user-service -n microservices
+
+# 检查资源使用
+kubectl top pods -n microservices
+
+# 检查服务状态
+kubectl get pods -n microservices -l app=user-service
+</code></pre>
+<h4 id="数据库连接问题"><a class="header" href="#数据库连接问题">数据库连接问题</a></h4>
+<pre><code class="language-bash"># 检查数据库服务状态
+kubectl get deployment -n microservices
+
+# 检查数据库连接
+kubectl exec -it deployment/postgres-primary -n microservices -- psql -U postgres
+
+# 检查网络连通性
+kubectl exec -it deployment/user-service -n microservices -- curl postgres-primary:5432
+</code></pre>
+<h2 id="总结"><a class="header" href="#总结">总结</a></h2>
+<p>本微服务系统示例展示了如何使用 Sys-Operator 构建复杂的微服务平台。通过模块化的设计和标准化的配置管理，实现了：</p>
+<h3 id="运维价值"><a class="header" href="#运维价值">运维价值</a></h3>
+<ul>
+<li><strong>自动化</strong>: 自动化的部署和扩缩容</li>
+</ul>
+<p>通过遵循最佳实践和本示例的设计模式，可以构建出稳定可靠、易于维护的微服务平台，为业务发展提供强有力的技术支撑。</p>
+<hr />
+<p><em>更多详情请参考相关配置文档和运维手册。</em></p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../../../operator/sys/configuration/sys-model.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../../../operator/sys/structure/directory.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../../../operator/sys/configuration/sys-model.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../../../operator/sys/structure/directory.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../../../elasticlunr.min.js"></script>
+        <script src="../../../mark.min.js"></script>
+        <script src="../../../searcher.js"></script>
+
+        <script src="../../../clipboard.min.js"></script>
+        <script src="../../../highlight.js"></script>
+        <script src="../../../book.js"></script>
+
+        <!-- Custom JS scripts -->
+        <script src="../../.././mermaid.min.js"></script>
+
+
+
+    </div>
+    </body>
+</html>

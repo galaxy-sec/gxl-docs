@@ -1,0 +1,880 @@
+<!DOCTYPE HTML>
+<html lang="zh" class="light sidebar-visible" dir="ltr">
+    <head>
+        <!-- Book generated using mdBook -->
+        <meta charset="UTF-8">
+        <title>常见问题 - galaxy-sec operator ecosystem</title>
+
+
+        <!-- Custom HTML head -->
+
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="theme-color" content="#ffffff">
+
+        <link rel="icon" href="../../../favicon.svg">
+        <link rel="shortcut icon" href="../../../favicon.png">
+        <link rel="stylesheet" href="../../../css/variables.css">
+        <link rel="stylesheet" href="../../../css/general.css">
+        <link rel="stylesheet" href="../../../css/chrome.css">
+        <link rel="stylesheet" href="../../../css/print.css" media="print">
+
+        <!-- Fonts -->
+        <link rel="stylesheet" href="../../../FontAwesome/css/font-awesome.css">
+        <link rel="stylesheet" href="../../../fonts/fonts.css">
+
+        <!-- Highlight.js Stylesheets -->
+        <link rel="stylesheet" id="highlight-css" href="../../../highlight.css">
+        <link rel="stylesheet" id="tomorrow-night-css" href="../../../tomorrow-night.css">
+        <link rel="stylesheet" id="ayu-highlight-css" href="../../../ayu-highlight.css">
+
+        <!-- Custom theme stylesheets -->
+        <link rel="stylesheet" href="../../.././mermaid.css">
+
+
+        <!-- Provide site root and default themes to javascript -->
+        <script>
+            const path_to_root = "../../../";
+            const default_light_theme = "light";
+            const default_dark_theme = "navy";
+            window.path_to_searchindex_js = "../../../searchindex.js";
+        </script>
+        <!-- Start loading toc.js asap -->
+        <script src="../../../toc.js"></script>
+    </head>
+    <body>
+    <div id="mdbook-help-container">
+        <div id="mdbook-help-popup">
+            <h2 class="mdbook-help-title">Keyboard shortcuts</h2>
+            <div>
+                <p>Press <kbd>←</kbd> or <kbd>→</kbd> to navigate between chapters</p>
+                <p>Press <kbd>S</kbd> or <kbd>/</kbd> to search in the book</p>
+                <p>Press <kbd>?</kbd> to show this help</p>
+                <p>Press <kbd>Esc</kbd> to hide this help</p>
+            </div>
+        </div>
+    </div>
+    <div id="body-container">
+        <!-- Work around some values being stored in localStorage wrapped in quotes -->
+        <script>
+            try {
+                let theme = localStorage.getItem('mdbook-theme');
+                let sidebar = localStorage.getItem('mdbook-sidebar');
+
+                if (theme.startsWith('"') && theme.endsWith('"')) {
+                    localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+                }
+
+                if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                    localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+                }
+            } catch (e) { }
+        </script>
+
+        <!-- Set the theme before any content is loaded, prevents flash -->
+        <script>
+            const default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? default_dark_theme : default_light_theme;
+            let theme;
+            try { theme = localStorage.getItem('mdbook-theme'); } catch(e) { }
+            if (theme === null || theme === undefined) { theme = default_theme; }
+            const html = document.documentElement;
+            html.classList.remove('light')
+            html.classList.add(theme);
+            html.classList.add("js");
+        </script>
+
+        <input type="checkbox" id="sidebar-toggle-anchor" class="hidden">
+
+        <!-- Hide / unhide sidebar before it is displayed -->
+        <script>
+            let sidebar = null;
+            const sidebar_toggle = document.getElementById("sidebar-toggle-anchor");
+            if (document.body.clientWidth >= 1080) {
+                try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch(e) { }
+                sidebar = sidebar || 'visible';
+            } else {
+                sidebar = 'hidden';
+                sidebar_toggle.checked = false;
+            }
+            if (sidebar === 'visible') {
+                sidebar_toggle.checked = true;
+            } else {
+                html.classList.remove('sidebar-visible');
+            }
+        </script>
+
+        <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+            <!-- populated by js -->
+            <mdbook-sidebar-scrollbox class="sidebar-scrollbox"></mdbook-sidebar-scrollbox>
+            <noscript>
+                <iframe class="sidebar-iframe-outer" src="../../../toc.html"></iframe>
+            </noscript>
+            <div id="sidebar-resize-handle" class="sidebar-resize-handle">
+                <div class="sidebar-resize-indicator"></div>
+            </div>
+        </nav>
+
+        <div id="page-wrapper" class="page-wrapper">
+
+            <div class="page">
+                <div id="menu-bar-hover-placeholder"></div>
+                <div id="menu-bar" class="menu-bar sticky">
+                    <div class="left-buttons">
+                        <label id="sidebar-toggle" class="icon-button" for="sidebar-toggle-anchor" title="Toggle Table of Contents" aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                            <i class="fa fa-bars"></i>
+                        </label>
+                        <button id="theme-toggle" class="icon-button" type="button" title="Change theme" aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                            <i class="fa fa-paint-brush"></i>
+                        </button>
+                        <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                            <li role="none"><button role="menuitem" class="theme" id="default_theme">Auto</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="light">Light</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                            <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button></li>
+                        </ul>
+                        <button id="search-toggle" class="icon-button" type="button" title="Search (`/`)" aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="/ s" aria-controls="searchbar">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+
+                    <h1 class="menu-title">galaxy-sec operator ecosystem</h1>
+
+                    <div class="right-buttons">
+                        <a href="../../../print.html" title="Print this book" aria-label="Print this book">
+                            <i id="print-button" class="fa fa-print"></i>
+                        </a>
+
+                    </div>
+                </div>
+
+                <div id="search-wrapper" class="hidden">
+                    <form id="searchbar-outer" class="searchbar-outer">
+                        <div class="search-wrapper">
+                            <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..." aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                            <div class="spinner-wrapper">
+                                <i class="fa fa-spinner fa-spin"></i>
+                            </div>
+                        </div>
+                    </form>
+                    <div id="searchresults-outer" class="searchresults-outer hidden">
+                        <div id="searchresults-header" class="searchresults-header"></div>
+                        <ul id="searchresults">
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+                <script>
+                    document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                    document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                    Array.from(document.querySelectorAll('#sidebar a')).forEach(function(link) {
+                        link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                    });
+                </script>
+
+                <div id="content" class="content">
+                    <main>
+                        <h1 id="常见问题故障排除"><a class="header" href="#常见问题故障排除">常见问题故障排除</a></h1>
+<h2 id="概述"><a class="header" href="#概述">概述</a></h2>
+<p>本文档提供了 Sys-Operator 系统常见问题的故障排除指南，帮助你快速定位和解决系统运行中的各种问题。</p>
+<h2 id="系统初始化问题"><a class="header" href="#系统初始化问题">系统初始化问题</a></h2>
+<h3 id="1-系统启动失败"><a class="header" href="#1-系统启动失败">1. 系统启动失败</a></h3>
+<h4 id="问题现象"><a class="header" href="#问题现象">问题现象</a></h4>
+<pre><code class="language-bash">$ gsys start
+错误: 系统启动失败 - 依赖服务不可用
+</code></pre>
+<h4 id="可能原因"><a class="header" href="#可能原因">可能原因</a></h4>
+<ul>
+<li>数据库连接失败</li>
+<li>缓存服务未启动</li>
+<li>网络连接问题</li>
+<li>配置文件错误</li>
+</ul>
+<h4 id="解决方案"><a class="header" href="#解决方案">解决方案</a></h4>
+<pre><code class="language-bash"># 1. 检查服务状态
+$ kubectl get pods -n microservices
+$ docker ps | grep microservices
+
+# 2. 检查配置文件
+$ yq validate sys/sys_model.yml
+$ yq validate sys/mod_list.yml
+$ yq validate sys/vars.yml
+
+# 3. 检查服务依赖
+$ gsys check-dependencies
+
+# 4. 查看详细日志
+$ gsys start --log debug
+
+# 5. 重启相关服务
+$ kubectl rollout restart deployment/database
+</code></pre>
+<h3 id="2-模块加载失败"><a class="header" href="#2-模块加载失败">2. 模块加载失败</a></h3>
+<h4 id="问题现象-1"><a class="header" href="#问题现象-1">问题现象</a></h4>
+<pre><code class="language-bash">$ gsys localize
+错误: 模块 user-service 加载失败
+错误: 模块地址无效或不可访问
+</code></pre>
+<h4 id="可能原因-1"><a class="header" href="#可能原因-1">可能原因</a></h4>
+<ul>
+<li>模块仓库地址错误</li>
+<li>网络连接问题</li>
+<li>模块版本不兼容</li>
+<li>权限不足</li>
+</ul>
+<h4 id="解决方案-1"><a class="header" href="#解决方案-1">解决方案</a></h4>
+<pre><code class="language-bash"># 1. 验证模块地址
+$ curl -I https://github.com/user/repo.git
+
+# 2. 检查网络连接
+$ ping github.com
+$ traceroute github.com
+
+# 3. 尝试不同的模块源
+$ gsys localize --module-source git
+$ gsys localize --module-source local
+
+# 4. 检查权限
+$ ls -la ~/.ssh/
+$ ssh -T git@github.com
+
+# 5. 手动下载模块
+$ git clone https://github.com/user/repo.git
+$ gsys localize --local-path ./repo
+</code></pre>
+<h2 id="配置管理问题"><a class="header" href="#配置管理问题">配置管理问题</a></h2>
+<h3 id="1-配置文件错误"><a class="header" href="#1-配置文件错误">1. 配置文件错误</a></h3>
+<h4 id="问题现象-2"><a class="header" href="#问题现象-2">问题现象</a></h4>
+<pre><code class="language-bash">$ gsys validate
+错误: 配置文件解析失败 - sys/vars.yml: 第15行，期望值
+</code></pre>
+<h4 id="可能原因-2"><a class="header" href="#可能原因-2">可能原因</a></h4>
+<ul>
+<li>YAML 语法错误</li>
+<li>必需字段缺失</li>
+<li>数据类型不匹配</li>
+<li>变量引用错误</li>
+</ul>
+<h4 id="解决方案-2"><a class="header" href="#解决方案-2">解决方案</a></h4>
+<pre><code class="language-bash"># 1. 检查YAML语法
+$ yq eval '.' sys/vars.yml
+
+# 2. 使用语法高亮编辑器检查
+# VS Code 或其他编辑器中打开配置文件
+
+# 3. 验证必需字段
+$ yq eval '.name' sys/sys_model.yml
+$ yq eval '.model' sys/sys_model.yml
+
+# 4. 检查变量引用
+$ yq eval '.vars[] | select(.value | contains("${"))' sys/vars.yml
+
+# 5. 逐步验证配置
+$ yq eval '.vars[0]' sys/vars.yml
+$ yq eval '.vars[1]' sys/vars.yml
+</code></pre>
+<h3 id="2-配置热重载失败"><a class="header" href="#2-配置热重载失败">2. 配置热重载失败</a></h3>
+<h4 id="问题现象-3"><a class="header" href="#问题现象-3">问题现象</a></h4>
+<pre><code class="language-bash">$ gsys reload
+错误: 配置重载失败 - 配置文件被锁定
+</code></pre>
+<h4 id="可能原因-3"><a class="header" href="#可能原因-3">可能原因</a></h4>
+<ul>
+<li>配置文件正在被其他进程使用</li>
+<li>权限不足</li>
+<li>文件系统错误</li>
+<li>服务未启动</li>
+</ul>
+<h4 id="解决方案-3"><a class="header" href="#解决方案-3">解决方案</a></h4>
+<pre><code class="language-bash"># 1. 检查文件占用
+$ lsof sys/vars.yml
+$ fuser sys/vars.yml
+
+# 2. 检查文件权限
+$ ls -la sys/
+$ chmod 644 sys/vars.yml
+
+# 3. 重启服务
+$ gsys stop
+$ gsys start
+
+# 4. 使用临时文件
+$ cp sys/vars.yml sys/vars.yml.tmp
+$ vi sys/vars.yml.tmp
+$ mv sys/vars.yml.tmp sys/vars.yml
+$ gsys reload
+</code></pre>
+<h2 id="网络连接问题"><a class="header" href="#网络连接问题">网络连接问题</a></h2>
+<h3 id="1-服务连接超时"><a class="header" href="#1-服务连接超时">1. 服务连接超时</a></h3>
+<h4 id="问题现象-4"><a class="header" href="#问题现象-4">问题现象</a></h4>
+<pre><code class="language-bash">$ gsys check-health
+错误: 用户服务连接超时 - 连接超时 (28)
+</code></pre>
+<h4 id="可能原因-4"><a class="header" href="#可能原因-4">可能原因</a></h4>
+<ul>
+<li>防火墙阻止连接</li>
+<li>端口未开放</li>
+<li>服务未启动</li>
+<li>DNS解析错误</li>
+<li>网络延迟过高</li>
+</ul>
+<h4 id="解决方案-4"><a class="header" href="#解决方案-4">解决方案</a></h4>
+<pre><code class="language-bash"># 1. 检查端口开放
+$ netstat -tlnp | grep :8080
+$ ss -tlnp | grep :8080
+
+# 2. 测试网络连通性
+$ telnet user-service 8080
+$ nc -zv user-service 8080
+
+# 3. 检查防火墙
+$ sudo ufw status
+$ sudo iptables -L -n
+
+# 4. 检查DNS解析
+$ nslookup user-service
+$ dig user-service
+
+# 5. 测试延迟
+$ ping user-service
+$ traceroute user-service
+</code></pre>
+<h3 id="2-服务发现失败"><a class="header" href="#2-服务发现失败">2. 服务发现失败</a></h3>
+<h4 id="问题现象-5"><a class="header" href="#问题现象-5">问题现象</a></h4>
+<pre><code class="language-bash">$ gsys status
+警告: 服务发现失败 - 无法注册服务到注册中心
+</code></pre>
+<h4 id="可能原因-5"><a class="header" href="#可能原因-5">可能原因</a></h4>
+<ul>
+<li>注册中心服务未启动</li>
+<li>网络分区</li>
+<li>服务配置错误</li>
+<li>权限问题</li>
+</ul>
+<h4 id="解决方案-5"><a class="header" href="#解决方案-5">解决方案</a></h4>
+<pre><code class="language-bash"># 1. 检查注册中心状态
+$ kubectl get deployment -n registry
+$ kubectl logs deployment/registry -n registry
+
+# 2. 检查服务配置
+$ yq eval '.service_discovery' sys/vars.yml
+$ yq eval '.registry' sys/vars.yml
+
+# 3. 测试注册中心连接
+$ curl -X POST http://registry:8081/api/v1/register \
+  -H "Content-Type: application/json" \
+  -d '{"name":"test","address":"localhost:8080"}'
+
+# 4. 检查网络策略
+$ kubectl get networkpolicy -n registry
+$ kubectl describe networkpolicy -n registry
+</code></pre>
+<h2 id="性能问题"><a class="header" href="#性能问题">性能问题</a></h2>
+<h3 id="1-系统响应缓慢"><a class="header" href="#1-系统响应缓慢">1. 系统响应缓慢</a></h3>
+<h4 id="问题现象-6"><a class="header" href="#问题现象-6">问题现象</a></h4>
+<pre><code class="language-bash">$ gsys metrics
+系统响应时间: 5.2s
+CPU使用率: 85%
+内存使用率: 90%
+</code></pre>
+<h4 id="可能原因-6"><a class="header" href="#可能原因-6">可能原因</a></h4>
+<ul>
+<li>资源不足</li>
+<li>数据库查询慢</li>
+<li>网络延迟</li>
+<li>并发处理能力不足</li>
+</ul>
+<h4 id="解决方案-6"><a class="header" href="#解决方案-6">解决方案</a></h4>
+<pre><code class="language-bash"># 1. 检查系统资源
+$ free -h
+$ df -h
+$ top
+$ htop
+
+# 2. 分析数据库性能
+$ psql -h localhost -U postgres -c "SELECT * FROM pg_stat_activity;"
+$ psql -h localhost -U postgres -c "EXPLAIN ANALYZE SELECT * FROM users;"
+
+# 3. 检查网络性能
+$ ping -c 4 target-server
+$ traceroute target-server
+$ iperf3 -c target-server
+
+# 4. 优化配置
+$ vi sys/vars.yml
+# 调整以下配置：
+# - increase_memory_limit
+# - increase_worker_threads
+# - optimize_database_pool
+$ gsys restart
+</code></pre>
+<h3 id="2-内存泄漏"><a class="header" href="#2-内存泄漏">2. 内存泄漏</a></h3>
+<h4 id="问题现象-7"><a class="header" href="#问题现象-7">问题现象</a></h4>
+<pre><code class="language-bash">$ gsys metrics
+内存使用率持续增长
+进程数不断增加
+</code></pre>
+<h4 id="可能原因-7"><a class="header" href="#可能原因-7">可能原因</a></h4>
+<ul>
+<li>未释放的资源</li>
+<li>缓存未清理</li>
+<li>循环引用</li>
+<li>第三方库问题</li>
+</ul>
+<h4 id="解决方案-7"><a class="header" href="#解决方案-7">解决方案</a></h4>
+<pre><code class="language-bash"># 1. 监控内存使用
+$ watch -n 5 'free -h'
+$ ps aux --sort=-%mem | head
+
+# 2. 使用内存分析工具
+$ valgrind --leak-check=full ./galaxy-ops
+
+# 3. 检查缓存配置
+$ yq eval '.cache.max_size' sys/vars.yml
+$ yq eval '.cache.eviction_policy' sys/vars.yml
+
+# 4. 重启服务
+$ gsys restart
+
+# 5. 分析内存转储
+$ jmap -dump:format=b,file=dump.hprof &lt;pid&gt;
+$ jhat dump.hprof
+</code></pre>
+<h2 id="安全问题"><a class="header" href="#安全问题">安全问题</a></h2>
+<h3 id="1-认证失败"><a class="header" href="#1-认证失败">1. 认证失败</a></h3>
+<h4 id="问题现象-8"><a class="header" href="#问题现象-8">问题现象</a></h4>
+<pre><code class="language-bash">$ gsys auth
+错误: 认证失败 - 无效的访问令牌
+</code></pre>
+<h4 id="可能原因-8"><a class="header" href="#可能原因-8">可能原因</a></h4>
+<ul>
+<li>令牌过期</li>
+<li>令牌无效</li>
+<li>密码错误</li>
+<li>账户被锁定</li>
+</ul>
+<h4 id="解决方案-8"><a class="header" href="#解决方案-8">解决方案</a></h4>
+<pre><code class="language-bash"># 1. 检查令牌状态
+$ gsys token verify
+$ gsys token info
+
+# 2. 刷新令牌
+$ gsys token refresh
+$ gsys token login
+
+# 3. 重置密码
+$ gsys user reset-password
+
+# 4. 检查账户状态
+$ gsys user status
+$ gsys user unlock
+</code></pre>
+<h3 id="2-权限不足"><a class="header" href="#2-权限不足">2. 权限不足</a></h3>
+<h4 id="问题现象-9"><a class="header" href="#问题现象-9">问题现象</a></h4>
+<pre><code class="language-bash">$ gsys admin
+错误: 权限不足 - 需要管理员权限
+</code></pre>
+<h4 id="可能原因-9"><a class="header" href="#可能原因-9">可能原因</a></h4>
+<ul>
+<li>用户角色权限不足</li>
+<li>系统配置错误</li>
+<li>权限缓存过期</li>
+<li>安全策略冲突</li>
+</ul>
+<h4 id="解决方案-9"><a class="header" href="#解决方案-9">解决方案</a></h4>
+<pre><code class="language-bash"># 1. 检查用户权限
+$ gsys user permissions
+$ gsys user roles
+
+# 2. 验证权限配置
+$ yq eval '.security.roles' sys/vars.yml
+
+# 3. 检查系统权限
+$ ls -la /etc/galaxy-ops/
+$ getfacl /etc/galaxy-ops/
+
+# 4. 重新登录
+$ gsys logout
+$ gsys login --admin
+</code></pre>
+<h2 id="部署问题"><a class="header" href="#部署问题">部署问题</a></h2>
+<h3 id="1-kubernetes-部署失败"><a class="header" href="#1-kubernetes-部署失败">1. Kubernetes 部署失败</a></h3>
+<h4 id="问题现象-10"><a class="header" href="#问题现象-10">问题现象</a></h4>
+<pre><code class="language-bash">$ gsys deploy
+错误: Kubernetes部署失败 - 无法创建Pod
+</code></pre>
+<h4 id="可能原因-10"><a class="header" href="#可能原因-10">可能原因</a></h4>
+<ul>
+<li>资源不足</li>
+<li>配置错误</li>
+<li>权限不足</li>
+<li>网络策略限制</li>
+</ul>
+<h4 id="解决方案-10"><a class="header" href="#解决方案-10">解决方案</a></h4>
+<pre><code class="language-bash"># 1. 检查资源状态
+$ kubectl get nodes
+$ kubectl get pods --all-namespaces
+$ kubectl describe pod &lt;pod-name&gt;
+
+# 2. 检查事件
+$ kubectl get events --sort-by='.metadata.creationTimestamp'
+
+# 3. 检查日志
+$ kubectl logs &lt;pod-name&gt;
+$ kubectl logs &lt;pod-name&gt; --previous
+
+# 4. 验证配置
+$ helm template . &gt; rendered.yaml
+$ kubectl apply -f rendered.yaml --dry-run=client
+
+# 5. 检查权限
+$ kubectl auth can-i create deployments
+$ kubectl auth can-i create pods
+</code></pre>
+<h3 id="2-容器镜像拉取失败"><a class="header" href="#2-容器镜像拉取失败">2. 容器镜像拉取失败</a></h3>
+<h4 id="问题现象-11"><a class="header" href="#问题现象-11">问题现象</a></h4>
+<pre><code class="language-bash">$ kubectl describe pod
+镜像拉取失败: 无法拉取镜像 registry.example.com/image:latest
+</code></pre>
+<h4 id="可能原因-11"><a class="header" href="#可能原因-11">可能原因</a></h4>
+<ul>
+<li>镜像不存在</li>
+<li>仓库认证失败</li>
+<li>网络连接问题</li>
+<li>镜像标签错误</li>
+</ul>
+<h4 id="解决方案-11"><a class="header" href="#解决方案-11">解决方案</a></h4>
+<pre><code class="language-bash"># 1. 检查镜像存在性
+$ docker pull registry.example.com/image:latest
+
+# 2. 检查认证配置
+$ cat ~/.docker/config.json
+$ kubectl get secret docker-registry
+
+# 3. 测试网络连接
+$ curl -I https://registry.example.com/v2/
+
+# 4. 使用本地镜像
+$ docker tag local-image:latest registry.example.com/image:latest
+$ docker push registry.example.com/image:latest
+$ kubectl set image deployment/my-app my-app=registry.example.com/image:latest
+</code></pre>
+<h2 id="监控问题"><a class="header" href="#监控问题">监控问题</a></h2>
+<h3 id="1-指标收集失败"><a class="header" href="#1-指标收集失败">1. 指标收集失败</a></h3>
+<h4 id="问题现象-12"><a class="header" href="#问题现象-12">问题现象</a></h4>
+<pre><code class="language-bash">$ gsys metrics
+警告: 无法收集系统指标 - 指标服务不可用
+</code></pre>
+<h4 id="可能原因-12"><a class="header" href="#可能原因-12">可能原因</a></h4>
+<ul>
+<li>监控服务未启动</li>
+<li>配置错误</li>
+<li>权限不足</li>
+<li>存储空间不足</li>
+</ul>
+<h4 id="解决方案-12"><a class="header" href="#解决方案-12">解决方案</a></h4>
+<pre><code class="language-bash"># 1. 检查监控服务
+$ kubectl get deployment -n monitoring
+$ kubectl logs deployment/prometheus -n monitoring
+
+# 2. 检查配置
+$ yq eval '.monitoring.enabled' sys/vars.yml
+$ yq eval '.monitoring.endpoints' sys/vars.yml
+
+# 3. 测试指标端点
+$ curl http://localhost:8080/metrics
+$ curl http://localhost:9090/api/v1/query?query=up
+
+# 4. 检查存储空间
+$ df -h
+$ kubectl exec -it prometheus-0 -n monitoring -- df -h
+</code></pre>
+<h3 id="2-告警规则误报"><a class="header" href="#2-告警规则误报">2. 告警规则误报</a></h3>
+<h4 id="问题现象-13"><a class="header" href="#问题现象-13">问题现象</a></h4>
+<pre><code class="language-bash">$ gsys alerts
+警告: 大量误报告警 - CPU使用率过高
+</code></pre>
+<h4 id="可能原因-13"><a class="header" href="#可能原因-13">可能原因</a></h4>
+<ul>
+<li>阈值设置不合理</li>
+<li>告警规则配置错误</li>
+<li>数据采集异常</li>
+<li>环境波动</li>
+</ul>
+<h4 id="解决方案-13"><a class="header" href="#解决方案-13">解决方案</a></h4>
+<pre><code class="language-bash"># 1. 检查告警配置
+$ yq eval '.alerts.rules' sys/vars.yml
+
+# 2. 查看告警历史
+$ gsys alerts history
+$ kubectl logs deployment/alertmanager -n monitoring
+
+# 3. 调整阈值
+$ yq eval '.alerts.rules[].condition' sys/vars.yml
+
+# 4. 添加抑制规则
+$ yq eval '.alertmanager.suppress_rules' sys/vars.yml
+</code></pre>
+<h2 id="数据问题"><a class="header" href="#数据问题">数据问题</a></h2>
+<h3 id="1-数据库连接失败"><a class="header" href="#1-数据库连接失败">1. 数据库连接失败</a></h3>
+<h4 id="问题现象-14"><a class="header" href="#问题现象-14">问题现象</a></h4>
+<pre><code class="language-bash">$ gsql
+错误: 连接数据库失败 - 访问被拒绝
+</code></pre>
+<h4 id="可能原因-14"><a class="header" href="#可能原因-14">可能原因</a></h4>
+<ul>
+<li>数据库服务未启动</li>
+<li>认证信息错误</li>
+<li>网络连接问题</li>
+<li>数据库权限不足</li>
+</ul>
+<h4 id="解决方案-14"><a class="header" href="#解决方案-14">解决方案</a></h4>
+<pre><code class="language-bash"># 1. 检查数据库服务
+$ kubectl get deployment -n database
+$ kubectl logs deployment/postgres -n database
+
+# 2. 验证连接信息
+$ yq eval '.database' sys/vars.yml
+
+# 3. 测试连接
+$ nc -zv postgres 5432
+$ telnet postgres 5432
+
+# 4. 检查权限
+$ psql -h postgres -U postgres -c "\du"
+$ psql -h postgres -U postgres -c "\l"
+</code></pre>
+<h3 id="2-数据不一致"><a class="header" href="#2-数据不一致">2. 数据不一致</a></h3>
+<h4 id="问题现象-15"><a class="header" href="#问题现象-15">问题现象</a></h4>
+<pre><code class="language-bash">$ gsql check-consistency
+错误: 数据一致性检查失败 - 发现不一致
+</code></pre>
+<h4 id="可能原因-15"><a class="header" href="#可能原因-15">可能原因</a></h4>
+<ul>
+<li>并发操作冲突</li>
+<li>数据损坏</li>
+<li>同步延迟</li>
+<li>应用逻辑错误</li>
+</ul>
+<h4 id="解决方案-15"><a class="header" href="#解决方案-15">解决方案</a></h4>
+<pre><code class="language-bash"># 1. 检查数据完整性
+$ gsql check-integrity
+
+# 2. 查看同步状态
+$ gsql replication status
+
+# 3. 检查并发操作
+$ gsql show-processlist
+
+# 4. 执行数据修复
+$ gsql repair-consistency
+
+# 5. 优化应用逻辑
+$ vi src/business_logic.rs
+# - 添加事务隔离
+# - 优化并发控制
+# - 增加重试机制
+</code></pre>
+<h2 id="模块问题"><a class="header" href="#模块问题">模块问题</a></h2>
+<h3 id="1-模块依赖冲突"><a class="header" href="#1-模块依赖冲突">1. 模块依赖冲突</a></h3>
+<h4 id="问题现象-16"><a class="header" href="#问题现象-16">问题现象</a></h4>
+<pre><code class="language-bash">$ gsys validate
+错误: 依赖冲突 - 模块A需要v1.0，模块B需要v2.0
+</code></pre>
+<h4 id="可能原因-16"><a class="header" href="#可能原因-16">可能原因</a></h4>
+<ul>
+<li>版本不兼容</li>
+<li>依赖循环</li>
+<li>传递依赖冲突</li>
+<li>环境差异</li>
+</ul>
+<h4 id="解决方案-16"><a class="header" href="#解决方案-16">解决方案</a></h4>
+<pre><code class="language-bash"># 1. 分析依赖树
+$ gsys dependency-tree
+
+# 2. 检查版本冲突
+$ gsys version-check
+
+# 3. 升级依赖
+$ gsys upgrade module-A --version v2.0
+
+# 4. 解决循环依赖
+# 重构代码或重新设计依赖关系
+
+# 5. 使用多版本依赖
+$ gsys multi-version enable
+</code></pre>
+<h3 id="2-模块热更新失败"><a class="header" href="#2-模块热更新失败">2. 模块热更新失败</a></h3>
+<h4 id="问题现象-17"><a class="header" href="#问题现象-17">问题现象</a></h4>
+<pre><code class="language-bash">$ gsys update-module
+错误: 模块热更新失败 - 服务中断
+</code></pre>
+<h4 id="可能原因-17"><a class="header" href="#可能原因-17">可能原因</a></h4>
+<ul>
+<li>配置错误</li>
+<li>依赖问题</li>
+<li>资源冲突</li>
+<li>服务状态异常</li>
+</ul>
+<h4 id="解决方案-17"><a class="header" href="#解决方案-17">解决方案</a></h4>
+<pre><code class="language-bash"># 1. 检查模块状态
+$ gsys module status
+
+# 2. 验证配置
+$ gsys module validate
+
+# 3. 测试更新
+$ gsys module test-update
+
+# 4. 执行更新
+$ gsys module update --force
+
+# 5. 滚回更新
+$ gsys module rollback
+</code></pre>
+<h2 id="最佳实践"><a class="header" href="#最佳实践">最佳实践</a></h2>
+<h3 id="1-问题诊断流程"><a class="header" href="#1-问题诊断流程">1. 问题诊断流程</a></h3>
+<pre><code class="language-bash"># 1. 收集问题信息
+$ gsys info --verbose
+
+# 2. 检查系统状态
+$ gsys status
+$ gsys health
+
+# 3. 查看日志
+$ gsys logs --follow
+$ journalctl -u galaxy-ops
+
+# 4. 分析资源使用
+$ gsys metrics
+$ top
+$ df -h
+
+# 5. 检查网络状态
+$ netstat -tlnp
+$ ping target-server
+
+# 6. 验证配置
+$ gsys validate --deep
+
+# 7. 执行修复
+$ gsys repair
+
+# 8. 验证修复结果
+$ gsys health
+</code></pre>
+<h3 id="2-性能调优"><a class="header" href="#2-性能调优">2. 性能调优</a></h3>
+<pre><code class="language-bash"># 1. 基准测试
+$ gsys benchmark --test load
+
+# 2. 性能分析
+$ gsys profile --cpu
+$ gsys profile --memory
+
+# 3. 配置优化
+$ gsys optimize --auto
+$ gsys optimize --manual
+
+# 4. 负载测试
+$ gsys stress-test --concurrent 1000
+
+# 5. 容量规划
+$ gsys capacity-plan
+</code></pre>
+<h3 id="3-自动化运维"><a class="header" href="#3-自动化运维">3. 自动化运维</a></h3>
+<pre><code class="language-bash"># 1. 设置监控告警
+$ gsys alerts configure --auto
+
+# 2. 自动扩缩容
+$ gscale auto
+$ gscale policy add
+
+# 3. 自动备份
+$ gbackup schedule --daily
+$ gbackup verify
+
+# 4. 自动恢复
+$ gscale auto-restore
+</code></pre>
+<h2 id="总结"><a class="header" href="#总结">总结</a></h2>
+<p>通过本文档提供的故障排除指南，你可以快速诊断和解决 Sys-Operator 系统运行中的各种问题。记住：</p>
+<h3 id="问题解决原则"><a class="header" href="#问题解决原则">问题解决原则</a></h3>
+<ol>
+<li><strong>系统化</strong>: 遵循标准的诊断流程</li>
+<li><strong>数据驱动</strong>: 基于指标和日志进行分析</li>
+<li><strong>逐步排除</strong>: 逐一排查可能的原因</li>
+<li><strong>测试验证</strong>: 每一步操作都要验证结果</li>
+</ol>
+<h3 id="预防建议"><a class="header" href="#预防建议">预防建议</a></h3>
+<ol>
+<li><strong>定期维护</strong>: 执行系统健康检查和优化</li>
+<li><strong>监控预警</strong>: 建立完善的监控和告警体系</li>
+<li><strong>文档记录</strong>: 详细记录问题和解决方案</li>
+<li><strong>团队协作</strong>: 建立问题响应和解决机制</li>
+</ol>
+<h3 id="持续改进"><a class="header" href="#持续改进">持续改进</a></h3>
+<ol>
+<li><strong>经验积累</strong>: 总结常见问题和解决方案</li>
+<li><strong>工具优化</strong>: 开发自动化诊断工具</li>
+<li><strong>知识共享</strong>: 建立问题库和最佳实践</li>
+<li><strong>培训提升</strong>: 团队技能持续提升</li>
+</ol>
+<p>通过系统化的故障排除和持续改进，确保 Sys-Operator 系统稳定可靠地运行，为业务发展提供强有力的技术保障。</p>
+<hr />
+<p><em>更多技术支持请参考 <a href="../README.html">官方文档</a> 或联系技术支持团队。</em></p>
+
+                    </main>
+
+                    <nav class="nav-wrapper" aria-label="Page navigation">
+                        <!-- Mobile navigation buttons -->
+                            <a rel="prev" href="../../../operator/sys/structure/naming-conventions.html" class="mobile-nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                                <i class="fa fa-angle-left"></i>
+                            </a>
+
+                            <a rel="next prefetch" href="../../../operator/mod/index.html" class="mobile-nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                                <i class="fa fa-angle-right"></i>
+                            </a>
+
+                        <div style="clear: both"></div>
+                    </nav>
+                </div>
+            </div>
+
+            <nav class="nav-wide-wrapper" aria-label="Page navigation">
+                    <a rel="prev" href="../../../operator/sys/structure/naming-conventions.html" class="nav-chapters previous" title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next prefetch" href="../../../operator/mod/index.html" class="nav-chapters next" title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+            </nav>
+
+        </div>
+
+
+
+
+        <script>
+            window.playground_copyable = true;
+        </script>
+
+
+        <script src="../../../elasticlunr.min.js"></script>
+        <script src="../../../mark.min.js"></script>
+        <script src="../../../searcher.js"></script>
+
+        <script src="../../../clipboard.min.js"></script>
+        <script src="../../../highlight.js"></script>
+        <script src="../../../book.js"></script>
+
+        <!-- Custom JS scripts -->
+        <script src="../../.././mermaid.min.js"></script>
+
+
+
+    </div>
+    </body>
+</html>
