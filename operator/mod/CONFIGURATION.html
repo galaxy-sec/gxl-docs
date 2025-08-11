@@ -254,16 +254,6 @@
     tag: openssl-3.0.0
   local: openssl-3.0.0
 </code></pre>
-<h3 id="缓存配置"><a class="header" href="#缓存配置">缓存配置</a></h3>
-<pre><code class="language-yaml">- name: large-package
-  version: 2.0.0
-  origin_addr:
-    url: https://example.com/large-package.tar.gz
-  cache_addr:
-    url: https://cache.example.com/large-package.tar.gz
-  cache_enable: true
-  local: large-package.tar.gz
-</code></pre>
 <h2 id="specdependsyml---依赖定义"><a class="header" href="#specdependsyml---依赖定义">spec/depends.yml - 依赖定义</a></h2>
 <p><code>depends.yml</code> 定义模块依赖的其他模块或资源，支持多种依赖类型和条件依赖。</p>
 <h3 id="基本格式-1"><a class="header" href="#基本格式-1">基本格式</a></h3>

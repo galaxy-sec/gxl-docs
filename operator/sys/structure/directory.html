@@ -332,23 +332,6 @@
 <li>保持平台间配置的一致性</li>
 <li>明确标记平台特定的配置</li>
 </ul>
-<h2 id="常见问题"><a class="header" href="#常见问题">常见问题</a></h2>
-<h3 id="1-目录结构混乱"><a class="header" href="#1-目录结构混乱">1. 目录结构混乱</a></h3>
-<p><strong>问题</strong>: 目录结构不符合规范，文件分散
-<strong>解决方案</strong>:</p>
-<pre><code class="language-bash"># 重新生成标准结构
-gsys init --force
-# 手动整理现有文件
-</code></pre>
-<h3 id="2-平台配置冲突"><a class="header" href="#2-平台配置冲突">2. 平台配置冲突</a></h3>
-<p><strong>问题</strong>: 不同平台间配置有冲突
-<strong>解决方案</strong>: 使用条件变量和平台特定的配置文件</p>
-<h3 id="3-文件重复"><a class="header" href="#3-文件重复">3. 文件重复</a></h3>
-<p><strong>问题</strong>: 相同功能在多个文件中重复定义
-<strong>解决方案</strong>: 使用继承和引用机制，避免重复定义</p>
-<h3 id="4-版本控制问题"><a class="header" href="#4-版本控制问题">4. 版本控制问题</a></h3>
-<p><strong>问题</strong>: 敏感信息被提交到版本控制
-<strong>解决方案</strong>: 更新 .gitignore 文件，使用环境变量管理敏感信息</p>
 <h2 id="总结"><a class="header" href="#总结">总结</a></h2>
 <p>Sys-Operator 的目录结构设计遵循了模块化、可维护性、可扩展性的原则。通过标准化的目录结构，可以有效地组织系统配置，管理模块依赖，并支持多平台部署。理解和遵循这个目录结构对于使用 Sys-Operator 至关重要。</p>
 <hr />
