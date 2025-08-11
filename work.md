@@ -38,3 +38,4 @@
       * 命令行工具：gmod.md, gops.md, gprj.md, gsys.md, buildin.md
       * 配置：net-access-ctrl-guide.md
       * 模块维护器详细文档：DEVELOPMENT.md, CONFIGURATION.md, REFERENCE.md, TROUBLESHOOTING.md
+[]  更新operator/sys下的文档， 更新相应的SUMMARY.md
