@@ -39,7 +39,7 @@ EnvContent = {Property | EnvCommand};
 EnvRefList = EnvRef, {",", whitespace, EnvRef};
 EnvRef = Identifier;
 
-(* 流程定义 - 两种形式：定义、引用 *)
+(* 流程定义 - 定义形式 *)
 Flow = [Annotation], (DefinitionFlow | ReferenceFlow);
 
 (* 定义流程（管道分隔）*)

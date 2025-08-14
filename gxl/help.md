@@ -106,18 +106,13 @@ env development : base {
 
 #### 3. 流程（Flows）
 
-流程表示工作流程序，支持两种形式：定义流程和引用流程。
+流程表示工作流程序，支持定义形式。
 
 **定义流程语法：**
 ```gxl
 [Annotation] flow [FlowRefList |] @FlowName [| FlowRefList] {
     FlowContent
 }
-```
-
-**引用流程语法：**
-```gxl
-[Annotation] flow FlowName : FlowRefList;
 ```
 
 **示例：**
@@ -139,9 +134,6 @@ flow setup | @main | cleanup {
         gx.echo(value: "Version 1.x detected");
     }
 }
-
-// 引用流程
-flow deploy : setup, main, cleanup;
 ```
 
 **流程编排：**
