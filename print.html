@@ -5708,179 +5708,429 @@ units:
 <li>验证配置是否生效</li>
 </ol>
 <p>祝您使用愉快！🎉</p>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="gxl---语法"><a class="header" href="#gxl---语法">GXL   语法</a></h1>
-<h2 id="结构"><a class="header" href="#结构">结构</a></h2>
-<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
-</span><span class="boring">fn main() {
-</span>mod envs {
- env dev {
- }
-}
+<div style="break-before: page; page-break-before: always;"></div><h1 id="gxl-介绍"><a class="header" href="#gxl-介绍">GXL 介绍</a></h1>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="gxl-语法帮助文档"><a class="header" href="#gxl-语法帮助文档">GXL 语法帮助文档</a></h1>
+<h2 id="概述-11"><a class="header" href="#概述-11">概述</a></h2>
+<p>GXL（Galaxy Flow Language）是一种为 DevSecOps 自动化工作流设计的领域特定语言。它采用模块化、层次化的结构设计，支持环境配置、流程编排、函数定义和活动重用等核心功能。</p>
+<h2 id="语言结构"><a class="header" href="#语言结构">语言结构</a></h2>
+<h3 id="顶层结构"><a class="header" href="#顶层结构">顶层结构</a></h3>
+<p>GXL 文件由一系列模块定义组成，每个模块包含环境、流程、函数和活动等组件：</p>
+<pre><code class="language-gxl">// 外部模块引用
+extern mod mod_a { path = "@{PATH}"; }
 
-mod main {
-    flow conf {
+// 模块定义
+mod my_module : mod_a, mod_b {
+    // 模块属性
+    author = "John Doe";
+    version = "1.0";
+    
+    // 环境定义
+    env dev {
+        root = "${HOME}/project";
+    }
+    
+    // 流程定义
+    flow main {
+        gx.echo(value: "Hello World");
+    }
+    
+    // 函数定义
+    fn greet(name) {
+        gx.echo(value: "Hello, ${name}!");
+    }
+    
+    // 活动定义
+    activity task_runner {
+        timeout = "30s";
+        retry_count = 3;
     }
 }
-<span class="boring">}</span></code></pre></pre>
+</code></pre>
+<h3 id="核心组件"><a class="header" href="#核心组件">核心组件</a></h3>
+<h4 id="1-模块modules"><a class="header" href="#1-模块modules">1. 模块（Modules）</a></h4>
+<p>模块是 GXL 的顶层组织单元，用于组织相关的环境、流程、函数和活动。</p>
+<p><strong>语法：</strong></p>
+<pre><code class="language-gxl">[Annotation] mod ModuleName [: ModuleRefList] {
+    ModuleContent
+}
+</code></pre>
+<p><strong>示例：</strong></p>
+<pre><code class="language-gxl">#[author("John Doe")]
+#[version("1.0")]
+mod main : utils, common {
+    author = "John Doe";
+    version = "1.0";
+    
+    env production {
+        root = "/app/production";
+    }
+}
+</code></pre>
+<h4 id="2-环境environments"><a class="header" href="#2-环境environments">2. 环境（Environments）</a></h4>
+<p>环境用于配置不同的执行上下文，支持环境继承和变量定义。</p>
+<p><strong>语法：</strong></p>
+<pre><code class="language-gxl">[Annotation] env EnvName [: EnvRefList] {
+    EnvContent
+}
+</code></pre>
+<p><strong>示例：</strong></p>
+<pre><code class="language-gxl">env base {
+    log_level = "info";
+}
+
+env development : base {
+    root = "${HOME}/dev";
+    debug = true;
+    
+    gx.read_cmd(
+        name: "DEV_PATH",
+        cmd: "pwd"
+    );
+}
+</code></pre>
+<p><strong>环境专用命令：</strong></p>
 <ul>
-<li>mod   模块</li>
-<li>env   环境</li>
-<li>flow  处理流</li>
+<li><code>gx.vars</code> - 定义变量</li>
+<li><code>gx.read_cmd</code> - 从命令输出读取变量</li>
+<li><code>gx.read_stdin</code> - 从标准输入读取变量</li>
+<li><code>gx.read_file</code> - 从文件读取变量</li>
 </ul>
-<h2 id="flow"><a class="header" href="#flow">flow</a></h2>
-<h3 id="示例-3"><a class="header" href="#示例-3">示例</a></h3>
-<h4 id="简单使用"><a class="header" href="#简单使用">简单使用</a></h4>
-<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
-</span><span class="boring">fn main() {
-</span>flow test {
-  gx.echo (  "hello world" );
+<h4 id="3-流程flows"><a class="header" href="#3-流程flows">3. 流程（Flows）</a></h4>
+<p>流程表示工作流程序，支持定义形式。</p>
+<p><strong>定义流程语法：</strong></p>
+<pre><code class="language-gxl">[Annotation] flow [FlowRefList |] @FlowName [| FlowRefList] {
+    FlowContent
 }
-<span class="boring">}</span></code></pre></pre>
-<h4 id="增加描述"><a class="header" href="#增加描述">增加描述</a></h4>
-<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
-</span><span class="boring">fn main() {
-</span>#[usage(desp="test flow")]
-flow test() {
-  gx.echo (  "hello world" );
+</code></pre>
+<p><strong>示例：</strong></p>
+<pre><code class="language-gxl">// 定义流程
+#[usage("主流程")]
+flow setup | @main | cleanup {
+    gx.echo(value: "Starting main process");
+    
+    // 条件分支
+    if ${DEBUG} == "true" {
+        gx.echo(value: "Debug mode enabled");
+    } else {
+        gx.echo(value: "Production mode");
+    }
+    
+    // 通配符比较
+    if ${VERSION} =* "1.*" {
+        gx.echo(value: "Version 1.x detected");
+    }
 }
-<span class="boring">}</span></code></pre></pre>
-<h4 id="编排"><a class="header" href="#编排">编排</a></h4>
-<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
-</span><span class="boring">fn main() {
-</span>flow head {
-  gx.echo ( "head"; )
-}
-flow tail {
-  gx.echo ( "tail"; )
+</code></pre>
+<p><strong>流程编排：</strong></p>
+<pre><code class="language-gxl">flow prepare {
+    gx.echo(value: "Preparing environment");
 }
 
-// 执行过程为: test -&gt; head -&gt; tail
-flow  @test | head | tail  { }
-flow  test | head | tail  { }
+flow process {
+    gx.echo(value: "Processing data");
+}
 
+flow finalize {
+    gx.echo(value: "Finalizing process");
+}
 
-// 执行过程为: head -&gt; tail -&gt; test
-flow  | head | tail  |@test { }
+// 执行顺序: prepare -&gt; process -&gt; finalize
+flow @main | process | finalize {
+    gx.echo(value: "Main process");
+}
 
-//执行过程为: head -&gt; test -&gt; tail
-flow  head | @test | tail {
-  gx.echo ( "test"; )
+// 执行顺序: prepare -&gt; main -&gt; finalize
+flow prepare | @main | finalize {
+    gx.echo(value: "Main process with preparation");
 }
-<span class="boring">}</span></code></pre></pre>
-<h3 id="定义"><a class="header" href="#定义">定义</a></h3>
-<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
-</span><span class="boring">fn main() {
-</span>  flow [ &lt;flows&gt;|]  @&lt;flow_name&gt;  [|&lt;flows&gt;] {
-  }
-<span class="boring">}</span></code></pre></pre>
-<h3 id="分支"><a class="header" href="#分支">分支</a></h3>
-<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
-</span><span class="boring">fn main() {
-</span>mod main {
-  api = "1.0"
-  flow conf {
-    if  ${API} == "1.0" {
-        gx.echo ( value : "this is if true cond " );
-    }
-    else {
-        gx.echo ( value : "this is if false cond" );
-    }
-  }
+</code></pre>
+<h4 id="4-函数functions"><a class="header" href="#4-函数functions">4. 函数（Functions）</a></h4>
+<p>函数是可重用的代码单元，支持参数传递和返回值。</p>
+<p><strong>语法：</strong></p>
+<pre><code class="language-gxl">[Annotation] fn FunctionName([FunctionParams]) {
+    FunctionContent
 }
-<span class="boring">}</span></code></pre></pre>
-<h4 id="通配比较"><a class="header" href="#通配比较">通配比较</a></h4>
-<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
-</span><span class="boring">fn main() {
-</span>mod main {
-  api = "1.0"
-  flow conf {
-    if  ${API} =* "1*" {
-        gx.echo ( value : "this is if true cond " );
-    }
-    else {
-        gx.echo ( value : "this is if false cond" );
-    }
-  }
+</code></pre>
+<p><strong>示例：</strong></p>
+<pre><code class="language-gxl">fn greet(name, message = "Hello") {
+    gx.echo(value: "${message}, ${name}!");
 }
-<span class="boring">}</span></code></pre></pre>
-<h2 id="env"><a class="header" href="#env">env</a></h2>
-<p>环境设定集合</p>
-<h3 id="示例-4"><a class="header" href="#示例-4">示例</a></h3>
-<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
-</span><span class="boring">fn main() {
-</span>env dev {
-    root = "./" ;
+
+fn deploy_service(service, *env) {
+    gx.echo(value: "Deploying ${service} to ${env}");
+    gx.cmd(cmd: "kubectl apply -f ${service}.yaml");
 }
-<span class="boring">}</span></code></pre></pre>
-<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
-</span><span class="boring">fn main() {
-</span>#[useage(desp="开发环境")]
+</code></pre>
+<h4 id="5-活动activities"><a class="header" href="#5-活动activities">5. 活动（Activities）</a></h4>
+<p>活动是可重用的操作单元，通常用于封装复杂的操作逻辑。</p>
+<p><strong>语法：</strong></p>
+<pre><code class="language-gxl">[Annotation] activity ActivityName {
+    ActivityContent
+}
+</code></pre>
+<p><strong>示例：</strong></p>
+<pre><code class="language-gxl">#[timeout("30s")]
+activity file_copy {
+    src = "";
+    dst = "";
+    log = "true";
+    retry_count = 3;
+    executor = "copy_act.sh";
+}
+
+// 活动调用
+flow copy_files {
+    file_copy(
+        src: "/source/file.txt",
+        dst: "/destination/file.txt"
+    );
+}
+</code></pre>
+<h2 id="内置命令"><a class="header" href="#内置命令">内置命令</a></h2>
+<p>GXL 提供了丰富的内置命令，使用函数调用语法：</p>
+<h3 id="1-gxecho"><a class="header" href="#1-gxecho">1. gx.echo</a></h3>
+<p>输出消息到控制台。</p>
+<p><strong>语法：</strong></p>
+<pre><code class="language-gxl">gx.echo(value: "message");
+</code></pre>
+<p><strong>示例：</strong></p>
+<pre><code class="language-gxl">gx.echo(value: "Hello World");
+gx.echo(value: "Variable value: ${VAR}");
+</code></pre>
+<h3 id="2-gxcmd"><a class="header" href="#2-gxcmd">2. gx.cmd</a></h3>
+<p>执行系统命令。</p>
+<p><strong>语法：</strong></p>
+<pre><code class="language-gxl">gx.cmd(cmd: "command");
+</code></pre>
+<p><strong>示例：</strong></p>
+<pre><code class="language-gxl">gx.cmd(cmd: "ls -la");
+gx.cmd(cmd: "kubectl get pods");
+</code></pre>
+<h3 id="3-gxvars"><a class="header" href="#3-gxvars">3. gx.vars</a></h3>
+<p>定义变量。</p>
+<p><strong>语法：</strong></p>
+<pre><code class="language-gxl">gx.vars {
+    name: "value"
+}
+</code></pre>
+<p><strong>示例：</strong></p>
+<pre><code class="language-gxl">gx.vars {
+    APP_NAME: "my-app",
+    VERSION: "1.0.0"
+}
+</code></pre>
+<h3 id="4-gxread"><a class="header" href="#4-gxread">4. gx.read</a></h3>
+<p>读取文件内容。</p>
+<p><strong>语法：</strong></p>
+<pre><code class="language-gxl">gx.read(file: "path", name: "var_name");
+</code></pre>
+<p><strong>示例：</strong></p>
+<pre><code class="language-gxl">gx.read(file: "config.json", name: "config");
+</code></pre>
+<h3 id="5-gxtpl"><a class="header" href="#5-gxtpl">5. gx.tpl</a></h3>
+<p>模板渲染。</p>
+<p><strong>语法：</strong></p>
+<pre><code class="language-gxl">gx.tpl(template: "template.tpl", output: "output.txt");
+</code></pre>
+<p><strong>示例：</strong></p>
+<pre><code class="language-gxl">gx.tpl(template: "deploy.yaml.tpl", output: "deploy.yaml");
+</code></pre>
+<h3 id="6-gxassert"><a class="header" href="#6-gxassert">6. gx.assert</a></h3>
+<p>断言检查。</p>
+<p><strong>语法：</strong></p>
+<pre><code class="language-gxl">gx.assert(condition: "expression", message: "error message");
+</code></pre>
+<p><strong>示例：</strong></p>
+<pre><code class="language-gxl">gx.assert(condition: "${STATUS} == 'success'", message: "Operation failed");
+</code></pre>
+<h3 id="7-gxver"><a class="header" href="#7-gxver">7. gx.ver</a></h3>
+<p>版本检查。</p>
+<p><strong>语法：</strong></p>
+<pre><code class="language-gxl">gx.ver(version: "required_version");
+</code></pre>
+<p><strong>示例：</strong></p>
+<pre><code class="language-gxl">gx.ver(version: "1.0.0");
+</code></pre>
+<h2 id="变量和引用"><a class="header" href="#变量和引用">变量和引用</a></h2>
+<h3 id="变量定义"><a class="header" href="#变量定义">变量定义</a></h3>
+<pre><code class="language-gxl">// 在环境中定义
 env dev {
-    root = "./" ;
+    app_name = "my-app";
+    version = "1.0.0";
 }
-<span class="boring">}</span></code></pre></pre>
-<h4 id="mix-env"><a class="header" href="#mix-env">mix env</a></h4>
-<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
-</span><span class="boring">fn main() {
-</span>env base {}
-env dev  : base {
-    root = "./" ;
+
+// 使用 gx.vars 定义
+gx.vars {
+    BUILD_ID: "12345",
+    TIMESTAMP: "2023-01-01"
 }
-<span class="boring">}</span></code></pre></pre>
-<ul>
-<li>默认env: default  , 可以省去 gflow -e 参数 ;</li>
-</ul>
-<h3 id="定义-1"><a class="header" href="#定义-1">定义</a></h3>
-<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
-</span><span class="boring">fn main() {
-</span>env &lt;name&gt; [: &lt;mix-envs&gt;] {
+</code></pre>
+<h3 id="变量引用"><a class="header" href="#变量引用">变量引用</a></h3>
+<pre><code class="language-gxl">// 环境变量引用
+${HOME}
+${PATH}
+
+// GXL 变量引用
+${app_name}
+${version}
+
+// 嵌套引用
+${${PREFIX}_name}
+</code></pre>
+<h3 id="外部模块引用"><a class="header" href="#外部模块引用">外部模块引用</a></h3>
+<pre><code class="language-gxl">// 路径引用
+extern mod utils { path = "@{PATH}/utils"; }
+
+// Git 引用
+extern mod common {
+    git = "https://github.com/example/common.git",
+    channel = "main"
 }
-<span class="boring">}</span></code></pre></pre>
-<ul>
-<li>name  :</li>
-<li>mix-envs : 可继承的env</li>
-</ul>
-<h2 id="mod"><a class="header" href="#mod">mod</a></h2>
-<p>mod 是顶级的组织结构</p>
-<p>只有 envs,main 两个mod 中的 env 和 flow  cli 直接load</p>
-<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
-</span><span class="boring">fn main() {
-</span>mod envs {
-  prop1 = "prop1"
-  env dev {}
-}
+</code></pre>
+<h2 id="注解annotations"><a class="header" href="#注解annotations">注解（Annotations）</a></h2>
+<p>注解用于为模块、环境、流程等添加元数据。</p>
+<p><strong>语法：</strong></p>
+<pre><code class="language-gxl">#[AnnotationName[(param: "value")]]
+</code></pre>
+<p><strong>示例：</strong></p>
+<pre><code class="language-gxl">#[author("John Doe")]
+#[version("1.0")]
+#[usage("主流程")]
+#[timeout("30s")]
 mod main {
-  prop1 = "prop1"
-  flow test {}
+    // 内容
 }
-<span class="boring">}</span></code></pre></pre>
-<p>执行</p>
-<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
-</span><span class="boring">fn main() {
-</span>gflow -e dev test 
-<span class="boring">}</span></code></pre></pre>
-<h3 id="mod-注解"><a class="header" href="#mod-注解">mod 注解</a></h3>
-<h3 id="mod继承"><a class="header" href="#mod继承">mod继承</a></h3>
-<h3 id="示例-5"><a class="header" href="#示例-5">示例</a></h3>
-<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
-</span><span class="boring">fn main() {
-</span><span class="boring">}</span></code></pre></pre>
-<h1 id="activity"><a class="header" href="#activity">Activity</a></h1>
-<ul>
-<li>包装shell  成为 activity</li>
-</ul>
-<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
-</span><span class="boring">fn main() {
-</span> activity copy {
-     src = "" ;
-     dst = "" ;
-     log = "1" ;
-     out = "true"
-     executer = "copy_act.sh" ;
+</code></pre>
+<h2 id="条件语句"><a class="header" href="#条件语句">条件语句</a></h2>
+<h3 id="if-else-语句"><a class="header" href="#if-else-语句">if-else 语句</a></h3>
+<pre><code class="language-gxl">flow check_version {
+    if ${VERSION} == "1.0" {
+        gx.echo(value: "Version 1.0 detected");
+    } else {
+        gx.echo(value: "Other version detected");
+    }
 }
-<span class="boring">}</span></code></pre></pre>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="变量定义"><a class="header" href="#变量定义">变量定义</a></h1>
-<h2 id="示例-6"><a class="header" href="#示例-6">示例</a></h2>
+</code></pre>
+<h3 id="通配符比较"><a class="header" href="#通配符比较">通配符比较</a></h3>
+<pre><code class="language-gxl">flow check_pattern {
+    if ${VERSION} =* "1.*" {
+        gx.echo(value: "Version 1.x detected");
+    }
+    
+    if ${NAME} =* "test-*" {
+        gx.echo(value: "Test environment detected");
+    }
+}
+</code></pre>
+<h2 id="最佳实践-9"><a class="header" href="#最佳实践-9">最佳实践</a></h2>
+<h3 id="1-模块组织"><a class="header" href="#1-模块组织">1. 模块组织</a></h3>
+<pre><code class="language-gxl">// 将相关功能组织到模块中
+mod database {
+    env production {
+        host = "db.prod.example.com";
+        port = 5432;
+    }
+    
+    flow backup {
+        gx.cmd(cmd: "pg_dump ${DB_NAME} &gt; backup.sql");
+    }
+}
+
+mod deployment {
+    env staging {
+        k8s_context = "staging-cluster";
+    }
+    
+    flow deploy {
+        gx.cmd(cmd: "kubectl apply -f deployment.yaml");
+    }
+}
+</code></pre>
+<h3 id="2-环境继承"><a class="header" href="#2-环境继承">2. 环境继承</a></h3>
+<pre><code class="language-gxl">// 基础环境
+env base {
+    log_level = "info";
+    timeout = "30s";
+}
+
+// 继承基础环境
+env development : base {
+    debug = true;
+    root = "${HOME}/dev";
+}
+
+env production : base {
+    debug = false;
+    root = "/app";
+}
+</code></pre>
+<h3 id="3-错误处理"><a class="header" href="#3-错误处理">3. 错误处理</a></h3>
+<pre><code class="language-gxl">flow safe_operation {
+    gx.assert(condition: "${FILE_EXISTS} == 'true'", 
+               message: "File does not exist");
+    
+    if ${STATUS} != "success" {
+        gx.echo(value: "Operation failed, rolling back");
+        // 回滚逻辑
+    }
+}
+</code></pre>
+<h3 id="4-参数化函数"><a class="header" href="#4-参数化函数">4. 参数化函数</a></h3>
+<pre><code class="language-gxl">fn deploy(app, env, version = "latest") {
+    gx.echo(value: "Deploying ${app} version ${version} to ${env}");
+    
+    if ${env} == "production" {
+        gx.assert(condition: "${version} != 'latest'", 
+                   message: "Cannot deploy latest to production");
+    }
+    
+    gx.cmd(cmd: "kubectl set image deployment/${app} ${app}=${app}:${version}");
+}
+
+// 使用函数
+flow main {
+    deploy("my-app", "staging");
+    deploy("my-app", "production", "1.2.3");
+}
+</code></pre>
+<h2 id="执行方式"><a class="header" href="#执行方式">执行方式</a></h2>
+<h3 id="命令行执行"><a class="header" href="#命令行执行">命令行执行</a></h3>
+<pre><code class="language-bash"># 执行指定环境的流程
+gflow -e dev main
+
+# 执行多个流程
+gflow -e prod setup,deploy,test
+
+# 使用默认环境
+gflow main
+</code></pre>
+<h3 id="模块加载"><a class="header" href="#模块加载">模块加载</a></h3>
+<p>只有 <code>envs</code> 和 <code>main</code> 两个模块中的环境和流程可以直接通过 CLI 加载执行。</p>
+<pre><code class="language-gxl">mod envs {
+    env dev {}
+    env prod {}
+}
+
+mod main {
+    flow deploy {}
+    flow test {}
+}
+</code></pre>
+<h2 id="常见问题-6"><a class="header" href="#常见问题-6">常见问题</a></h2>
+<h3 id="q-如何调试-gxl-脚本"><a class="header" href="#q-如何调试-gxl-脚本">Q: 如何调试 GXL 脚本？</a></h3>
+<p>A: 使用 <code>gx.echo</code> 输出变量值和执行状态，在开发环境中设置 <code>debug = true</code>。</p>
+<h3 id="q-如何处理敏感信息"><a class="header" href="#q-如何处理敏感信息">Q: 如何处理敏感信息？</a></h3>
+<p>A: 使用环境变量或配置文件存储敏感信息，避免在 GXL 文件中硬编码密码等敏感数据。</p>
+<h3 id="q-如何优化流程执行性能"><a class="header" href="#q-如何优化流程执行性能">Q: 如何优化流程执行性能？</a></h3>
+<p>A: 合理使用流程编排，避免重复操作，使用函数封装常用逻辑，适当使用并行执行。</p>
+<h3 id="q-如何处理依赖关系"><a class="header" href="#q-如何处理依赖关系">Q: 如何处理依赖关系？</a></h3>
+<p>A: 使用模块引用和环境继承来管理依赖，确保执行顺序正确。</p>
+<h2 id="总结-6"><a class="header" href="#总结-6">总结</a></h2>
+<p>GXL 是一个功能强大的 DevSecOps 自动化语言，通过模块化设计、环境配置、流程编排和函数重用等特性，可以帮助用户构建复杂的自动化工作流。掌握 GXL 语法和最佳实践，可以显著提高工作效率和代码质量。</p>
+<hr />
+<p><em>本文档基于 GXL 语法定义和实现代码编写，如需了解更详细的技术实现，请参考相关源代码文件。</em></p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="变量定义-1"><a class="header" href="#变量定义-1">变量定义</a></h1>
+<h2 id="示例-3"><a class="header" href="#示例-3">示例</a></h2>
 <pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span>    one= "one";
@@ -5925,89 +6175,6 @@ mod main   {
 <li>GXL_CUR_DIR:  GXL 当前所在目录，在调用gx.run时，与GXL_START_ROOT可能不同</li>
 <li>GXL_CMD_ARG:  gflow -- &lt;cmd_arg&gt;</li>
 </ul>
-<div style="break-before: page; page-break-before: always;"></div><div style="break-before: page; page-break-before: always;"></div><h1 id="flow-1"><a class="header" href="#flow-1">flow</a></h1>
-<h2 id="注解"><a class="header" href="#注解">注解</a></h2>
-<h3 id="task---v060"><a class="header" href="#task---v060">task   (v0.6.0)</a></h3>
-<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
-</span><span class="boring">fn main() {
-</span>#[task(name="setup")]
-flow setup{
-    ...
-}
-<span class="boring">}</span></code></pre></pre>
-<h3 id="dryrun--v070"><a class="header" href="#dryrun--v070">dryrun  (v0.7.0)</a></h3>
-<pre><code>#[dryrun(_pub_dryrun)]
-flow _pub_dysec {
-    ...
-}
-flow _pub_dryrun {
-    ...
-}
-</code></pre>
-<h3 id="transcation-undo-v070"><a class="header" href="#transcation-undo-v070">transcation undo (v0.7.0)</a></h3>
-<pre><code>flow trans1 | step1 | step2 | step3 ;
-  #[transaction,undo(_undo_step1)]
-  flow step1 {
-    gx.echo (" step1 ");
-  }
-  #[undo(_undo_step2)]
-  flow step2 {
-    gx.echo (" step2 ");
-  }
-  #[undo(_undo_step3)]
-  flow step3 {
-    gx.echo (" step3 ");
-    gx.assert ( value : "true" , expect : "false" );
-  }
-
-  flow _undo_step1 {
-    gx.echo (" undo step1 ");
-  }
-  flow _undo_step2 {
-    gx.echo (" undo step2 ");
-  }
-  flow _undo_step3 {
-    gx.echo (" undo step3 ");
-  }
-</code></pre>
-<h3 id="usage"><a class="header" href="#usage">usage</a></h3>
-<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
-</span><span class="boring">fn main() {
-</span>#[usage(desp="test")]
-flow test_1 {
-
-}
-<span class="boring">}</span></code></pre></pre>
-<h3 id="auto_load"><a class="header" href="#auto_load">auto_load</a></h3>
-<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
-</span><span class="boring">fn main() {
-</span>#[auto_load(entry,exit)] 
-
-//entry: 进入flow 
-//exit : 退出flow
-示例:
-
-mod main {
-
-  flow start {
-    gx.echo ( value : "hello" );
-  }
-  #[auto_load(entry)]
-  flow conf {
-    gx.echo ( value : "hello" );
-  }
-}
-<span class="boring">}</span></code></pre></pre>
-<div style="break-before: page; page-break-before: always;"></div><h2 id="defined"><a class="header" href="#defined">defined</a></h2>
-<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
-</span><span class="boring">fn main() {
-</span>    if defined(${PRJ_ROOT}) {
-        gx.echo (  "${PRJ_ROOT}/test/main.py"  );
-        }
-        else {
-        gx.echo (  "${PRJ_ROOT}/test/main.py"  );
-    }
-<span class="boring">}</span></code></pre></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="gxl-文件语法"><a class="header" href="#gxl-文件语法">GXL 文件语法</a></h1>
 <h2 id="gxl-语法定义"><a class="header" href="#gxl-语法定义">GXL 语法定义</a></h2>
 <p>GXL（Galaxy Flow Language）是一种为 DevSecOps 自动化工作流设计的领域特定语言。根据代码库中的信息，GXL 的语法定义主要在 galaxy-sec/galaxy-flow 仓库的解析器模块中实现。</p>
@@ -6017,21 +6184,20 @@ mod main {
 <li>模块（Modules）：使用 mod 关键字定义，是 GXL 的顶层组织单元</li>
 <li>环境（Environments）：使用 env 关键字定义，用于配置不同的执行上下文</li>
 <li>流程（Flows）：使用 flow 关键字定义，表示工作流程序</li>
-<li>活动（Activities）：可重用的操作单元，在流程中调用</li>
+<li>函数（Functions）：使用 fn 关键字定义，可重用的函数单元</li>
+<li>活动（Activities）：使用 activity 关键字定义，可重用的操作单元，在模块级别定义</li>
 </ul>
 <h2 id="ebnf-语法"><a class="header" href="#ebnf-语法">EBNF 语法</a></h2>
 <pre><code class="language-EBNF">
-; GXL 文件由一系列模块定义组成
-GXL-File = *Module
-
-
 (* GXL 文件由一系列模块定义组成 *)
 GXL-File = {Module};
 
 (* 模块定义 *)
-Module = "mod", whitespace, ModuleName, whitespace, "{", whitespace, ModuleContent, whitespace, "}", whitespace, ";";
+Module = [Annotation], "mod", whitespace, ModuleName, [whitespace, ":", whitespace, ModuleRefList], whitespace, "{", whitespace, ModuleContent, whitespace, "}", whitespace, ";";
 ModuleName = Identifier;
-ModuleContent = {Property | Environment | Flow};
+ModuleRefList = ModuleRef, {",", whitespace, ModuleRef};
+ModuleRef = Identifier;
+ModuleContent = {Property | Environment | Flow | Function | Activity};
 
 (* 属性定义 (键值对) *)
 Property = PropertyName, whitespace, "=", whitespace, PropertyValue, whitespace, ";";
@@ -6039,37 +6205,54 @@ PropertyName = Identifier;
 PropertyValue = String;
 
 (* 环境定义 *)
-Environment = "env", whitespace, EnvName, [whitespace, ":", whitespace, EnvRefList], whitespace, "{", whitespace, EnvContent, whitespace, "}";
+Environment = [Annotation], "env", whitespace, EnvName, [whitespace, ":", whitespace, EnvRefList], whitespace, "{", whitespace, EnvContent, whitespace, "}", whitespace, ";";
 EnvName = Identifier;
-EnvContent = {Property};
+EnvContent = {Property | EnvCommand};
 EnvRefList = EnvRef, {",", whitespace, EnvRef};
 EnvRef = Identifier;
 
-(* 流程定义 - 两种形式：直接定义或引用其他流程 *)
-Flow = DirectFlow | ReferenceFlow;
+(* 流程定义 - 定义形式 *)
+Flow = [Annotation], (DefinitionFlow | ReferenceFlow);
 
-(* 直接定义流程 *)
-DirectFlow = "flow", whitespace, FlowName, [whitespace, ":", whitespace, FlowRefList [ whitespace , ":" whitespace, FlowRefList ] ], whitespace, "{", whitespace, FlowContent, whitespace, "}", whitespace, ";";
-FlowName = Identifier;
-FlowContent = {Command};
+(* 定义流程（管道分隔）*)
+DefinitionFlow = "flow", whitespace, [FlowRefList, whitespace, "|"], whitespace, "@", FlowName, [whitespace, "|", whitespace, FlowRefList], whitespace, "{", whitespace, FlowContent, whitespace, "}", whitespace, ";";
 
 (* 引用其他流程 *)
 ReferenceFlow = "flow", whitespace, FlowName, whitespace, ":", whitespace, FlowRefList, whitespace, ";";
+FlowName = Identifier;
 FlowRefList = FlowRef, {",", whitespace, FlowRef};
 FlowRef = Identifier;
+FlowContent = {Command | Property};
 
+(* 函数定义 *)
+Function = [Annotation], "fn", whitespace, FunctionName, whitespace, "(", whitespace, [FunctionParams], whitespace, ")", whitespace, "{", whitespace, FunctionContent, whitespace, "}", whitespace, ";";
+FunctionName = Identifier;
+FunctionParams = FunctionParam, {",", whitespace, FunctionParam};
+FunctionParam = ["*"], Identifier, [whitespace, "=", whitespace, String];
+FunctionContent = {Command};
+
+(* 活动定义 *)
+Activity = [Annotation], "activity", whitespace, ActivityName, whitespace, "{", whitespace, ActivityContent, whitespace, "}", whitespace, ";";
+ActivityName = Identifier;
+ActivityContent = {Property};
 
 (* 命令定义 *)
 Command = (BuiltinCommand | ActivityCall), whitespace, ";";
 
-(* 内置命令 *)
-BuiltinCommand = "gx.", CommandName, whitespace, "{", whitespace, CommandProps, whitespace, "}";
+(* 内置命令 - 使用函数调用语法 *)
+BuiltinCommand = "gx.", CommandName, whitespace, "(", whitespace, CommandProps, whitespace, ")";
 CommandName = "echo" | "vars" | "cmd" | "read" | "tpl" | "assert" | "ver";
-CommandProps = {PropertyAssignment};
-PropertyAssignment = PropertyName, whitespace, "=", whitespace, PropertyValue, whitespace,  ",";
+CommandProps = {PropertyAssignment}, {",", whitespace, PropertyAssignment};
+PropertyAssignment = PropertyName, whitespace, ":", whitespace, PropertyValue;
+
+(* 环境专用命令 *)
+EnvCommand = "gx.vars", whitespace, "{", whitespace, CommandProps, whitespace, "}"
+           | "gx.read_cmd", whitespace, "(", whitespace, CommandProps, whitespace, ")"
+           | "gx.read_stdin", whitespace, "(", whitespace, CommandProps, whitespace, ")"
+           | "gx.read_file", whitespace, "(", whitespace, CommandProps, whitespace, ")";
 
 (* 活动调用 *)
-ActivityCall = ActivityName, whitespace, "{", whitespace, CommandProps, whitespace, "}";
+ActivityCall = ActivityName, whitespace, "(", whitespace, CommandProps, whitespace, ")";
 ActivityName = Identifier, {".", Identifier};
 
 (* 标识符 *)
@@ -6081,7 +6264,7 @@ Digit = "0" | "1" | ... | "9";
 String = '"', {StringChar}, '"';
 StringChar = UnescapedChar | EscapedChar;
 UnescapedChar = ? 除了 " 和 \ 的任何字符 ?;
-EscapedChar = "\", ("\" | '"');
+EscapedChar = "\\", ("\\" | '"');
 
 (* 变量引用 *)
 VariableRef = "${", VariableName, "}";
@@ -6097,51 +6280,99 @@ ModuleSource = PathSource | GitSource;
 PathSource = "path", whitespace, "=", whitespace, String;
 GitSource = "git", whitespace, "=", whitespace, String, whitespace, ",", whitespace, "channel", whitespace, "=", whitespace, String;
 
-
 (* 注解 *)
-Annotation = "#[", AnnotationName, ("(", AnnotationParams, ")")?, "]";
+Annotation = "#[", AnnotationName, ["(", AnnotationParams, ")"], "]";
 AnnotationName = Identifier;
 AnnotationParams = AnnotationParam, {",", whitespace, AnnotationParam};
 AnnotationParam = Identifier, whitespace, "=", whitespace, String;
 </code></pre>
-<h2 id="示例-7"><a class="header" href="#示例-7">示例</a></h2>
-<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
-</span><span class="boring">fn main() {
-</span>env dev {
-	root = "${HOME}/my_project";
-	gx.read_cmd {
-		name = "MY_PATH" ;
-		cmd  = "pwd" ;
-	};
+<h2 id="实现代码对应关系"><a class="header" href="#实现代码对应关系">实现代码对应关系</a></h2>
+<h3 id="1-模块解析实现"><a class="header" href="#1-模块解析实现">1. 模块解析实现</a></h3>
+<p><strong>EBNF</strong>: <code>Module = [Annotation], "mod", ...</code>
+<strong>实现位置</strong>: <mcfile name="stc_mod.rs" path="/Users/zuowenjian/devspace/galaxy/galaxy-flow/src/parser/stc_mod.rs"></mcfile>
+<strong>主要函数</strong>: <mcsymbol name="gal_stc_mod" filename="stc_mod.rs" path="/Users/zuowenjian/devspace/galaxy/galaxy-flow/src/parser/stc_mod.rs" startline="40" type="function"></mcsymbol>
+<strong>功能</strong>: 解析模块定义，支持注解、模块引用列表、属性和环境/流程/函数/活动内容</p>
+<h3 id="2-环境解析实现"><a class="header" href="#2-环境解析实现">2. 环境解析实现</a></h3>
+<p><strong>EBNF</strong>: <code>Environment = [Annotation], "env", ...</code>
+<strong>实现位置</strong>: <mcfile name="stc_env.rs" path="/Users/zuowenjian/devspace/galaxy/galaxy-flow/src/parser/stc_env.rs"></mcfile>
+<strong>主要函数</strong>: <mcsymbol name="gal_stc_env" filename="stc_env.rs" path="/Users/zuowenjian/devspace/galaxy/galaxy-flow/src/parser/stc_env.rs" startline="48" type="function"></mcsymbol>
+<strong>功能</strong>: 解析环境定义，支持注解、环境引用列表、属性和环境专用命令</p>
+<h3 id="3-流程解析实现"><a class="header" href="#3-流程解析实现">3. 流程解析实现</a></h3>
+<p><strong>EBNF</strong>: <code>Flow = [Annotation], (DefinitionFlow | ReferenceFlow)</code>
+<strong>实现位置</strong>: <mcfile name="stc_flow/head.rs" path="/Users/zuowenjian/devspace/galaxy/galaxy-flow/src/parser/stc_flow/head.rs"></mcfile>
+<strong>主要函数</strong>: <mcsymbol name="galaxy_flow_head" filename="head.rs" path="/Users/zuowenjian/devspace/galaxy/galaxy-flow/src/parser/stc_flow/head.rs" startline="15" type="function"></mcsymbol>
+<strong>功能</strong>: 解析流程头部，支持两种语法形式（定义、引用流程）
+<strong>流程体解析</strong>: <mcsymbol name="gal_stc_flow_body" filename="body.rs" path="/Users/zuowenjian/devspace/galaxy/galaxy-flow/src/parser/stc_flow/body.rs" startline="11" type="function"></mcsymbol></p>
+<h3 id="4-基础元素解析实现"><a class="header" href="#4-基础元素解析实现">4. 基础元素解析实现</a></h3>
+<p><strong>EBNF</strong>: <code>Identifier</code>, <code>String</code>, <code>VariableRef</code>
+<strong>实现位置</strong>: <mcfile name="atom.rs" path="/Users/zuowenjian/devspace/galaxy/galaxy-flow/src/parser/atom.rs"></mcfile>
+<strong>主要函数</strong>:</p>
+<ul>
+<li><mcsymbol name="take_var_ref_name" filename="atom.rs" path="/Users/zuowenjian/devspace/galaxy/galaxy-flow/src/parser/atom.rs" startline="47" type="function"></mcsymbol> - 解析变量引用</li>
+<li><mcsymbol name="take_dot_pair" filename="atom.rs" path="/Users/zuowenjian/devspace/galaxy/galaxy-flow/src/parser/atom.rs" startline="30" type="function"></mcsymbol> - 解析点分隔标识符</li>
+</ul>
+<h2 id="示例-4"><a class="header" href="#示例-4">示例</a></h2>
+<pre><code class="language-gxl">env dev {
+    root = "${HOME}/my_project";
+    gx.read_cmd (
+        name : "MY_PATH",
+        cmd  : "pwd"
+    );
 }
-<span class="boring">}</span></code></pre></pre>
-<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
-</span><span class="boring">fn main() {
-</span>mod my_module {
-    -- 模块属性
+</code></pre>
+<pre><code class="language-gxl">#[author("John Doe")]
+#[version("1.0")]
+mod my_module : mod_a, mod_b {
+    # 模块属性
     author = "John Doe";
     version = "1.0";
 
-    -- 环境定义
+    # 环境定义
     env test {
         root = "${HOME}/test_project";
-        gx.read_cmd {
-            name = "TEST_PATH";
-            cmd = "ls";
-        };
+        gx.read_cmd (
+            name : "TEST_PATH",
+            cmd  : "ls"
+        );
     }
 
-    -- 流程定义
-    flow my_flow {
-        step1 = "execute_task";
-        task1.run {
-            param1 = "value1";
-            param2 = "value2";
-        };
+    # 函数定义
+    fn echo_message(msg) {
+        gx.echo (value : msg);
     }
+
+    # 活动定义
+    activity task_runner {
+        timeout = "30s";
+        retry_count = 3;
+    }
+
+    # 流程定义 - 定义流程
+    flow before_flow | @my_flow | after_flow {
+        gx.echo (value : "Hello from my_flow");
+        task_runner.run (
+            param1 : "value1",
+            param2 : "value2"
+        );
+    }
+
+    # 流程定义 - 定义流程（管道分隔）
+    flow before_flow | @main_flow | after_flow {
+        gx.echo (value : "Pipeline flow execution");
+    }
+
+    # 引用流程
+    flow reference_flow : my_flow, other_flow;
 }
-<span class="boring">}</span></code></pre></pre>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="示例-8"><a class="header" href="#示例-8">示例</a></h1>
+</code></pre>
+<h3 id="外部模块引用示例"><a class="header" href="#外部模块引用示例">外部模块引用示例</a></h3>
+<pre><code class="language-gxl">extern mod mod_a { path = "@{PATH}"; }
+extern mod mod_b { 
+    git = "https://github.com/example/repo.git", 
+    channel = "main" 
+}
+</code></pre>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="示例-5"><a class="header" href="#示例-5">示例</a></h1>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="assert-示例"><a class="header" href="#assert-示例">Assert 示例</a></h1>
 <h2 id="示例代码"><a class="header" href="#示例代码">示例代码</a></h2>
 <pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
