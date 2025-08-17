@@ -432,673 +432,493 @@ gflow -f ./config/my-config.gxl
 </code></pre>
 <h3 id="模块加载失败"><a class="header" href="#模块加载失败">模块加载失败</a></h3>
 <p>检查网络连接和模块路径配置。</p>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="gmod---galaxy-module-management-tool"><a class="header" href="#gmod---galaxy-module-management-tool">gmod - Galaxy Module Management Tool</a></h1>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="gmod"><a class="header" href="#gmod">gmod</a></h1>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="gops---galaxy-operations-system-系统操作管理工具"><a class="header" href="#gops---galaxy-operations-system-系统操作管理工具">gops - Galaxy Operations System 系统操作管理工具</a></h1>
 <h2 id="概述-1"><a class="header" href="#概述-1">概述</a></h2>
-<p><code>gmod</code> 是 Galaxy 模块管理工具，用于创建、更新和本地化 Galaxy 模块。它提供了完整的模块生命周期管理功能，帮助开发者快速构建和维护 Galaxy 项目。</p>
-<h2 id="安装"><a class="header" href="#安装">安装</a></h2>
-<pre><code class="language-bash"># 从源代码安装
-cargo install --path .
-
-# 或者使用二进制分发
-curl -fsSL https://github.com/galaxy-sec/galaxy-ops/releases/latest/download/gmod.tar.gz | tar -xz
-sudo mv gmod /usr/local/bin/
-</code></pre>
+<p><code>gops</code> 是 Galaxy Operations System 的核心命令行工具，用于管理系统配置、模块操作和系统设置。它提供了完整的系统管理功能，帮助开发者高效地管理 Galaxy 系统的各种组件和配置。</p>
 <h2 id="基本用法-1"><a class="header" href="#基本用法-1">基本用法</a></h2>
 <h3 id="显示版本信息"><a class="header" href="#显示版本信息">显示版本信息</a></h3>
-<pre><code class="language-bash">gmod
-# 输出示例：gmod: 1.0.0
+<pre><code class="language-bash">gops
+# 输出示例：gops: 0.12.0
 </code></pre>
 <h3 id="显示帮助信息"><a class="header" href="#显示帮助信息">显示帮助信息</a></h3>
-<pre><code class="language-bash">gmod --help
-gmod &lt;command&gt; --help
+<pre><code class="language-bash">gops --help
+gops &lt;command&gt; --help
+gops &lt;command&gt; &lt;subcommand&gt; --help
 </code></pre>
-<h2 id="命令详解"><a class="header" href="#命令详解">命令详解</a></h2>
-<h3 id="gmod-example"><a class="header" href="#gmod-example">gmod example</a></h3>
-<p>创建示例模块结构</p>
-<p><strong>语法：</strong></p>
-<pre><code class="language-bash">gmod example
+<h2 id="命令结构"><a class="header" href="#命令结构">命令结构</a></h2>
+<p><code>gops</code> 采用三层命令结构：</p>
+<pre><code>gops [全局选项] &lt;主命令&gt; [子命令选项] &lt;子命令&gt;
 </code></pre>
-<p><strong>功能：</strong></p>
+<h3 id="主命令"><a class="header" href="#主命令">主命令</a></h3>
+<ol>
+<li><strong><code>gops prj</code></strong> - 工程管理命令</li>
+<li><strong><code>gops mod</code></strong> - 模块管理命令</li>
+<li><strong><code>gops sys</code></strong> - 系统管理命令</li>
+</ol>
+<h2 id="全局选项"><a class="header" href="#全局选项">全局选项</a></h2>
+<p>所有命令都支持以下全局选项：</p>
+<h3 id="调试选项"><a class="header" href="#调试选项">调试选项</a></h3>
 <ul>
-<li>在当前目录创建完整的示例模块结构</li>
-<li>包含所有必需的配置文件和模板</li>
-<li>展示模块组织的最佳实践</li>
-</ul>
-<p><strong>示例：</strong></p>
-<pre><code class="language-bash">gmod example
-# 创建示例模块到当前目录
-</code></pre>
-<h3 id="gmod-new"><a class="header" href="#gmod-new">gmod new</a></h3>
-<p>定义新的模块规范</p>
-<p><strong>语法：</strong></p>
-<pre><code class="language-bash">gmod new [OPTIONS]
-</code></pre>
-<p><strong>选项：</strong></p>
-<ul>
-<li><code>-n, --name &lt;NAME&gt;</code> - 模块名称（字母数字，可包含连字符和下划线）【必填】</li>
 <li><code>-d, --debug &lt;LEVEL&gt;</code> - 调试级别（0-4）
 <ul>
-<li>0：关闭调试输出</li>
-<li>1：基础调试信息</li>
-<li>2：详细调试信息</li>
-<li>3：跟踪调试信息</li>
-<li>4：完整调试信息</li>
+<li><code>0</code>: 关闭调试输出</li>
+<li><code>1</code>: 基础调试信息</li>
+<li><code>2</code>: 详细调试信息</li>
+<li><code>3</code>: 跟踪调试信息</li>
+<li><code>4</code>: 完整调试信息</li>
 </ul>
 </li>
-<li><code>--log &lt;LOG&gt;</code> - 日志配置（格式：模块=级别,模块=级别）</li>
 </ul>
-<p><strong>功能：</strong></p>
+<h3 id="日志选项"><a class="header" href="#日志选项">日志选项</a></h3>
 <ul>
-<li>创建指定名称的新模块</li>
-<li>初始化模块目录结构</li>
-<li>生成所有必需的配置文件</li>
+<li><code>--log &lt;LOG&gt;</code> - 日志级别配置
+<ul>
+<li>格式：<code>模块=级别,模块=级别</code></li>
+<li>例如：<code>--log setting=debug,system=info</code></li>
 </ul>
-<p><strong>示例：</strong></p>
-<pre><code class="language-bash"># 创建名为 "my-module" 的新模块
-gmod new --name my-module
-
-# 创建模块并启用调试输出
-gmod new --name my-module --debug 2
-
-# 创建模块并配置日志
-gmod new --name my-module --log cmd=debug,parse=info
-</code></pre>
-<p><strong>输出：</strong></p>
-<pre><code>创建目录：my-module/
-生成配置文件：my-module/mod.yml
-生成配置文件：my-module/module.yaml
-生成模板文件：my-module/templates/
-生成示例文件：my-module/examples/
-</code></pre>
-<h3 id="gmod-update"><a class="header" href="#gmod-update">gmod update</a></h3>
-<p>更新现有模块的依赖关系</p>
-<p><strong>语法：</strong></p>
-<pre><code class="language-bash">gmod update [OPTIONS]
+</li>
+</ul>
+<h3 id="强制选项"><a class="header" href="#强制选项">强制选项</a></h3>
+<ul>
+<li><code>-f, --force &lt;LEVEL&gt;</code> - 强制更新级别
+<ul>
+<li><code>0</code>: 正常模式（默认）</li>
+<li><code>1</code>: 跳过确认</li>
+<li><code>2</code>: 覆盖文件</li>
+<li><code>3</code>: 强制拉取</li>
+</ul>
+</li>
+</ul>
+<h2 id="工程管理命令-gops-prj"><a class="header" href="#工程管理命令-gops-prj">工程管理命令 (gops prj)</a></h2>
+<h3 id="创建维护工程"><a class="header" href="#创建维护工程">创建维护工程</a></h3>
+<pre><code class="language-bash">gops prj new [OPTIONS]
 </code></pre>
 <p><strong>选项：</strong></p>
 <ul>
-<li><code>-d, --debug &lt;LEVEL&gt;</code> - 调试级别（0-4）</li>
+<li><code>-n, --name &lt;NAME&gt;</code> - 工程配置名称（必填）</li>
+<li><code>-d, --debug &lt;LEVEL&gt;</code> - 调试级别</li>
 <li><code>--log &lt;LOG&gt;</code> - 日志配置</li>
-<li><code>-f, --force &lt;LEVEL&gt;</code> - 强制更新级别
-<ul>
-<li>0：正常更新</li>
-<li>1：跳过确认</li>
-<li>2：覆盖现有文件</li>
-<li>3：强制 git pull</li>
-</ul>
-</li>
 </ul>
 <p><strong>功能：</strong></p>
 <ul>
-<li>更新模块的依赖关系</li>
-<li>下载远程引用的模块</li>
+<li>创建指定名称的维护工程</li>
+<li>初始化工程目录结构</li>
+<li>生成必要的配置文件</li>
+</ul>
+<p><strong>示例：</strong></p>
+<pre><code class="language-bash"># 创建名为 my-project 的工程
+gops prj new --name my-project
+
+# 创建工程并启用调试
+gops prj new --name my-project --debug 2
+</code></pre>
+<h3 id="导入系统到工程"><a class="header" href="#导入系统到工程">导入系统到工程</a></h3>
+<pre><code class="language-bash">gops prj import [OPTIONS]
+</code></pre>
+<p><strong>选项：</strong></p>
+<ul>
+<li><code>-p, --path &lt;PATH&gt;</code> - 系统导入路径（必填）</li>
+<li><code>-d, --debug &lt;LEVEL&gt;</code> - 调试级别</li>
+<li><code>--log &lt;LOG&gt;</code> - 日志配置</li>
+<li><code>-f, --force &lt;LEVEL&gt;</code> - 强制更新级别</li>
+</ul>
+<p><strong>功能：</strong></p>
+<ul>
+<li>从指定路径导入系统配置</li>
+<li>将系统集成到当前工程</li>
+<li>自动处理系统依赖关系</li>
+</ul>
+<p><strong>示例：</strong></p>
+<pre><code class="language-bash"># 从指定路径导入系统
+gops prj import --path /path/to/system
+
+# 详细调试导入过程
+gops prj import --path /path/to/system --debug 3
+</code></pre>
+<h3 id="更新工程"><a class="header" href="#更新工程">更新工程</a></h3>
+<pre><code class="language-bash">gops prj update [OPTIONS]
+</code></pre>
+<p><strong>选项：</strong></p>
+<ul>
+<li><code>-d, --debug &lt;LEVEL&gt;</code> - 调试级别</li>
+<li><code>--log &lt;LOG&gt;</code> - 日志配置</li>
+<li><code>-f, --force &lt;LEVEL&gt;</code> - 强制更新级别</li>
+</ul>
+<p><strong>功能：</strong></p>
+<ul>
+<li>更新工程中的系统引用</li>
+<li>更新模块依赖关系</li>
+<li>下载远程资源</li>
+</ul>
+<p><strong>示例：</strong></p>
+<pre><code class="language-bash"># 正常更新工程
+gops prj update
+
+# 强制更新（覆盖文件）
+gops prj update --force 2
+
+# 详细调试更新过程
+gops prj update --debug 3 --log update=debug
+</code></pre>
+<h3 id="工程设置"><a class="header" href="#工程设置">工程设置</a></h3>
+<pre><code class="language-bash">gops prj setting [OPTIONS]
+</code></pre>
+<p><strong>选项：</strong></p>
+<ul>
+<li><code>-i, --interactive</code> - 启用交互模式（默认：true）</li>
+<li><code>-d, --debug &lt;LEVEL&gt;</code> - 调试级别</li>
+<li><code>--log &lt;LOG&gt;</code> - 日志配置</li>
+</ul>
+<p><strong>功能：</strong></p>
+<ul>
+<li>管理工程级别的变量设置</li>
+<li>支持交互式和非交互式配置</li>
+<li>自动保存配置到 value.yml 文件</li>
+</ul>
+<p><strong>示例：</strong></p>
+<pre><code class="language-bash"># 基于默认值，生成value.yml
+gops prj setting
+
+
+
+# 显式启用交互模式
+gops prj setting -i
+
+</code></pre>
+<h2 id="模块管理命令-gops-mod"><a class="header" href="#模块管理命令-gops-mod">模块管理命令 (gops mod)</a></h2>
+<h3 id="创建示例模块结构"><a class="header" href="#创建示例模块结构">创建示例模块结构</a></h3>
+<pre><code class="language-bash">gops mod example [OPTIONS]
+</code></pre>
+<p><strong>选项：</strong></p>
+<ul>
+<li><code>-d, --debug &lt;LEVEL&gt;</code> - 调试级别</li>
+<li><code>--log &lt;LOG&gt;</code> - 日志配置</li>
+</ul>
+<p><strong>功能：</strong></p>
+<ul>
+<li>创建完整的示例模块结构</li>
+<li>包含示例配置和工作流</li>
+<li>展示模块组织最佳实践</li>
+</ul>
+<p><strong>示例：</strong></p>
+<pre><code class="language-bash"># 创建示例模块
+gops mod example
+
+# 创建示例模块并启用调试
+gops mod example --debug 2
+</code></pre>
+<h3 id="定义新模块操作符"><a class="header" href="#定义新模块操作符">定义新模块操作符</a></h3>
+<pre><code class="language-bash">gops mod new [OPTIONS]
+</code></pre>
+<p><strong>选项：</strong></p>
+<ul>
+<li><code>-n, --name &lt;NAME&gt;</code> - 模块名称（必填）
+<ul>
+<li>支持字母数字、连字符和下划线</li>
+</ul>
+</li>
+<li><code>-d, --debug &lt;LEVEL&gt;</code> - 调试级别</li>
+<li><code>--log &lt;LOG&gt;</code> - 日志配置</li>
+</ul>
+<p><strong>功能：</strong></p>
+<ul>
+<li>使用给定名称创建新模块规范</li>
+<li>初始化模块目录结构</li>
+<li>生成所有必要的配置文件</li>
+</ul>
+<p><strong>示例：</strong></p>
+<pre><code class="language-bash"># 创建名为 my-module 的模块
+gops mod new --name my-module
+
+# 创建模块并启用调试
+gops mod new --name my-module --debug 3
+</code></pre>
+<h3 id="更新现有模块操作符"><a class="header" href="#更新现有模块操作符">更新现有模块操作符</a></h3>
+<pre><code class="language-bash">gops mod update [OPTIONS]
+</code></pre>
+<p><strong>选项：</strong></p>
+<ul>
+<li><code>-d, --debug &lt;LEVEL&gt;</code> - 调试级别</li>
+<li><code>--log &lt;LOG&gt;</code> - 日志配置</li>
+<li><code>-f, --force &lt;LEVEL&gt;</code> - 强制更新级别</li>
+</ul>
+<p><strong>功能：</strong></p>
+<ul>
+<li>更新现有模块的配置</li>
+<li>更新模块依赖关系或规范</li>
 <li>支持强制更新模式</li>
 </ul>
 <p><strong>示例：</strong></p>
 <pre><code class="language-bash"># 正常更新模块
-gmod update
+gops mod update
 
-# 强制更新，跳过确认
-gmod update --force 1
+# 强制更新模块
+gops mod update --force 1
 
-# 详细调试输出更新过程
-gmod update --debug 3 --log all=debug
+# 详细调试更新过程
+gops mod update --debug 4 --log mod=debug
 </code></pre>
-<h3 id="gmod-localize"><a class="header" href="#gmod-localize">gmod localize</a></h3>
-<p>本地化模块配置</p>
-<p><strong>语法：</strong></p>
-<pre><code class="language-bash">gmod localize [OPTIONS]
+<h3 id="本地化模块配置"><a class="header" href="#本地化模块配置">本地化模块配置</a></h3>
+<pre><code class="language-bash">gops mod localize [OPTIONS]
 </code></pre>
 <p><strong>选项：</strong></p>
 <ul>
-<li><code>-d, --debug &lt;LEVEL&gt;</code> - 调试级别（0-4）</li>
+<li><code>-d, --debug &lt;LEVEL&gt;</code> - 调试级别</li>
 <li><code>--log &lt;LOG&gt;</code> - 日志配置</li>
-<li><code>--value &lt;PATH&gt;</code> - 值文件路径（YAML/JSON）</li>
-<li><code>--default</code> - 使用默认值，不使用用户提供的 value.yml</li>
+<li><code>--value &lt;PATH&gt;</code> - 包含环境特定值的 YAML/JSON 文件路径</li>
+<li><code>--default</code> - 使用内置默认值而不是用户提供的 value.yml</li>
 </ul>
 <p><strong>功能：</strong></p>
 <ul>
-<li>根据环境特定的值生成本地化配置</li>
-<li>支持多环境配置管理</li>
-<li>可选择使用自定义或默认值</li>
+<li>基于环境特定值生成本地化配置文件</li>
+<li>适配不同部署环境的需求</li>
+<li>支持自定义值或默认值选择</li>
 </ul>
 <p><strong>示例：</strong></p>
 <pre><code class="language-bash"># 使用默认值本地化
-gmod localize --default
+gops mod localize --default
 
 # 使用自定义值文件本地化
-gmod localize --value prod-values.yml
+gops mod localize --value prod-values.yml
 
 # 使用自定义值文件并启用调试
-gmod localize --value dev-values.yml --debug 2
+gops mod localize --value dev-values.yml --debug 2
 </code></pre>
-<h2 id="环境变量-1"><a class="header" href="#环境变量-1">环境变量</a></h2>
-<ul>
-<li><code>TEST_MODE</code> - 测试模式设置</li>
-<li><code>MOCK_SUCCESS</code> - 模拟成功状态</li>
-</ul>
-<h2 id="配置文件-1"><a class="header" href="#配置文件-1">配置文件</a></h2>
-<h3 id="模块配置结构"><a class="header" href="#模块配置结构">模块配置结构</a></h3>
-<pre><code>my-module/
-├── mod.yml                    # 模块主配置文件
-├── module.yaml               # 模块元数据
-├── templates/                # 模板目录
-├── examples/                # 示例文件
-└── config/                  # 配置文件
-    ├── default.yml          # 默认配置
-    ├── local.yml            # 本地配置
-    └── env/                  # 环境特定配置
-        ├── dev.yml
-        ├── staging.yml
-        └── prod.yml
-</code></pre>
-<h3 id="modyml-示例"><a class="header" href="#modyml-示例">mod.yml 示例</a></h3>
-<pre><code class="language-yaml">name: my-module
-version: "1.0.0"
-description: "My Galaxy Module"
-author: "Your Name &lt;your.email@example.com&gt;"
-
-dependencies:
-  - galaxy/core: "&gt;=1.0.0"
-  - galaxy/utils: "~2.0.0"
-
-sources:
-  - type: git
-    url: "https://github.com/username/my-module.git"
-    ref: main
-
-outputs:
-  - name: main
-    path: "build/output"
-    format: tar.gz
-</code></pre>
-<h2 id="最佳实践"><a class="header" href="#最佳实践">最佳实践</a></h2>
-<h3 id="模块命名"><a class="header" href="#模块命名">模块命名</a></h3>
-<ul>
-<li>使用小写字母、数字、连字符和下划线</li>
-<li>避免特殊字符和空格</li>
-<li>使用有意义的名称，如：<code>user-service-api</code></li>
-</ul>
-<h3 id="依赖管理"><a class="header" href="#依赖管理">依赖管理</a></h3>
-<ul>
-<li>使用语义化版本控制</li>
-<li>定期更新依赖：<code>gmod update --force 1</code></li>
-<li>在生产环境使用锁定版本</li>
-</ul>
-<h3 id="配置管理"><a class="header" href="#配置管理">配置管理</a></h3>
-<ul>
-<li>使用环境特定的配置文件</li>
-<li>在 CI/CD 流程中自动本地化</li>
-<li>使用默认配置作为后备</li>
-</ul>
-<h3 id="调试技巧"><a class="header" href="#调试技巧">调试技巧</a></h3>
-<pre><code class="language-bash"># 启用完整调试输出
-gmod update --debug 4 --log all=debug
-
-# 检查模块依赖关系
-gmod new --name debug-test --debug 2
-
-# 使用详细日志进行故障排除
-gmod localize --debug 3 --log cmd=debug,net=trace
-</code></pre>
-<h2 id="故障排除"><a class="header" href="#故障排除">故障排除</a></h2>
-<h3 id="常见问题-1"><a class="header" href="#常见问题-1">常见问题</a></h3>
-<p><strong>Q: 创建模块失败</strong></p>
-<pre><code>错误：无法创建目录 "my-module"
-原因：目录已存在或权限不足
-解决：删除现有目录或检查权限
-</code></pre>
-<p><strong>Q: 更新模块时网络错误</strong></p>
-<pre><code>错误：无法下载依赖
-解决：检查网络连接和 git 配置
-gmod update --debug 3 --log net=debug
-</code></pre>
-<p><strong>Q: 本地化失败</strong></p>
-<pre><code>错误：无法解析值文件
-解决：检查 YAML/JSON 格式是否正确
-gmod localize --value config.yml --debug 2
-</code></pre>
-<h3 id="调试模式-1"><a class="header" href="#调试模式-1">调试模式</a></h3>
-<p>使用调试模式获取详细的执行信息：</p>
-<pre><code class="language-bash"># 最高级别调试
-gmod update --debug 4 --log all=debug
-
-# 关键模块调试
-gmod new --name test --debug 3 --log cmd=debug
-</code></pre>
-<h2 id="测试"><a class="header" href="#测试">测试</a></h2>
-<p>项目包含完整的测试套件：</p>
-<pre><code class="language-bash"># 运行所有测试
-cargo test
-
-# 运行特定测试
-cargo test test_gxmod_cmd_app_creation
-
-# 运行测试并显示输出
-cargo test -- --nocapture
-</code></pre>
-<h2 id="示例工作流"><a class="header" href="#示例工作流">示例工作流</a></h2>
-<h3 id="开发新模块"><a class="header" href="#开发新模块">开发新模块</a></h3>
-<pre><code class="language-bash"># 1. 创建新模块
-gmod new --name user-service
-
-# 2. 编辑模块配置
-cd user-service
-vim mod.yml
-
-# 3. 开发功能
-# ... 编码 ...
-
-# 4. 更新依赖
-cd ..
-gmod update
-
-# 5. 本地化配置
-gmod localize --value dev-values.yml
-
-# 6. 验证模块
-gmod example
-</code></pre>
-<h3 id="部署到生产环境"><a class="header" href="#部署到生产环境">部署到生产环境</a></h3>
-<pre><code class="language-bash"># 1. 创建生产模块
-gmod new --name user-service-prod
-
-# 2. 更新到最新版本
-gmod update --force 3
-
-# 3. 使用生产配置本地化
-gmod localize --value prod-values.yml
-
-# 4. 验证配置
-ls -la user-service-prod/config/env/prod.yml
-</code></pre>
-<h2 id="版本历史"><a class="header" href="#版本历史">版本历史</a></h2>
-<h3 id="当前版本100"><a class="header" href="#当前版本100">当前版本：1.0.0</a></h3>
-<ul>
-<li>初始版本</li>
-<li>支持模块创建、更新和本地化</li>
-<li>完整的错误处理和日志记录</li>
-</ul>
-<h2 id="贡献指南"><a class="header" href="#贡献指南">贡献指南</a></h2>
-<p>欢迎贡献代码和建议：</p>
-<ol>
-<li>Fork 项目（https://github.com/galaxy-sec/galaxy-ops）</li>
-<li>创建特性分支</li>
-<li>提交更改</li>
-<li>推送到分支</li>
-<li>创建 Pull Request</li>
-</ol>
-<h2 id="许可证"><a class="header" href="#许可证">许可证</a></h2>
-<p>本项目采用 MIT 许可证 - 详见 LICENSE 文件</p>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="gops---galaxy-operations-system-系统操作管理工具"><a class="header" href="#gops---galaxy-operations-system-系统操作管理工具">gops - Galaxy Operations System 系统操作管理工具</a></h1>
-<h2 id="概述-2"><a class="header" href="#概述-2">概述</a></h2>
-<p><code>gops</code> 是 Galaxy Operations System 的核心管理工具，用于管理系统配置、导入模块、更新引用等操作。它提供了完整的系统操作功能，帮助开发者高效地管理 Galaxy 系统的各种配置和操作。</p>
-<h2 id="安装-1"><a class="header" href="#安装-1">安装</a></h2>
-<pre><code class="language-bash"># 从源代码安装
-cargo install --path .
-
-# 或者使用二进制分发
-https://github.com/galaxy-sec/galaxy-ops/releases/latest/
-</code></pre>
-<h2 id="基本用法-2"><a class="header" href="#基本用法-2">基本用法</a></h2>
-<h3 id="显示版本信息-1"><a class="header" href="#显示版本信息-1">显示版本信息</a></h3>
-<pre><code class="language-bash">gops
-# 输出示例：gops: 1.0.0
-</code></pre>
-<h3 id="显示帮助信息-1"><a class="header" href="#显示帮助信息-1">显示帮助信息</a></h3>
-<pre><code class="language-bash">gops --help
-gops &lt;command&gt; --help
-</code></pre>
-<h2 id="命令详解-1"><a class="header" href="#命令详解-1">命令详解</a></h2>
-<h3 id="gops-new"><a class="header" href="#gops-new">gops new</a></h3>
-<p>创建新的系统配置</p>
-<p><strong>语法：</strong></p>
-<pre><code class="language-bash">gops new [OPTIONS]
+<h2 id="系统管理命令-gops-sys"><a class="header" href="#系统管理命令-gops-sys">系统管理命令 (gops sys)</a></h2>
+<h3 id="创建新的系统操作符"><a class="header" href="#创建新的系统操作符">创建新的系统操作符</a></h3>
+<pre><code class="language-bash">gops sys new [OPTIONS]
 </code></pre>
 <p><strong>选项：</strong></p>
 <ul>
-<li><code>-n, --name &lt;NAME&gt;</code> - 系统配置名称（必填）
+<li><code>-n, --name &lt;NAME&gt;</code> - 系统名称（必填）
 <ul>
-<li>系统配置的唯一标识名称</li>
 <li>支持字母数字、连字符和下划线</li>
-<li>必须为非空字符串</li>
 </ul>
 </li>
 </ul>
 <p><strong>功能：</strong></p>
 <ul>
-<li>创建指定名称的新系统配置</li>
-<li>初始化系统配置目录结构</li>
-<li>生成所有必需的配置文件</li>
-<li>设置默认的系统配置参数</li>
+<li>创建新的系统规范</li>
+<li>初始化系统目录结构</li>
+<li>生成所有必要的配置文件和模板</li>
+<li>交互式选择系统型号配置（测试环境下自动选择）</li>
 </ul>
 <p><strong>示例：</strong></p>
-<pre><code class="language-bash"># 创建名为 "my-config" 的新系统配置
-gops new --name my-config
+<pre><code class="language-bash"># 创建新系统（交互式选择型号）
+gops sys new --name my-system
 
-# 创建带详细调试的系统配置
-gops new --name debug-config --debug 2
+# 在测试环境中创建系统
+TEST_MODE=true gops sys new --name test-system
 </code></pre>
-<p><strong>输出：</strong></p>
-<pre><code>创建目录：my-config/
-生成配置文件：my-config/ops_config.yml
-生成模板文件：my-config/templates/
-生成示例文件：my-config/examples/
-生成脚本文件：my-config/scripts/
-</code></pre>
-<h3 id="gops-import"><a class="header" href="#gops-import">gops import</a></h3>
-<p>导入外部模块到当前系统</p>
-<p><strong>语法：</strong></p>
-<pre><code class="language-bash">gops import [OPTIONS]
+<h3 id="更新系统配置"><a class="header" href="#更新系统配置">更新系统配置</a></h3>
+<pre><code class="language-bash">gops sys update [OPTIONS]
 </code></pre>
 <p><strong>选项：</strong></p>
 <ul>
-<li><code>-d, --debug &lt;LEVEL&gt;</code> - 调试级别（0-4）
-<ul>
-<li>0：关闭调试输出</li>
-<li>1：基础调试信息</li>
-<li>2：详细调试信息</li>
-<li>3：跟踪调试信息</li>
-<li>4：完整调试信息</li>
-</ul>
-</li>
-<li><code>--log &lt;LOG&gt;</code> - 日志配置（格式：模块=级别,模块=级别）</li>
-<li><code>-f, --force &lt;LEVEL&gt;</code> - 强制更新级别
-<ul>
-<li>0：不强制更新</li>
-<li>1：强制更新引用</li>
-<li>2：强制更新依赖</li>
-<li>3：强制更新所有内容</li>
-</ul>
-</li>
-<li><code>-p, --path &lt;PATH&gt;</code> - 模块导入路径（必填）
-<ul>
-<li>可以是相对路径或绝对路径</li>
-<li>指定要导入的模块所在位置</li>
-</ul>
-</li>
-</ul>
-<p><strong>功能：</strong></p>
-<ul>
-<li>从指定路径导入模块配置</li>
-<li>将模块集成到当前系统</li>
-<li>自动处理模块依赖关系</li>
-<li>支持强制导入模式</li>
-</ul>
-<p><strong>示例：</strong></p>
-<pre><code class="language-bash"># 从指定路径导入模块
-gops import --path /path/to/module
-
-# 跳过确认导入
-gops import --path /path/to/module --force 1
-
-# 详细调试导入过程
-gops import --path /path/to/module --debug 3 --log import=debug
-
-# 强制更新所有内容
-gops import --path /path/to/module --force 3
-</code></pre>
-<h3 id="gops-update"><a class="header" href="#gops-update">gops update</a></h3>
-<p>更新系统模块和引用</p>
-<p><strong>语法：</strong></p>
-<pre><code class="language-bash">gops update [OPTIONS]
-</code></pre>
-<p><strong>选项：</strong></p>
-<ul>
-<li><code>-d, --debug &lt;LEVEL&gt;</code> - 调试级别（0-4）</li>
+<li><code>-d, --debug &lt;LEVEL&gt;</code> - 调试级别</li>
 <li><code>--log &lt;LOG&gt;</code> - 日志配置</li>
-<li><code>-f, --force &lt;LEVEL&gt;</code> - 强制更新级别
-<ul>
-<li>0：不强制更新</li>
-<li>1：强制更新引用</li>
-<li>2：强制更新依赖</li>
-<li>3：强制更新所有内容</li>
-</ul>
-</li>
+<li><code>-f, --force &lt;LEVEL&gt;</code> - 强制更新级别</li>
 </ul>
 <p><strong>功能：</strong></p>
 <ul>
-<li>更新系统模块的引用关系</li>
-<li>更新模块的依赖配置</li>
-<li>下载远程资源引用</li>
-<li>支持多种强制更新模式</li>
+<li>更新现有系统配置</li>
+<li>更新系统规范或依赖关系</li>
+<li>支持强制更新以不确认的情况下覆盖配置</li>
 </ul>
 <p><strong>示例：</strong></p>
 <pre><code class="language-bash"># 正常更新系统
-gops update
+gops sys update
 
-# 强制更新引用
-gops update --force 1
+# 强制更新系统（跳过确认）
+gops sys update --force 1
 
 # 详细调试更新过程
-gops update --debug 3 --log all=debug
+gops sys update --debug 3 --log sys=debug
 </code></pre>
-<h3 id="gops-localize"><a class="header" href="#gops-localize">gops localize</a></h3>
-<p>本地化模块配置</p>
-<p><strong>语法：</strong></p>
-<pre><code class="language-bash">gops localize [OPTIONS]
+<h3 id="为环境本地化系统配置"><a class="header" href="#为环境本地化系统配置">为环境本地化系统配置</a></h3>
+<pre><code class="language-bash">gops sys localize [OPTIONS]
 </code></pre>
 <p><strong>选项：</strong></p>
 <ul>
-<li><code>-d, --debug &lt;LEVEL&gt;</code> - 调试级别（0-4）</li>
+<li><code>-d, --debug &lt;LEVEL&gt;</code> - 调试级别</li>
 <li><code>--log &lt;LOG&gt;</code> - 日志配置</li>
-<li><code>--value &lt;PATH&gt;</code> - 本地化值文件路径
-<ul>
-<li>指定用于本地化的值文件路径</li>
-<li>通常是 YAML 格式的配置文件</li>
-</ul>
-</li>
-<li><code>--default</code> - 使用默认模块配置
-<ul>
-<li>启用默认模块模式</li>
-<li>不使用用户自定义的 value.yml 文件</li>
-</ul>
-</li>
+<li><code>--value &lt;PATH&gt;</code> - 包含环境特定值的 YAML/JSON 文件路径</li>
+<li><code>--default</code> - 使用内置默认值而不是用户提供的 value.yml</li>
 </ul>
 <p><strong>功能：</strong></p>
 <ul>
-<li>根据环境特定的值本地化模块配置</li>
-<li>适配不同环境的配置需求</li>
-<li>支持多环境配置管理</li>
-<li>可选择使用自定义或默认值</li>
+<li>基于环境特定值生成本地化系统配置文件</li>
+<li>适配不同部署环境的系统配置</li>
+<li>支持自定义值或默认值选择</li>
 </ul>
 <p><strong>示例：</strong></p>
-<pre><code class="language-bash"># 使用默认配置本地化
-gops localize --default
+<pre><code class="language-bash"># 使用默认值本地化系统配置
+gops sys localize --default
 
 # 使用自定义值文件本地化
-gops localize --value prod-values.yml
+gops sys localize --value prod-config.yml
 
 # 使用自定义值文件并启用调试
-gops localize --value dev-values.yml --debug 2
+gops sys localize --value dev-config.yml --debug 2
 </code></pre>
-<blockquote>
-<p><strong>注意：</strong> 目前 <code>gops localize</code> 命令实现为 <code>todo!()</code>，功能尚未完成。</p>
-</blockquote>
-<h3 id="gops-setting"><a class="header" href="#gops-setting">gops setting</a></h3>
-<p>系统设置管理</p>
-<p><strong>语法：</strong></p>
-<pre><code class="language-bash">gops setting [OPTIONS]
-</code></pre>
-<p><strong>选项：</strong></p>
+<h2 id="环境变量-1"><a class="header" href="#环境变量-1">环境变量</a></h2>
+<h3 id="调试环境变量"><a class="header" href="#调试环境变量">调试环境变量</a></h3>
 <ul>
-<li><code>-d, --debug &lt;LEVEL&gt;</code> - 调试级别（0-4）</li>
-<li><code>--log &lt;LOG&gt;</code> - 日志配置
+<li><code>TEST_MODE</code> - 测试模式设置
 <ul>
-<li>格式：模块=级别,模块=级别</li>
-<li>例如：--log setting=debug,system=info</li>
+<li>当设置为任意值时，启用测试环境行为</li>
+<li>在 <code>gops sys new</code> 中自动选择系统型号而不是交互式选择</li>
 </ul>
 </li>
 </ul>
-<p><strong>功能：</strong></p>
+<h3 id="模拟环境变量"><a class="header" href="#模拟环境变量">模拟环境变量</a></h3>
 <ul>
-<li>管理系统级别的配置设置</li>
-<li>查看和修改系统配置参数</li>
-<li>提供系统状态信息</li>
-<li>支持调试和日志配置</li>
-</ul>
-<p><strong>示例：</strong></p>
-<pre><code class="language-bash"># 查看系统设置
-gops setting
-
-# 启用调试输出查看设置
-gops setting --debug 2
-
-# 配置日志级别查看设置
-gops setting --log setting=debug,system=info
-</code></pre>
-<h2 id="环境变量-2"><a class="header" href="#环境变量-2">环境变量</a></h2>
+<li><code>MOCK_SUCCESS</code> - 模拟成功状态
 <ul>
-<li><code>TEST_MODE</code> - 测试模式设置</li>
-<li><code>MOCK_SUCCESS</code> - 模拟成功状态</li>
-<li><code>TEST_MODE</code> 和 <code>MOCK_SUCCESS</code> 用于测试环境，确保测试的安全性和隔离性</li>
+<li>用于测试环境中模拟成功的操作</li>
+<li>通常与 <code>TEST_MODE</code> 一起使用</li>
 </ul>
-<h2 id="配置文件-2"><a class="header" href="#配置文件-2">配置文件</a></h2>
-<h3 id="系统配置结构"><a class="header" href="#系统配置结构">系统配置结构</a></h3>
-<pre><code>my-config/
-├── ops_config.yml              # 系统主配置文件
-├── templates/                  # 模板目录
-├── examples/                  # 示例文件
-├── scripts/                   # 脚本文件
-├── modules/                   # 模块目录
-├── config/                    # 配置文件
-│   ├── default.yml           # 默认配置
-│   ├── local.yml             # 本地配置
-│   └── env/                  # 环境特定配置
-│       ├── dev.yml
-│       ├── staging.yml
-│       └── prod.yml
-└── settings/                  # 系统设置
-    ├── system.yml
-    ├── security.yml
-    └── performance.yml
-</code></pre>
-<h3 id="ops_configyml-示例"><a class="header" href="#ops_configyml-示例">ops_config.yml 示例</a></h3>
-<pre><code class="language-yaml"># 系统配置文件
-system_name: my-ops-system
-version: "1.0.0"
-description: "My Galaxy Operations System"
-
-# 模块配置
-modules:
-  - name: core
-    type: system
-    version: "1.0.0"
-  - name: database
-    type: external
-    path: "/path/to/database-module"
-    version: "2.1.0"
-
-# 依赖配置
-dependencies:
-  - galaxy/core: "&gt;=1.0.0"
-  - galaxy/utils: "~2.0.0"
-  - galaxy/security: "^1.5.0"
-
-# 导入配置
-imports:
-  - name: user-service
-    path: "/path/to/user-service"
-    version: "1.2.0"
-
-# 输出配置
-outputs:
-  - name: artifacts
-    path: "build/artifacts"
-    format: tar.gz
-
-# 系统设置
-settings:
-  debug_level: 1
-  log_level: info
-  auto_update: true
-</code></pre>
-<h2 id="最佳实践-1"><a class="header" href="#最佳实践-1">最佳实践</a></h2>
-<h3 id="配置命名"><a class="header" href="#配置命名">配置命名</a></h3>
-<ul>
-<li>使用小写字母、数字、连字符和下划线</li>
-<li>避免特殊字符和空格</li>
-<li>使用有意义的名称，如：<code>production-config</code></li>
-<li>区分环境和用途：<code>dev-api-config</code></li>
+</li>
 </ul>
-<h3 id="模块管理"><a class="header" href="#模块管理">模块管理</a></h3>
-<pre><code class="language-bash"># 导入新模块
-gops import --path /path/to/new-module --force 1
-
-# 更新现有模块
-gops update --force 2
-
-# 验证配置
-gops setting --debug 2
+<h2 id="配置文件结构"><a class="header" href="#配置文件结构">配置文件结构</a></h2>
+<h3 id="工程目录结构"><a class="header" href="#工程目录结构">工程目录结构</a></h3>
+<pre><code>my-project/
+├── ops-prj.yml              # 工程主配置文件
+├── values/                  # 配置值目录
+│   └── {system-name}/      # 系统特定值
+│       └── value.yml       # 系统变量值文件
+├── ops-systems.yml          # 系统引用配置
+└── {system-name}/          # 系统目录
+    ├── sys/                 # 系统配置
+    │   ├── sys.yml          # 系统规范
+    │   └── vars.yml         # 系统变量定义
+    └── values/              # 系统值链接（指向 values/{system-name}/）
 </code></pre>
-<h3 id="配置管理-1"><a class="header" href="#配置管理-1">配置管理</a></h3>
-<pre><code class="language-bash"># 开发环境配置
-gops localize --value dev-config.yml --debug 2
-
-# 测试环境配置
-gops localize --value test-config.yml
-
-# 生产环境配置
-gops localize --value prod-config.yml --default
+<h3 id="模块目录结构"><a class="header" href="#模块目录结构">模块目录结构</a></h3>
+<pre><code>my-module/
+├── mod.yml                  # 模块配置文件
+├── sys/                     # 系统配置
+├── workflow/                # 工作流配置
+├── artifacts/               # 构建产物
+├── config/                  # 配置文件
+└── settings/                # 模块设置
 </code></pre>
-<h3 id="调试技巧-1"><a class="header" href="#调试技巧-1">调试技巧</a></h3>
-<pre><code class="language-bash"># 启用完整调试输出
-gops import --path /test --debug 4 --log all=debug
-
-# 检查系统设置
-gops setting --debug 3 --log setting=debug
-
-# 使用详细日志进行故障排除
-gops update --debug 2 --log cmd=debug,net=trace
+<h3 id="系统目录结构"><a class="header" href="#系统目录结构">系统目录结构</a></h3>
+<pre><code>my-system/
+├── sys/                     # 系统配置
+│   ├── sys.yml              # 系统规范
+│   ├── model.yml            # 系统模型
+│   └── vars.yml             # 系统变量定义
+├── workflow/                # 工作流配置
+├── templates/               # 模板文件
+├── examples/                # 示例配置
+└── scripts/                 # 脚本文件
 </code></pre>
-<h2 id="故障排除-1"><a class="header" href="#故障排除-1">故障排除</a></h2>
-<h3 id="常见问题-2"><a class="header" href="#常见问题-2">常见问题</a></h3>
-<p><strong>Q: 创建配置失败</strong></p>
-<pre><code>错误：无法创建目录 "my-config"
-原因：目录已存在或权限不足
-解决：删除现有目录或检查权限
-</code></pre>
-<p><strong>Q: 导入模块失败</strong></p>
-<pre><code>错误：无法导入模块
-原因：路径不存在或权限不足
-解决：检查路径是否正确，确保有读取权限
-gops import --path /test/path --debug 3 --log import=debug
-</code></pre>
-<p><strong>Q: 更新模块时网络错误</strong></p>
-<pre><code>错误：无法下载依赖
-解决：检查网络连接和 git 配置
-gops update --debug 3 --log net=debug
-</code></pre>
-<p><strong>Q: 本地化功能未实现</strong></p>
-<pre><code>错误：localize 功能尚未完成
-原因：当前版本实现为 todo!()
-解决：等待后续版本支持，或使用其他配置管理方式
-</code></pre>
-<h3 id="调试模式-2"><a class="header" href="#调试模式-2">调试模式</a></h3>
-<p>使用调试模式获取详细的执行信息：</p>
-<pre><code class="language-bash"># 最高级别调试
-gops import --path /test --debug 4 --log all=debug
+<h2 id="最佳实践"><a class="header" href="#最佳实践">最佳实践</a></h2>
+<h3 id="工程管理"><a class="header" href="#工程管理">工程管理</a></h3>
+<pre><code class="language-bash"># 1. 创建新工程
+gops prj new --name my-project
 
-# 关键模块调试
-gops new --name test --debug 3 --log cmd=debug
+# 2. 导入系统到工程
+gops prj import --path /path/to/system --force 1
 
-# 设置调试
-gops setting --debug 2 --log setting=debug
+# 3. 更新工程
+gops prj update
+
+# 4. 配置工程变量（交互模式）
+gops prj setting
+
+# 5. 配置工程变量（非交互模式）
+gops prj setting --no-interactive
 </code></pre>
-<h3 id="系统诊断"><a class="header" href="#系统诊断">系统诊断</a></h3>
-<pre><code class="language-bash"># 检查配置文件
-ls -la my-config/
+<h3 id="模块开发"><a class="header" href="#模块开发">模块开发</a></h3>
+<pre><code class="language-bash"># 1. 创建示例模块（学习结构）
+gops mod example
 
-# 验证系统配置
-cat my-config/ops_config.yml
+# 2. 创建新模块
+gops mod new --name my-module
 
-# 检查模块目录
-ls -la my-config/modules/
+# 3. 更新模块
+gops mod update --force 2
 
-# 查看系统设置
-gops setting --debug 1
+# 4. 本地化模块配置
+gops mod localize --value dev-values.yml
 </code></pre>
-<h2 id="测试-1"><a class="header" href="#测试-1">测试</a></h2>
+<h3 id="系统管理"><a class="header" href="#系统管理">系统管理</a></h3>
+<pre><code class="language-bash"># 1. 创建新系统
+gops sys new --name my-system
+
+# 2. 更新系统
+gops sys update --force 1
+
+# 3. 本地化系统配置
+gops sys localize --value prod-config.yml
+</code></pre>
+<h3 id="调试技巧"><a class="header" href="#调试技巧">调试技巧</a></h3>
+<pre><code class="language-bash"># 启用详细调试
+gops prj import --path /test --debug 4 --log all=debug
+
+# 调试特定模块
+gops mod update --debug 3 --log mod=debug
+
+# 调试系统操作
+gops sys update --debug 3 --log sys=debug
+
+# 调试设置操作
+gops prj setting --debug 2 --log setting=debug
+</code></pre>
+<h2 id="故障排除"><a class="header" href="#故障排除">故障排除</a></h2>
+<h3 id="常见错误及解决方案"><a class="header" href="#常见错误及解决方案">常见错误及解决方案</a></h3>
+<p><strong>Q: 工程创建失败</strong></p>
+<pre><code>错误：无法创建目录 "my-project"
+解决：检查目录权限，或选择不同的名称
+</code></pre>
+<p><strong>Q: 系统导入失败</strong></p>
+<pre><code>错误：load project from ./path fail!
+解决：检查路径是否正确，确保有适当的访问权限
+gops prj import --path /path/to/system --debug 3
+</code></pre>
+<p><strong>Q: 模块更新失败</strong></p>
+<pre><code>错误：无法加载模块配置
+解决：确保在正确的模块目录中执行命令
+gops mod update --debug 4 --log mod=debug
+</code></pre>
+<p><strong>Q: 系统创建卡在选择界面</strong></p>
+<pre><code>解决：在测试环境中设置 TEST_MODE 环境变量
+TEST_MODE=true gops sys new --name test-system
+</code></pre>
+<p><strong>Q: 设置命令在非交互模式下失败</strong></p>
+<pre><code>解决：确保 value.yml 文件存在且格式正确
+gops prj setting --no-interactive --debug 2
+</code></pre>
+<h3 id="调试模式使用"><a class="header" href="#调试模式使用">调试模式使用</a></h3>
+<pre><code class="language-bash"># 基础调试
+gops prj import --path /test --debug 1
+
+# 详细调试
+gops mod update --debug 2 --log mod=debug
+
+# 跟踪级别调试
+gops sys update --debug 3 --log sys=trace
+
+# 完整调试
+gops prj setting --debug 4 --log all=debug
+</code></pre>
+<h3 id="日志配置示例"><a class="header" href="#日志配置示例">日志配置示例</a></h3>
+<pre><code class="language-bash"># 调试特定模块
+gops mod update --log mod=debug
+
+# 调试多个模块
+gops sys update --log sys=debug,net=info
+
+# 设置不同级别
+gops prj import --log import=debug,system=info,net=trace
+
+# 调试所有内容
+gops mod update --log all=debug
+</code></pre>
+<h2 id="测试"><a class="header" href="#测试">测试</a></h2>
 <p>项目包含完整的测试套件：</p>
 <pre><code class="language-bash"># 运行所有测试
 cargo test
@@ -1109,80 +929,69 @@ cargo test test_gxops_run_success
 # 运行测试并显示输出
 cargo test -- --nocapture
 
-# 测试环境隔离
+# 在测试环境中运行
 TEST_MODE=true cargo test
+
+# 运行特定命令的测试
+cargo test test_ia_setting_interactive
+cargo test test_ia_setting_non_interactive
 </code></pre>
-<h2 id="示例工作流-1"><a class="header" href="#示例工作流-1">示例工作流</a></h2>
-<h3 id="开发新系统"><a class="header" href="#开发新系统">开发新系统</a></h3>
-<pre><code class="language-bash"># 1. 创建新系统配置
-gops new --name my-ops-system
+<h2 id="示例工作流"><a class="header" href="#示例工作流">示例工作流</a></h2>
+<h3 id="开发环境设置"><a class="header" href="#开发环境设置">开发环境设置</a></h3>
+<pre><code class="language-bash"># 1. 创建开发工程
+gops prj new --name dev-project
 
-# 2. 导入外部模块
-gops import --path /path/to/user-service --force 1
+# 2. 导入开发系统
+gops prj import --path /path/to/dev-system --force 1
 
-# 3. 导入数据库模块
-gops import --path /path/to/database-module --force 2
+# 3. 更新工程依赖
+gops prj update --debug 2
 
-# 4. 更新系统模块
-gops update
+# 4. 配置开发变量（非交互模式）
+gops prj setting --no-interactive
 
-# 5. 查看系统设置
-gops setting --debug 1
+# 5. 创建开发模块
+gops mod new --name dev-module
 
-# 6. 本地化配置（功能待实现）
-gops localize --value dev-config.yml
+# 6. 本地化模块配置
+gops mod localize --value dev-values.yml
 </code></pre>
-<h3 id="部署到生产环境-1"><a class="header" href="#部署到生产环境-1">部署到生产环境</a></h3>
-<pre><code class="language-bash"># 1. 创建生产系统配置
-gops new --name production-system
+<h3 id="生产环境部署"><a class="header" href="#生产环境部署">生产环境部署</a></h3>
+<pre><code class="language-bash"># 1. 创建生产工程
+gops prj new --name prod-project
 
-# 2. 导入生产模块
-gops import --path /path/to/production-modules --force 3
+# 2. 导入生产系统
+gops prj import --path /path/to/prod-system --force 3
 
-# 3. 更新到最新版本
-gops update --force 3
+# 3. 配置生产变量（使用默认值）
+gops prj setting --no-interactive
 
-# 4. 查看生产设置
-gops setting --log production=debug
-
-# 5. 使用生产配置本地化
-gops localize --value prod-config.yml --default
+# 4. 本地化生产配置
+gops sys localize --value prod-config.yml --default
 </code></pre>
-<h2 id="版本历史-1"><a class="header" href="#版本历史-1">版本历史</a></h2>
-<h3 id="当前版本100-1"><a class="header" href="#当前版本100-1">当前版本：1.0.0</a></h3>
-<ul>
-<li>初始版本</li>
-<li>支持系统配置创建</li>
-<li>支持模块导入功能</li>
-<li>支持系统模块更新</li>
-<li>支持系统设置管理</li>
-<li>本地化功能标记为待实现（todo!()）</li>
-<li>完整的错误处理和日志记录</li>
-</ul>
-<h2 id="功能开发状态"><a class="header" href="#功能开发状态">功能开发状态</a></h2>
-<div class="table-wrapper"><table><thead><tr><th>功能</th><th>状态</th><th>说明</th></tr></thead><tbody>
-<tr><td>new</td><td>✅ 完成</td><td>创建新的系统配置</td></tr>
-<tr><td>import</td><td>✅ 完成</td><td>导入外部模块到当前系统</td></tr>
-<tr><td>update</td><td>✅ 完成</td><td>更新系统模块和引用</td></tr>
-<tr><td>localize</td><td>⏳ 待开发</td><td>本地化模块配置（当前为 todo!()）</td></tr>
-<tr><td>setting</td><td>✅ 完成</td><td>系统设置管理</td></tr>
+<h2 id="版本信息"><a class="header" href="#版本信息">版本信息</a></h2>
+<p>当前版本：<code>0.12.0</code></p>
+<h2 id="功能状态"><a class="header" href="#功能状态">功能状态</a></h2>
+<div class="table-wrapper"><table><thead><tr><th>命令</th><th>子命令</th><th>状态</th><th>说明</th></tr></thead><tbody>
+<tr><td><code>gops prj</code></td><td><code>new</code></td><td>✅ 完成</td><td>创建维护工程</td></tr>
+<tr><td><code>gops prj</code></td><td><code>import</code></td><td>✅ 完成</td><td>导入系统到工程</td></tr>
+<tr><td><code>gops prj</code></td><td><code>update</code></td><td>✅ 完成</td><td>更新工程</td></tr>
+<tr><td><code>gops prj</code></td><td><code>setting</code></td><td>✅ 完成</td><td>工程设置（支持交互/非交互模式）</td></tr>
+<tr><td><code>gops mod</code></td><td><code>example</code></td><td>✅ 完成</td><td>创建示例模块结构</td></tr>
+<tr><td><code>gops mod</code></td><td><code>new</code></td><td>✅ 完成</td><td>定义新模块操作符</td></tr>
+<tr><td><code>gops mod</code></td><td><code>update</code></td><td>✅ 完成</td><td>更新现有模块操作符</td></tr>
+<tr><td><code>gops mod</code></td><td><code>localize</code></td><td>✅ 完成</td><td>本地化模块配置</td></tr>
+<tr><td><code>gops sys</code></td><td><code>new</code></td><td>✅ 完成</td><td>创建新的系统操作符</td></tr>
+<tr><td><code>gops sys</code></td><td><code>update</code></td><td>✅ 完成</td><td>更新系统配置</td></tr>
+<tr><td><code>gops sys</code></td><td><code>localize</code></td><td>✅ 完成</td><td>为环境本地化系统配置</td></tr>
 </tbody></table>
 </div>
-<h2 id="贡献指南-1"><a class="header" href="#贡献指南-1">贡献指南</a></h2>
-<p>欢迎贡献代码和建议：</p>
-<ol>
-<li>Fork 项目</li>
-<li>创建特性分支</li>
-<li>提交更改</li>
-<li>推送到分支</li>
-<li>创建 Pull Request</li>
-</ol>
-<h2 id="许可证-1"><a class="header" href="#许可证-1">许可证</a></h2>
-<p>本项目采用 MIT 许可证 - 详见 LICENSE 文件</p>
+<h2 id="许可证"><a class="header" href="#许可证">许可证</a></h2>
+<p>本项目采用 MIT 许可证 - 详见项目根目录的 LICENSE 文件</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="gprj-命令使用文档"><a class="header" href="#gprj-命令使用文档">gprj 命令使用文档</a></h1>
-<h2 id="概述-3"><a class="header" href="#概述-3">概述</a></h2>
+<h2 id="概述-2"><a class="header" href="#概述-2">概述</a></h2>
 <p><code>gprj</code> 是 Galaxy Flow 的项目管理工具，用于初始化和管理 Galaxy 项目环境。</p>
-<h2 id="基本用法-3"><a class="header" href="#基本用法-3">基本用法</a></h2>
+<h2 id="基本用法-2"><a class="header" href="#基本用法-2">基本用法</a></h2>
 <pre><code class="language-bash">gprj &lt;COMMAND&gt; [OPTIONS]
 </code></pre>
 <h2 id="命令列表"><a class="header" href="#命令列表">命令列表</a></h2>
@@ -1274,7 +1083,7 @@ gprj conf init --remote
 <p>执行管理任务，等同于 gflow 的管理模式。</p>
 <pre><code class="language-bash">gprj adm [OPTIONS]
 </code></pre>
-<h2 id="配置文件-3"><a class="header" href="#配置文件-3">配置文件</a></h2>
+<h2 id="配置文件-1"><a class="header" href="#配置文件-1">配置文件</a></h2>
 <h3 id="默认配置文件"><a class="header" href="#默认配置文件">默认配置文件</a></h3>
 <ul>
 <li><code>./_gal/work.gxl</code> - 工作流配置</li>
@@ -1322,7 +1131,7 @@ gprj conf init --remote
 <h3 id="自定义模板仓库"><a class="header" href="#自定义模板仓库">自定义模板仓库</a></h3>
 <pre><code class="language-bash">gprj init prj --repo https://my-tpl.git --tpl my-template
 </code></pre>
-<h2 id="环境变量-3"><a class="header" href="#环境变量-3">环境变量</a></h2>
+<h2 id="环境变量-2"><a class="header" href="#环境变量-2">环境变量</a></h2>
 <ul>
 <li><code>GALAXY_FLOW_HOME</code>: Galaxy Flow 主目录</li>
 <li><code>RUST_LOG</code>: Rust 日志级别</li>
@@ -1332,7 +1141,7 @@ gprj conf init --remote
 <li><code>0</code>: 执行成功</li>
 <li><code>非0</code>: 执行失败，返回错误码</li>
 </ul>
-<h2 id="常见问题-3"><a class="header" href="#常见问题-3">常见问题</a></h2>
+<h2 id="常见问题-1"><a class="header" href="#常见问题-1">常见问题</a></h2>
 <h3 id="权限问题-1"><a class="header" href="#权限问题-1">权限问题</a></h3>
 <p>确保有执行权限：</p>
 <pre><code class="language-bash">chmod +x gprj
@@ -1346,7 +1155,7 @@ gprj conf init --remote
 <pre><code class="language-bash">mv _gal/work.gxl _gal/work.gxl.backup
 gprj conf init
 </code></pre>
-<h2 id="最佳实践-2"><a class="header" href="#最佳实践-2">最佳实践</a></h2>
+<h2 id="最佳实践-1"><a class="header" href="#最佳实践-1">最佳实践</a></h2>
 <h3 id="项目初始化"><a class="header" href="#项目初始化">项目初始化</a></h3>
 <ol>
 <li>先初始化环境：<code>gprj init env</code></li>
@@ -1360,413 +1169,12 @@ gprj conf init
 <li>定期更新模块：<code>gprj update mod</code></li>
 <li>使用版本控制管理配置文件</li>
 </ul>
-<div style="break-before: page; page-break-before: always;"></div><h1 id="gsys---galaxy-system-management-tool"><a class="header" href="#gsys---galaxy-system-management-tool">gsys - Galaxy System Management Tool</a></h1>
-<h2 id="概述-4"><a class="header" href="#概述-4">概述</a></h2>
-<p><code>gsys</code> 是 Galaxy 系统管理工具，用于创建、更新和本地化 Galaxy 系统配置。它提供了完整的系统生命周期管理功能，帮助开发者快速构建和维护 Galaxy 系统。</p>
-<h2 id="安装-2"><a class="header" href="#安装-2">安装</a></h2>
-<pre><code class="language-bash"># 从源代码安装
-cargo install --path .
-
-# 或者使用二进制分发
-https://github.com/galaxy-sec/galaxy-ops/releases/latest/
-</code></pre>
-<h2 id="基本用法-4"><a class="header" href="#基本用法-4">基本用法</a></h2>
-<h3 id="显示版本信息-2"><a class="header" href="#显示版本信息-2">显示版本信息</a></h3>
-<pre><code class="language-bash">gsys
-# 输出示例：gsys: 1.0.0
-</code></pre>
-<h3 id="显示帮助信息-2"><a class="header" href="#显示帮助信息-2">显示帮助信息</a></h3>
-<pre><code class="language-bash">gsys --help
-gsys &lt;command&gt; --help
-</code></pre>
-<h2 id="命令详解-2"><a class="header" href="#命令详解-2">命令详解</a></h2>
-<h3 id="gsys-new"><a class="header" href="#gsys-new">gsys new</a></h3>
-<p>创建新的系统操作符</p>
-<p><strong>语法：</strong></p>
-<pre><code class="language-bash">gsys new [OPTIONS]
-</code></pre>
-<p><strong>选项：</strong></p>
-<ul>
-<li><code>-n, --name &lt;NAME&gt;</code> - 系统名称（字母数字，可包含连字符和下划线）【必填】</li>
-</ul>
-<p><strong>功能：</strong></p>
-<ul>
-<li>创建指定名称的新系统</li>
-<li>初始化系统目录结构</li>
-<li>生成所有必需的配置文件</li>
-<li>交互式选择系统型号配置</li>
-</ul>
-<p><strong>示例：</strong></p>
-<pre><code class="language-bash"># 创建名为 "my-system" 的新系统
-gsys new --name my-system
-
-# 创建系统时交互式选择系统型号
-# 系统会提示：请选择系统型号配置:
-# 1. ModelSTD_1
-# 2. ModelSTD_2
-# ...
-# 选择完成后会自动生成对应的配置文件
-</code></pre>
-<p><strong>输出：</strong></p>
-<pre><code>创建目录：my-system/
-生成配置文件：my-system/sys/sys_model.yml
-生成模板文件：my-system/templates/
-生成示例文件：my-system/examples/
-</code></pre>
-<h3 id="gsys-update"><a class="header" href="#gsys-update">gsys update</a></h3>
-<p>更新现有系统配置</p>
-<p><strong>语法：</strong></p>
-<pre><code class="language-bash">gsys update [OPTIONS]
-</code></pre>
-<p><strong>选项：</strong></p>
-<ul>
-<li><code>-d, --debug &lt;LEVEL&gt;</code> - 调试级别（0-4）
-<ul>
-<li>0：关闭调试输出</li>
-<li>1：基础调试信息</li>
-<li>2：详细调试信息</li>
-<li>3：跟踪调试信息</li>
-<li>4：完整调试信息</li>
-</ul>
-</li>
-<li><code>--log &lt;LOG&gt;</code> - 日志配置（格式：模块=级别,模块=级别）</li>
-<li><code>-f, --force &lt;LEVEL&gt;</code> - 强制更新级别
-<ul>
-<li>0：正常更新</li>
-<li>1：跳过确认</li>
-<li>2：覆盖文件</li>
-<li>3：强制 git pull</li>
-</ul>
-</li>
-</ul>
-<p><strong>功能：</strong></p>
-<ul>
-<li>更新系统的配置和依赖关系</li>
-<li>下载远程引用的系统资源</li>
-<li>支持多种强制更新模式</li>
-<li>自动处理系统版本冲突</li>
-</ul>
-<p><strong>示例：</strong></p>
-<pre><code class="language-bash"># 正常更新系统
-gsys update
-
-# 跳过确认更新
-gsys update --force 1
-
-# 详细调试输出更新过程
-gsys update --debug 3 --log all=debug
-
-# 完整强制更新
-gsys update --force 3 --debug 4
-</code></pre>
-<h3 id="gsys-localize"><a class="header" href="#gsys-localize">gsys localize</a></h3>
-<p>本地化系统配置</p>
-<p><strong>语法：</strong></p>
-<pre><code class="language-bash">gsys localize [OPTIONS]
-</code></pre>
-<p><strong>选项：</strong></p>
-<ul>
-<li><code>-d, --debug &lt;LEVEL&gt;</code> - 调试级别（0-4）</li>
-<li><code>--log &lt;LOG&gt;</code> - 日志配置</li>
-<li><code>--value &lt;PATH&gt;</code> - 值文件路径（YAML/JSON）</li>
-<li><code>--default</code> - 使用内置默认值，不使用用户提供的 value.yml</li>
-</ul>
-<p><strong>功能：</strong></p>
-<ul>
-<li>根据环境特定的值生成本地化配置</li>
-<li>支持多环境配置管理</li>
-<li>可选择使用自定义或默认值</li>
-<li>自动生成环境特定的配置文件</li>
-</ul>
-<p><strong>示例：</strong></p>
-<pre><code class="language-bash"># 使用默认值本地化
-gsys localize --default
-
-# 使用自定义值文件本地化
-gsys localize --value prod-values.yml
-
-# 使用自定义值文件并启用调试
-gsys localize --value dev-values.yml --debug 2
-
-# 使用详细日志进行本地化
-gsys localize --value staging-values.yml --log cmd=debug,localize=info
-</code></pre>
-<h2 id="系统型号配置"><a class="header" href="#系统型号配置">系统型号配置</a></h2>
-<h3 id="支持的系统型号"><a class="header" href="#支持的系统型号">支持的系统型号</a></h3>
-<p><code>gsys</code> 支持多种系统型号配置，可通过以下方式查看：</p>
-<pre><code class="language-bash"># 查看所有支持的系统型号
-python3 -c "from galaxy_ops.module import ModelSTD; print('\n'.join(str(m) for m in ModelSTD.support()))"
-</code></pre>
-<h3 id="系统型号选择"><a class="header" href="#系统型号选择">系统型号选择</a></h3>
-<p>在创建新系统时，<code>gsys</code> 会交互式提示选择系统型号：</p>
-<pre><code>请选择系统型号配置:
-1. ModelSTD_AWS
-2. ModelSTD_Docker
-3. ModelSTD_Kubernetes
-4. ModelSTD_BareMetal
-5. 从当前系统自动检测
-请输入选项编号 [1-5]:
-</code></pre>
-<h3 id="当前系统检测"><a class="header" href="#当前系统检测">当前系统检测</a></h3>
-<p>如果选择"从当前系统自动检测"，<code>gsys</code> 会自动检测当前运行环境并生成对应的配置：</p>
-<pre><code class="language-bash"># 自动检测当前系统
-ModelSTD::from_cur_sys()  # 内部调用的方法
-</code></pre>
-<h2 id="环境变量-4"><a class="header" href="#环境变量-4">环境变量</a></h2>
-<ul>
-<li><code>TEST_MODE</code> - 测试模式设置</li>
-<li><code>MOCK_SUCCESS</code> - 模拟成功状态</li>
-<li><code>TEST_MODE</code> 和 <code>MOCK_SUCCESS</code> 用于测试环境，确保测试的安全性和隔离性</li>
-</ul>
-<h2 id="配置文件-4"><a class="header" href="#配置文件-4">配置文件</a></h2>
-<h3 id="系统配置结构-1"><a class="header" href="#系统配置结构-1">系统配置结构</a></h3>
-<pre><code>my-system/
-├── sys/                       # 系统配置目录
-│   ├── sys_model.yml          # 系统型号配置
-│   ├── dependencies.yml      # 依赖配置
-│   └── config/               # 系统配置
-│       ├── default.yml        # 默认配置
-│       ├── local.yml          # 本地配置
-│       └── env/               # 环境特定配置
-│           ├── dev.yml
-│           ├── staging.yml
-│           └── prod.yml
-├── templates/                 # 模板目录
-├── examples/                 # 示例文件
-├── scripts/                  # 脚本文件
-└── deployment/               # 部署配置
-    ├── docker/
-    ├── kubernetes/
-    └── terraform/
-</code></pre>
-<h3 id="sys_modelyml-示例"><a class="header" href="#sys_modelyml-示例">sys_model.yml 示例</a></h3>
-<pre><code class="language-yaml"># AWS 系统型号配置
-system_name: my-aws-system
-model: ModelSTD_AWS
-version: "1.0.0"
-
-# 基础配置
-base_config:
-  region: us-east-1
-  availability_zones:
-    - us-east-1a
-    - us-east-1b
-    - us-east-1c
-
-# 计算资源
-compute:
-  type: auto_scaling
-  min_size: 2
-  max_size: 10
-  desired_capacity: 3
-  instance_type: t3.large
-
-# 存储配置
-storage:
-  type: ebs
-  volume_size: 100
-  volume_type: gp3
-  encrypted: true
-
-# 网络配置
-network:
-  vpc_cidr: "10.0.0.0/16"
-  subnet_cidrs:
-    - "10.0.1.0/24"
-    - "10.0.2.0/24"
-    - "10.0.3.0/24"
-
-# 安全配置
-security:
-  enable_vpc: true
-  enable_security_groups: true
-  enable_iam: true
-</code></pre>
-<h3 id="docker-系统型号配置"><a class="header" href="#docker-系统型号配置">Docker 系统型号配置</a></h3>
-<pre><code class="language-yaml"># Docker 系统型号配置
-system_name: my-docker-system
-model: ModelSTD_Docker
-version: "1.0.0"
-
-# 容器配置
-containers:
-  - name: main
-    image: "my-app:latest"
-    ports:
-      - "8080:80"
-    environment:
-      - NODE_ENV=production
-    volumes:
-      - "/opt/app/data:/app/data"
-
-# 网络配置
-networks:
-  - name: app-network
-    driver: bridge
-    internal: false
-
-# 数据卷配置
-volumes:
-  - name: app-data
-    driver: local
-</code></pre>
-<h2 id="最佳实践-3"><a class="header" href="#最佳实践-3">最佳实践</a></h2>
-<h3 id="系统命名"><a class="header" href="#系统命名">系统命名</a></h3>
-<ul>
-<li>使用小写字母、数字、连字符和下划线</li>
-<li>避免特殊字符和空格</li>
-<li>使用有意义的名称，如：<code>production-web-app</code></li>
-<li>区分环境和用途：<code>dev-api-gateway</code></li>
-</ul>
-<h3 id="系统型号选择-1"><a class="header" href="#系统型号选择-1">系统型号选择</a></h3>
-<pre><code class="language-bash"># AWS 环境
-gsys new --name aws-ecommerce -- 选择 ModelSTD_AWS
-
-# Docker 环境
-gsys new --name docker-microservices -- 选择 ModelSTD_Docker
-
-# Kubernetes 环境
-gsys new --name k8s-monitoring -- 选择 ModelSTD_Kubernetes
-
-# 裸金属服务器
-gsys new --name bare-metal-database -- 选择 ModelSTD_BareMetal
-</code></pre>
-<h3 id="依赖管理-1"><a class="header" href="#依赖管理-1">依赖管理</a></h3>
-<ul>
-<li>定期更新系统依赖：<code>gsys update --force 1</code></li>
-<li>在生产环境使用锁定版本</li>
-<li>使用版本控制管理配置变更</li>
-</ul>
-<h3 id="配置管理-2"><a class="header" href="#配置管理-2">配置管理</a></h3>
-<pre><code class="language-bash"># 开发环境配置
-gsys localize --value dev-config.yml --log cmd=debug
-
-# 测试环境配置
-gsys localize --value test-config.yml
-
-# 生产环境配置
-gsys localize --value prod-config.yml --default
-</code></pre>
-<h2 id="故障排除-2"><a class="header" href="#故障排除-2">故障排除</a></h2>
-<h3 id="常见问题-4"><a class="header" href="#常见问题-4">常见问题</a></h3>
-<p><strong>Q: 创建系统失败</strong></p>
-<pre><code>错误：无法创建目录 "my-system"
-原因：目录已存在或权限不足
-解决：删除现有目录或检查权限
-</code></pre>
-<p><strong>Q: 系统型号选择失败</strong></p>
-<pre><code>错误：无法解析系统型号
-解决：检查系统型号配置文件是否正确
-gsys new --name test-system -- 选择 1
-</code></pre>
-<p><strong>Q: 更新系统时网络错误</strong></p>
-<pre><code>错误：无法下载依赖
-解决：检查网络连接和 git 配置
-gsys update --debug 3 --log net=debug
-</code></pre>
-<p><strong>Q: 本地化失败</strong></p>
-<pre><code>错误：无法解析值文件
-解决：检查 YAML/JSON 格式是否正确
-gsys localize --value config.yml --debug 2
-</code></pre>
-<h3 id="调试模式-3"><a class="header" href="#调试模式-3">调试模式</a></h3>
-<p>使用调试模式获取详细的执行信息：</p>
-<pre><code class="language-bash"># 最高级别调试
-gsys update --debug 4 --log all=debug
-
-# 关键模块调试
-gsys new --name test --debug 3 --log cmd=debug
-
-# 网络调试
-gsys update --debug 3 --log net=debug
-</code></pre>
-<h3 id="系统诊断-1"><a class="header" href="#系统诊断-1">系统诊断</a></h3>
-<pre><code class="language-bash"># 检查系统配置
-ls -la my-system/sys/
-
-# 验证系统型号配置
-cat my-system/sys/sys_model.yml
-
-# 检查环境配置
-ls -la my-system/sys/config/env/
-</code></pre>
-<h2 id="测试-2"><a class="header" href="#测试-2">测试</a></h2>
-<p>项目包含完整的测试套件：</p>
-<pre><code class="language-bash"># 运行所有测试
-cargo test
-
-# 运行特定测试
-cargo test test_gxsys_run_success
-
-# 运行测试并显示输出
-cargo test -- --nocapture
-
-# 测试环境隔离
-TEST_MODE=true cargo test
-</code></pre>
-<h2 id="示例工作流-2"><a class="header" href="#示例工作流-2">示例工作流</a></h2>
-<h3 id="开发新系统-1"><a class="header" href="#开发新系统-1">开发新系统</a></h3>
-<pre><code class="language-bash"># 1. 创建新系统
-gsys new --name my-system
-
-# 2. 选择系统型号（交互式）
-# 输入编号选择对应的系统型号
-
-# 3. 编辑系统配置
-cd my-system
-vim sys/sys_model.yml
-
-# 4. 更新系统资源
-cd ..
-gsys update
-
-# 5. 本地化配置
-gsys localize --value dev-config.yml
-
-# 6. 验证系统配置
-ls -la my-system/sys/config/env/
-</code></pre>
-<h3 id="部署到生产环境-2"><a class="header" href="#部署到生产环境-2">部署到生产环境</a></h3>
-<pre><code class="language-bash"># 1. 创建生产系统
-gsys new --name production-system
-
-# 2. 选择生产环境系统型号
-# 根据实际情况选择 AWS/Docker/K8s 等
-
-# 3. 更新到最新版本
-gsys update --force 3
-
-# 4. 使用生产配置本地化
-gsys localize --value prod-config.yml --default
-
-# 5. 验证生产配置
-cat my-system/sys/config/env/prod.yml
-</code></pre>
-<h2 id="版本历史-2"><a class="header" href="#版本历史-2">版本历史</a></h2>
-<h3 id="当前版本100-2"><a class="header" href="#当前版本100-2">当前版本：1.0.0</a></h3>
-<ul>
-<li>初始版本</li>
-<li>支持系统创建、更新和本地化</li>
-<li>交互式系统型号选择</li>
-<li>多种系统型号支持（AWS、Docker、Kubernetes、BareMetal）</li>
-<li>完整的错误处理和日志记录</li>
-</ul>
-<h2 id="贡献指南-2"><a class="header" href="#贡献指南-2">贡献指南</a></h2>
-<p>欢迎贡献代码和建议：</p>
-<ol>
-<li>Fork 项目</li>
-<li>创建特性分支</li>
-<li>提交更改</li>
-<li>推送到分支</li>
-<li>创建 Pull Request</li>
-</ol>
-<h2 id="许可证-2"><a class="header" href="#许可证-2">许可证</a></h2>
-<p>本项目采用 MIT 许可证 - 详见 LICENSE 文件</p>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="gsys"><a class="header" href="#gsys">gsys</a></h1>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="buildin"><a class="header" href="#buildin">BUILDIN</a></h1>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="维护器"><a class="header" href="#维护器">维护器</a></h1>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="系统维护器"><a class="header" href="#系统维护器">系统维护器</a></h1>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="系统模型配置"><a class="header" href="#系统模型配置">系统模型配置</a></h1>
-<h2 id="概述-5"><a class="header" href="#概述-5">概述</a></h2>
+<h2 id="概述-3"><a class="header" href="#概述-3">概述</a></h2>
 <p><code>sys_model.yml</code> 是 Sys-Operator 中最重要的配置文件之一，定义了系统的基础信息、目标运行环境和扩展元数据。所有系统都必须包含这个文件，它是系统定义的核心。</p>
 <h2 id="配置结构"><a class="header" href="#配置结构">配置结构</a></h2>
 <h3 id="基础系统定义"><a class="header" href="#基础系统定义">基础系统定义</a></h3>
@@ -1859,7 +1267,7 @@ vender: "Enterprise Corp"
 vender: "Open Source Community"
 vender: "Development Team"
 </code></pre>
-<h2 id="最佳实践-4"><a class="header" href="#最佳实践-4">最佳实践</a></h2>
+<h2 id="最佳实践-2"><a class="header" href="#最佳实践-2">最佳实践</a></h2>
 <h3 id="1-命名最佳实践"><a class="header" href="#1-命名最佳实践">1. 命名最佳实践</a></h3>
 <h4 id="系统命名建议"><a class="header" href="#系统命名建议">系统命名建议</a></h4>
 <ul>
@@ -1899,7 +1307,7 @@ name: app1                 # 无意义的编号
 <li>考虑容器化 vs 宿主机部署的差异</li>
 <li>支持混合环境部署需求</li>
 </ul>
-<h2 id="故障排除-3"><a class="header" href="#故障排除-3">故障排除</a></h2>
+<h2 id="故障排除-1"><a class="header" href="#故障排除-1">故障排除</a></h2>
 <h3 id="1-常见错误"><a class="header" href="#1-常见错误">1. 常见错误</a></h3>
 <h4 id="缺少必需字段"><a class="header" href="#缺少必需字段">缺少必需字段</a></h4>
 <pre><code class="language-yaml"># 错误示例
@@ -1943,7 +1351,7 @@ name: SYSTEM_NAME        # 包含大写字母
 <li>保持命名和格式的一致性</li>
 </ul>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="微服务系统示例"><a class="header" href="#微服务系统示例">微服务系统示例</a></h1>
-<h2 id="概述-6"><a class="header" href="#概述-6">概述</a></h2>
+<h2 id="概述-4"><a class="header" href="#概述-4">概述</a></h2>
 <p>本文档提供了一个完整的微服务系统示例，展示如何使用 Sys-Operator 构建和管理复杂的微服务架构。该示例包含 Web 前端、API 网关、用户服务、订单服务和数据库等多个模块，体现了现代微服务系统的典型架构模式。</p>
 <h2 id="系统架构"><a class="header" href="#系统架构">系统架构</a></h2>
 <h3 id="整体架构图"><a class="header" href="#整体架构图">整体架构图</a></h3>
@@ -2371,7 +1779,7 @@ vars:
 </span>TODO
 <span class="boring">}</span></code></pre></pre>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="sys-operator-目录结构"><a class="header" href="#sys-operator-目录结构">Sys-Operator 目录结构</a></h1>
-<h2 id="概述-7"><a class="header" href="#概述-7">概述</a></h2>
+<h2 id="概述-5"><a class="header" href="#概述-5">概述</a></h2>
 <p>本文档详细说明了 Sys-Operator 的目录结构，帮助你理解系统组织和文件规范。</p>
 <h2 id="完整的目录结构"><a class="header" href="#完整的目录结构">完整的目录结构</a></h2>
 <pre><code>system_name/
@@ -2503,7 +1911,7 @@ vars:
 <li><strong>模块级</strong>: 模块具体配置和文件</li>
 <li><strong>平台级</strong>: 特定平台的配置</li>
 </ul>
-<h2 id="最佳实践-5"><a class="header" href="#最佳实践-5">最佳实践</a></h2>
+<h2 id="最佳实践-3"><a class="header" href="#最佳实践-3">最佳实践</a></h2>
 <h3 id="1-目录创建"><a class="header" href="#1-目录创建">1. 目录创建</a></h3>
 <p>使用 <code>gsys new </code> 命令创建标准化的目录结构：</p>
 <h3 id="2-目录维护"><a class="header" href="#2-目录维护">2. 目录维护</a></h3>
@@ -2531,7 +1939,7 @@ vars:
 <hr />
 <p><em>更多详情请参考 <a href="operator/sys/structure/./file-organization.html">文件组织方式</a> 和 <a href="operator/sys/structure/./naming-conventions.html">命名规范</a>。</em></p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="文件组织方式"><a class="header" href="#文件组织方式">文件组织方式</a></h1>
-<h2 id="概述-8"><a class="header" href="#概述-8">概述</a></h2>
+<h2 id="概述-6"><a class="header" href="#概述-6">概述</a></h2>
 <p>本文档详细说明 Sys-Operator 中的文件组织方式，包括配置文件的结构、模块文件的存储、工作流文件的编排等，帮助你理解如何有效地组织和管理系统文件。</p>
 <h2 id="配置文件组织"><a class="header" href="#配置文件组织">配置文件组织</a></h2>
 <h3 id="1-系统级配置文件"><a class="header" href="#1-系统级配置文件">1. 系统级配置文件</a></h3>
@@ -2766,7 +2174,7 @@ mod main : operators {
 <span class="boring">}</span></code></pre></pre>
 <h3 id="3-模块文件组织"><a class="header" href="#3-模块文件组织">3. 模块文件组织</a></h3>
 <p>模块文件存储在 <code>sys/mods/</code> 目录下，每个模块有自己的本地化副本。</p>
-<h4 id="模块目录结构"><a class="header" href="#模块目录结构">模块目录结构</a></h4>
+<h4 id="模块目录结构-1"><a class="header" href="#模块目录结构-1">模块目录结构</a></h4>
 <pre><code>sys/mods/
 ├── module_name/
 │   └── platform_model/
@@ -2877,7 +2285,7 @@ test_envs:
 <hr />
 <p><em>更多详情请参考 <a href="operator/sys/structure/./directory.html">目录结构</a> 和 <a href="operator/sys/structure/./naming-conventions.html">命名规范</a>。</em></p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="命名规范"><a class="header" href="#命名规范">命名规范</a></h1>
-<h2 id="概述-9"><a class="header" href="#概述-9">概述</a></h2>
+<h2 id="概述-7"><a class="header" href="#概述-7">概述</a></h2>
 <p>本文档详细说明 Sys-Operator 中的命名规范，包括文件名、变量名、模块名、系统名等的命名约定，帮助你保持命名的一致性和可读性。</p>
 <h2 id="命名原则"><a class="header" href="#命名原则">命名原则</a></h2>
 <h3 id="1-可读性原则"><a class="header" href="#1-可读性原则">1. 可读性原则</a></h3>
@@ -3516,7 +2924,7 @@ fi
 
 echo "命名规范验证通过"
 </code></pre>
-<h2 id="最佳实践-6"><a class="header" href="#最佳实践-6">最佳实践</a></h2>
+<h2 id="最佳实践-4"><a class="header" href="#最佳实践-4">最佳实践</a></h2>
 <h3 id="1-创建命名规范文档"><a class="header" href="#1-创建命名规范文档">1. 创建命名规范文档</a></h3>
 <p><strong>内容建议</strong>:</p>
 <ul>
@@ -3564,7 +2972,7 @@ echo "命名规范验证通过"
 <p><em>更多详情请参考 <a href="operator/sys/structure/./directory.html">目录结构</a> 和 <a href="operator/sys/structure/./file-organization.html">文件组织方式</a>。</em></p>
 <div style="break-before: page; page-break-before: always;"></div><p>TODO</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="mod-operator-开发指南"><a class="header" href="#mod-operator-开发指南">Mod-Operator 开发指南</a></h1>
-<h2 id="概述-10"><a class="header" href="#概述-10">概述</a></h2>
+<h2 id="概述-8"><a class="header" href="#概述-8">概述</a></h2>
 <p>Mod-Operator 是 Galaxy Ops 框架的核心组件，用于定义和管理可复用的运维模块。每个 Mod-Operator 代表一个独立的软件组件或服务，包含完整的生命周期管理能力，包括安装、配置、启动、停止、监控等操作。</p>
 <h3 id="核心特性"><a class="header" href="#核心特性">核心特性</a></h3>
 <ul>
@@ -3665,7 +3073,7 @@ gmod new postgresql --template database
 <li>缓存启用 (cache_enable)</li>
 <li>本地文件名 (local)</li>
 </ul>
-<h3 id="依赖管理-2"><a class="header" href="#依赖管理-2">依赖管理</a></h3>
+<h3 id="依赖管理"><a class="header" href="#依赖管理">依赖管理</a></h3>
 <p>模块可以依赖其他模块或资源，支持：</p>
 <ul>
 <li>本地路径依赖</li>
@@ -3855,7 +3263,7 @@ gflow install -d 3  # 最详细输出
 gflow install --dry-run
 
 </code></pre>
-<h2 id="最佳实践-7"><a class="header" href="#最佳实践-7">最佳实践</a></h2>
+<h2 id="最佳实践-5"><a class="header" href="#最佳实践-5">最佳实践</a></h2>
 <h3 id="1-模块设计原则"><a class="header" href="#1-模块设计原则">1. 模块设计原则</a></h3>
 <h4 id="单一职责原则"><a class="header" href="#单一职责原则">单一职责原则</a></h4>
 <p><strong>✅ 好的做法：</strong></p>
@@ -5130,7 +4538,7 @@ impl ErrorHandler {
     }
 }
 <span class="boring">}</span></code></pre></pre>
-<h2 id="环境变量-5"><a class="header" href="#环境变量-5">环境变量</a></h2>
+<h2 id="环境变量-3"><a class="header" href="#环境变量-3">环境变量</a></h2>
 <h2 id="api-使用示例"><a class="header" href="#api-使用示例">API 使用示例</a></h2>
 <h3 id="创建自定义模块"><a class="header" href="#创建自定义模块">创建自定义模块</a></h3>
 <pre><pre class="playground"><code class="language-rust">use galaxy_ops::{
@@ -5429,7 +4837,7 @@ curl -I "https://github.com/user/repo/releases"
 
 # 查看是否重定向到镜像服务器
 </code></pre>
-<h2 id="常见问题-5"><a class="header" href="#常见问题-5">常见问题</a></h2>
+<h2 id="常见问题-2"><a class="header" href="#常见问题-2">常见问题</a></h2>
 <h3 id="q-如何添加多个镜像服务器"><a class="header" href="#q-如何添加多个镜像服务器">Q: 如何添加多个镜像服务器？</a></h3>
 <p>A: 在 <code>units</code> 中添加多个配置单元，系统会按顺序尝试：</p>
 <pre><code class="language-yaml">enable: true
@@ -5537,7 +4945,7 @@ units:
       read-timeout: 15
       total-timeout: 30
 </code></pre>
-<h2 id="故障排除-4"><a class="header" href="#故障排除-4">故障排除</a></h2>
+<h2 id="故障排除-2"><a class="header" href="#故障排除-2">故障排除</a></h2>
 <h3 id="检查配置文件语法"><a class="header" href="#检查配置文件语法">检查配置文件语法</a></h3>
 <p>使用在线 YAML 验证工具检查配置文件语法：</p>
 <ol>
@@ -5545,7 +4953,7 @@ units:
 <li>粘贴您的配置文件内容</li>
 <li>检查是否有语法错误</li>
 </ol>
-<h3 id="常见错误及解决方案"><a class="header" href="#常见错误及解决方案">常见错误及解决方案</a></h3>
+<h3 id="常见错误及解决方案-1"><a class="header" href="#常见错误及解决方案-1">常见错误及解决方案</a></h3>
 <h4 id="1-配置文件不生效"><a class="header" href="#1-配置文件不生效">1. 配置文件不生效</a></h4>
 <p><strong>症状</strong>: 配置修改后没有效果
 <strong>解决方案</strong>:</p>
@@ -5580,7 +4988,7 @@ units:
 <li>确认认证信息是否有权限访问目标服务</li>
 <li>检查 token 是否已过期</li>
 </ul>
-<h3 id="调试技巧-2"><a class="header" href="#调试技巧-2">调试技巧</a></h3>
+<h3 id="调试技巧-1"><a class="header" href="#调试技巧-1">调试技巧</a></h3>
 <h4 id="启用详细日志"><a class="header" href="#启用详细日志">启用详细日志</a></h4>
 <p>如果应用程序支持日志，可以启用详细日志来查看重定向过程：</p>
 <pre><code class="language-bash"># 示例：启用调试日志
@@ -5596,7 +5004,7 @@ curl -v "https://github.com/user/repo"
 </code></pre>
 <h4 id="检查配置加载"><a class="header" href="#检查配置加载">检查配置加载</a></h4>
 <p>如果可能，查看应用程序启动时的日志，确认配置文件是否正确加载。</p>
-<h2 id="最佳实践-8"><a class="header" href="#最佳实践-8">最佳实践</a></h2>
+<h2 id="最佳实践-6"><a class="header" href="#最佳实践-6">最佳实践</a></h2>
 <h3 id="安全性建议"><a class="header" href="#安全性建议">安全性建议</a></h3>
 <ol>
 <li><strong>使用环境变量</strong>: 避免在配置文件中硬编码敏感信息</li>
@@ -5710,7 +5118,7 @@ units:
 <p>祝您使用愉快！🎉</p>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="gxl-介绍"><a class="header" href="#gxl-介绍">GXL 介绍</a></h1>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="gxl-语法帮助文档"><a class="header" href="#gxl-语法帮助文档">GXL 语法帮助文档</a></h1>
-<h2 id="概述-11"><a class="header" href="#概述-11">概述</a></h2>
+<h2 id="概述-9"><a class="header" href="#概述-9">概述</a></h2>
 <p>GXL（Galaxy Flow Language）是一种为 DevSecOps 自动化工作流设计的领域特定语言。它采用模块化、层次化的结构设计，支持环境配置、流程编排、函数定义和活动重用等核心功能。</p>
 <h2 id="语言结构"><a class="header" href="#语言结构">语言结构</a></h2>
 <h3 id="顶层结构"><a class="header" href="#顶层结构">顶层结构</a></h3>
@@ -6022,7 +5430,7 @@ mod main {
     }
 }
 </code></pre>
-<h2 id="最佳实践-9"><a class="header" href="#最佳实践-9">最佳实践</a></h2>
+<h2 id="最佳实践-7"><a class="header" href="#最佳实践-7">最佳实践</a></h2>
 <h3 id="1-模块组织"><a class="header" href="#1-模块组织">1. 模块组织</a></h3>
 <pre><code class="language-gxl">// 将相关功能组织到模块中
 mod database {
@@ -6116,7 +5524,7 @@ mod main {
     flow test {}
 }
 </code></pre>
-<h2 id="常见问题-6"><a class="header" href="#常见问题-6">常见问题</a></h2>
+<h2 id="常见问题-3"><a class="header" href="#常见问题-3">常见问题</a></h2>
 <h3 id="q-如何调试-gxl-脚本"><a class="header" href="#q-如何调试-gxl-脚本">Q: 如何调试 GXL 脚本？</a></h3>
 <p>A: 使用 <code>gx.echo</code> 输出变量值和执行状态，在开发环境中设置 <code>debug = true</code>。</p>
 <h3 id="q-如何处理敏感信息"><a class="header" href="#q-如何处理敏感信息">Q: 如何处理敏感信息？</a></h3>
